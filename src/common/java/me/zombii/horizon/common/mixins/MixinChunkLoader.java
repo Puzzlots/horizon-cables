@@ -1,9 +1,12 @@
 package me.zombii.horizon.common.mixins;
 
 import finalforeach.cosmicreach.io.ChunkLoader;
+import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.SaveLocation;
 import finalforeach.cosmicreach.world.World;
+import me.zombii.horizon.common.network.NetworkGroup;
 import me.zombii.horizon.common.network.NetworkGroups;
+import org.hjson.JsonArray;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,8 +30,17 @@ public class MixinChunkLoader {
                 stream.close();
 
                 String contents = new String(data);
-                JsonObject networkGroup = JsonValue.readHjson(contents).asObject();
-                NetworkGroups.powerNetworkGroup.load(networkGroup);
+                JsonObject groups = JsonValue.readHjson(contents).asObject();
+                for (Identifier name : NetworkGroups.GROUP_REGISTRY.names()) {
+                    String strName = name.toString();
+                    JsonValue groupData = groups.get(strName);
+                    if (groupData != null && groupData.isObject()) {
+                        JsonObject groupDataObject = groupData.asObject();
+                        NetworkGroup<?> group = NetworkGroups.GROUP_REGISTRY.get(name);
+
+                        group.load(groupDataObject);
+                    }
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -5,7 +5,6 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.Block
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.enhanced.EnhancedBlockModelGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.BlockGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.ISidedModelLoader;
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
@@ -20,10 +19,10 @@ import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.be.power.PowerNetworkHubBlockEntity;
 import me.zombii.horizon.common.network.AbstractNetwork;
 import me.zombii.horizon.common.network.AbstractNode;
-import me.zombii.horizon.common.network.power.IPowerBlock;
-import me.zombii.horizon.common.network.power.PowerHubNode;
+import me.zombii.horizon.common.network.dcpower.IDCPowerBlock;
+import me.zombii.horizon.common.network.dcpower.DCPowerHubNode;
 
-public class PowerNetworkHubBlock implements IPowerBlock {
+public class PowerNetworkHubBlock implements IDCPowerBlock {
     public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "power-network-hub");
 
     private final BlockGenerator blockGenerator;
@@ -97,12 +96,12 @@ public class PowerNetworkHubBlock implements IPowerBlock {
 
     @Override
     public AbstractNode createEmptyNode() {
-        return new PowerHubNode();
+        return new DCPowerHubNode();
     }
 
     @Override
     public AbstractNode createNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state) {
-        return new PowerHubNode(network, pos, state, this);
+        return new DCPowerHubNode(network, pos, state, this);
     }
 
     @Override

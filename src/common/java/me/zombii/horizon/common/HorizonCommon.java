@@ -9,7 +9,7 @@ import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.util.GameTag;
 import me.zombii.horizon.common.be.power.PowerNetworkHubBlockEntity;
 import me.zombii.horizon.common.blocks.power.PowerCableBlock;
-import me.zombii.horizon.common.blocks.power.BatteryBlock;
+import me.zombii.horizon.common.blocks.power.BatteryPowerBlock;
 import me.zombii.horizon.common.blocks.power.PowerNetworkHubBlock;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -42,7 +42,7 @@ public class HorizonCommon implements ModInit {
     public void onEvent(EventModBlockRegister e) {
         e.register(new PowerCableBlock());
         e.register(new PowerNetworkHubBlock());
-        e.register(new BatteryBlock());
+        e.register(new BatteryPowerBlock());
 
 //        e.register(new FlatWireBlock());
 //        e.register(new ItemPipeBlock());

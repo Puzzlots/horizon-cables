@@ -14,13 +14,13 @@ import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.common.blocks.CableConnectorFunction;
+import me.zombii.horizon.common.connectedblocks.CableConnectorFunction;
 import me.zombii.horizon.common.network.NetworkManager;
-import me.zombii.horizon.common.network.power.IPowerBlock;
-import me.zombii.horizon.common.network.power.IPowerHubBlockEntity;
-import me.zombii.horizon.common.network.power.PowerNetwork;
+import me.zombii.horizon.common.network.dcpower.IDCPowerBlock;
+import me.zombii.horizon.common.network.dcpower.IDCPowerHubBlockEntity;
+import me.zombii.horizon.common.network.dcpower.DCPowerNetwork;
 
-public class PowerCableBlock implements IPowerBlock {
+public class PowerCableBlock implements IDCPowerBlock {
 
     public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "power-cable");
 
@@ -51,7 +51,7 @@ public class PowerCableBlock implements IPowerBlock {
     public void onPlace(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
 
-        PowerNetwork powerNetwork = NetworkManager.findNetwork(IPowerBlock.class, IPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
+        DCPowerNetwork powerNetwork = NetworkManager.findNetwork(IDCPowerBlock.class, IDCPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
         if (powerNetwork == null) return;
 
         NetworkManager.build(powerNetwork, args.blockPos, false);
@@ -59,7 +59,7 @@ public class PowerCableBlock implements IPowerBlock {
 
     @Override
     public void onBreak(BlockEventArgs args) {
-        PowerNetwork powerNetwork = NetworkManager.findNetwork(IPowerBlock.class, IPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
+        DCPowerNetwork powerNetwork = NetworkManager.findNetwork(IDCPowerBlock.class, IDCPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
         if (powerNetwork == null) return;
 
         powerNetwork.removeNode(args.blockPos);
@@ -99,7 +99,7 @@ public class PowerCableBlock implements IPowerBlock {
     public boolean canConnect(BlockState state, Direction direction, BlockState target) {
         IGameTagList list = target.getTags();
         if (list == null) return false;
-        IPowerBlock block = (IPowerBlock) BlockLoader.INSTANCE.getModdedFromVanillaBlock(target.getBlock());
+        IDCPowerBlock block = (IDCPowerBlock) BlockLoader.INSTANCE.getModdedFromVanillaBlock(target.getBlock());
         boolean passesTags = list.contains(HorizonTags.TAG_POWER_HUB) || list.contains(HorizonTags.TAG_POWER_CABLE) ||  list.contains(HorizonTags.TAG_POWER_SOURCE);
         if (block == null || block == this) return passesTags;
         return passesTags && block.canConnect(target, direction.getOpposite(), state);

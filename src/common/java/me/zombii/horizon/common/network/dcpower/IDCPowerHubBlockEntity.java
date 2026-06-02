@@ -1,22 +1,22 @@
-package me.zombii.horizon.common.network.power;
+package me.zombii.horizon.common.network.dcpower;
 
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.IBlockEntity;
 
 import java.util.function.BiFunction;
 
-public interface IPowerHubBlockEntity {
+public interface IDCPowerHubBlockEntity {
 
-    BiFunction<IPowerBlock, IReadBlockPosition, PowerNetwork> NETWORK_DISCOVERY_FUNCTION
+    BiFunction<IDCPowerBlock, IReadBlockPosition, DCPowerNetwork> NETWORK_DISCOVERY_FUNCTION
             = (block, blockPosition) -> {
         IBlockEntity blockEntity = blockPosition.getBlockEntity();
 
-        if (blockEntity instanceof IPowerHubBlockEntity hub) {
+        if (blockEntity instanceof IDCPowerHubBlockEntity hub) {
             return hub.getPowerNetwork();
         }
         return null;
     };
 
-    PowerNetwork getPowerNetwork();
+    DCPowerNetwork getPowerNetwork();
 
 }

@@ -1,6 +1,5 @@
 package me.zombii.horizon.common.be.power;
 
-import finalforeach.cosmicreach.accounts.AccountOffline;
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
@@ -15,10 +14,10 @@ import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.network.NetworkGroups;
 import me.zombii.horizon.common.network.NetworkManager;
-import me.zombii.horizon.common.network.power.IPowerHubBlockEntity;
-import me.zombii.horizon.common.network.power.PowerNetwork;
+import me.zombii.horizon.common.network.dcpower.IDCPowerHubBlockEntity;
+import me.zombii.horizon.common.network.dcpower.DCPowerNetwork;
 
-public class PowerNetworkHubBlockEntity extends BlockEntity implements IPowerHubBlockEntity {
+public class PowerNetworkHubBlockEntity extends BlockEntity implements IDCPowerHubBlockEntity {
 
     public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "power-network-hub");
 
@@ -31,7 +30,7 @@ public class PowerNetworkHubBlockEntity extends BlockEntity implements IPowerHub
     }
 
     private int networkID = -1;
-    private PowerNetwork powerNetwork;
+    private DCPowerNetwork powerNetwork;
 
     public PowerNetworkHubBlockEntity(Zone zone, int x, int y, int z) {
         super(zone, x, y, z);
@@ -50,12 +49,12 @@ public class PowerNetworkHubBlockEntity extends BlockEntity implements IPowerHub
         Chunk chunk = getZone().getChunkAtBlock(getGlobalX(), getGlobalY(), getGlobalZ());
 
         if (networkID != -1) {
-            powerNetwork = NetworkGroups.powerNetworkGroup.get(networkID);
+            powerNetwork = NetworkGroups.dcPowerNetworkGroup.get(networkID);
             return;
         }
 
         if (chunk != null) {
-            powerNetwork = NetworkGroups.powerNetworkGroup.newNetwork();
+            powerNetwork = NetworkGroups.dcPowerNetworkGroup.newNetwork();
             networkID = powerNetwork.getNetworkID();
             NetworkManager.build(powerNetwork, BlockPosition.of(this), false);
         } else {
@@ -68,9 +67,9 @@ public class PowerNetworkHubBlockEntity extends BlockEntity implements IPowerHub
         super.onRemove();
 
         if (networkID == -1) return;
-        if (NetworkGroups.powerNetworkGroup.get(networkID) == null) return;
+        if (NetworkGroups.dcPowerNetworkGroup.get(networkID) == null) return;
 
-        NetworkGroups.powerNetworkGroup.remove(networkID);
+        NetworkGroups.dcPowerNetworkGroup.remove(networkID);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class PowerNetworkHubBlockEntity extends BlockEntity implements IPowerHub
     }
 
     @Override
-    public PowerNetwork getPowerNetwork() {
+    public DCPowerNetwork getPowerNetwork() {
         return powerNetwork;
     }
 

@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.blocks;
+package me.zombii.horizon.common.connectedblocks;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;

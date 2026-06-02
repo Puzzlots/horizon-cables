@@ -5,7 +5,6 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.Block
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.enhanced.EnhancedBlockModelGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.BlockGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.ISidedModelLoader;
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
@@ -17,20 +16,19 @@ import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.common.be.power.PowerNetworkHubBlockEntity;
 import me.zombii.horizon.common.network.AbstractNetwork;
 import me.zombii.horizon.common.network.AbstractNode;
 import me.zombii.horizon.common.network.NetworkManager;
-import me.zombii.horizon.common.network.power.*;
+import me.zombii.horizon.common.network.dcpower.*;
 
-public class BatteryBlock implements IPowerBlock {
+public class BatteryPowerBlock implements IDCPowerBlock {
     public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "battery");
 
     private final BlockGenerator blockGenerator;
     private final EnhancedBlockModelGenerator modelGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public BatteryBlock() {
+    public BatteryPowerBlock() {
         this.blockGenerator = new BlockGenerator(ID);
 
         this.eventGenerator = new BlockEventGenerator(BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID, ID);
@@ -56,7 +54,7 @@ public class BatteryBlock implements IPowerBlock {
     public void onPlace(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
 
-        PowerNetwork powerNetwork = NetworkManager.findNetwork(IPowerBlock.class, IPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
+        DCPowerNetwork powerNetwork = NetworkManager.findNetwork(IDCPowerBlock.class, IDCPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
         if (powerNetwork == null) return;
 
         NetworkManager.build(powerNetwork, args.blockPos, false);
@@ -64,7 +62,7 @@ public class BatteryBlock implements IPowerBlock {
 
     @Override
     public void onBreak(BlockEventArgs args) {
-        PowerNetwork powerNetwork = NetworkManager.findNetwork(IPowerBlock.class, IPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
+        DCPowerNetwork powerNetwork = NetworkManager.findNetwork(IDCPowerBlock.class, IDCPowerHubBlockEntity.NETWORK_DISCOVERY_FUNCTION, args.blockPos);
         if (powerNetwork == null) return;
 
         powerNetwork.removeNode(args.blockPos);
@@ -104,12 +102,12 @@ public class BatteryBlock implements IPowerBlock {
 
     @Override
     public AbstractNode createEmptyNode() {
-        return new BatteryNode();
+        return new DCBatteryNode();
     }
 
     @Override
     public AbstractNode createNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state) {
-        return new BatteryNode(network, pos, state, this);
+        return new DCBatteryNode(network, pos, state, this);
     }
 
     @Override

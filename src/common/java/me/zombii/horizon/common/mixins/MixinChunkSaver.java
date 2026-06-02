@@ -1,8 +1,10 @@
 package me.zombii.horizon.common.mixins;
 
 import finalforeach.cosmicreach.io.ChunkSaver;
+import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.SaveLocation;
 import finalforeach.cosmicreach.world.World;
+import me.zombii.horizon.common.network.NetworkGroup;
 import me.zombii.horizon.common.network.NetworkGroups;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
@@ -32,11 +34,17 @@ public class MixinChunkSaver {
         }
 
         try {
-            JsonObject networkGroup = new JsonObject();
-            NetworkGroups.powerNetworkGroup.save(networkGroup);
+            JsonObject groups = new JsonObject();
+            for (Identifier name : NetworkGroups.GROUP_REGISTRY.names()) {
+                JsonObject groupData = new JsonObject();
+                NetworkGroup<?> group = NetworkGroups.GROUP_REGISTRY.get(name);
+
+                group.save(groupData);
+                groups.set(name.toString(), groupData);
+            }
 
             FileOutputStream stream = new FileOutputStream(file);
-            stream.write(networkGroup.toString(Stringify.FORMATTED).getBytes());
+            stream.write(groups.toString(Stringify.FORMATTED).getBytes());
             stream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.network.power;
+package me.zombii.horizon.common.network.dcpower;
 
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
@@ -7,13 +7,13 @@ import me.zombii.horizon.common.network.AbstractNode;
 import me.zombii.horizon.common.network.INetworkedBlock;
 import me.zombii.horizon.common.network.NodeReference;
 
-public class BatteryNode extends AbstractNode {
+public class DCBatteryNode extends AbstractNode {
 
-    public BatteryNode() {
+    public DCBatteryNode() {
         super();
     }
 
-    public BatteryNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state, INetworkedBlock<?> block) {
+    public DCBatteryNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state, INetworkedBlock<?> block) {
         super(network, pos, state, block);
     }
 

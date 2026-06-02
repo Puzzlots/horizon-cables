@@ -13,4 +13,7 @@ public class HorizonTags {
     public static final GameTag TAG_ITEM_INSERTER = GameTag.get("horizon-item-inserter");
     public static final GameTag TAG_ITEM_EXTRACTOR = GameTag.get("horizon-extractor");
 
+
+    public static final GameTag TAG_ENERGY_COMPATIBLE = GameTag.get("horizon-energy-compatible");
+
 }

@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import me.zombii.horizon.common.network.*;
-import me.zombii.horizon.common.network.power.BatteryNode;
-import me.zombii.horizon.common.network.power.PowerCableNode;
-import me.zombii.horizon.common.network.power.PowerHubNode;
-import me.zombii.horizon.common.network.power.PowerNetwork;
+import me.zombii.horizon.common.network.dcpower.DCBatteryNode;
+import me.zombii.horizon.common.network.dcpower.DCPowerCableNode;
+import me.zombii.horizon.common.network.dcpower.DCPowerHubNode;
+import me.zombii.horizon.common.network.dcpower.DCPowerNetwork;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkRenderer {
@@ -19,7 +18,7 @@ public class NetworkRenderer {
 
     public static void renderAllNetworks(ShapeRenderer renderer) {
 //        List<AbstractNetwork> networks = NetworkManager.networks;
-        List<PowerNetwork> networks = NetworkGroups.powerNetworkGroup.getNetworks();
+        List<DCPowerNetwork> networks = NetworkGroups.dcPowerNetworkGroup.getNetworks();
         for (AbstractNetwork network : networks) {
             render(renderer, network);
         }
@@ -35,15 +34,15 @@ public class NetworkRenderer {
             nodeScale = .25f;
             renderer.setColor(Color.WHITE);
 
-            if (node instanceof BatteryNode) {
+            if (node instanceof DCBatteryNode) {
                 nodeScale = .5f;
                 renderer.setColor(Color.GREEN);
             }
-            if (node instanceof PowerCableNode) {
+            if (node instanceof DCPowerCableNode) {
 //                nodeScale = .25f;
                 renderer.setColor(Color.WHITE);
             }
-            if (node instanceof PowerHubNode) {
+            if (node instanceof DCPowerHubNode) {
                 nodeScale = 1f;
                 renderer.setColor(Color.BLUE);
             }

@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.blocks;
+package me.zombii.horizon.common.connectedblocks;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
@@ -6,16 +6,13 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.Model
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.enhanced.EnhancedBlockModelGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.ISidedModelLoader;
 import finalforeach.cosmicreach.blocks.BlockState;
-import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.rendering.IMeshData;
 import finalforeach.cosmicreach.rendering.blockmodels.BlockModel;
-import finalforeach.cosmicreach.util.IGameTagList;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.util.constants.Direction;
 import finalforeach.cosmicreach.world.Chunk;
 import finalforeach.cosmicreach.world.Zone;
-import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.network.INetworkedBlock;
 
 import java.util.Arrays;

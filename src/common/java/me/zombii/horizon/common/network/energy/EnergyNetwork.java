@@ -1,15 +1,16 @@
-package me.zombii.horizon.common.network.power;
+package me.zombii.horizon.common.network.energy;
 
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import me.zombii.horizon.common.network.AbstractNetwork;
 import me.zombii.horizon.common.network.AbstractNode;
 import me.zombii.horizon.common.network.INetworkedBlock;
+import me.zombii.horizon.common.network.energy.interfaces.IEnergyBlock;
 
-public class PowerNetwork extends AbstractNetwork {
+public class EnergyNetwork extends AbstractNetwork {
 
-    public PowerNetwork() {
-        super(IPowerBlock.class);
+    public EnergyNetwork() {
+        super(IEnergyBlock.class);
     }
 
     @Override

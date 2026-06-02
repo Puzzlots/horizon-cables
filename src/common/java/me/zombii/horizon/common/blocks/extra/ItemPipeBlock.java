@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.blocks;
+package me.zombii.horizon.common.blocks.extra;
 
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
@@ -9,6 +9,7 @@ import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.util.Identifier;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
+import me.zombii.horizon.common.connectedblocks.PipeConnectorFunction;
 
 public class ItemPipeBlock implements IModBlock {
 

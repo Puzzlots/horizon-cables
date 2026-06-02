@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.blocks;
+package me.zombii.horizon.common.blocks.extra;
 
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
@@ -6,11 +6,11 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.Block
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.BlockGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State;
 import finalforeach.cosmicreach.blocks.Block;
-import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.util.Identifier;
 import me.zombii.horizon.common.HorizonTags;
+import me.zombii.horizon.common.connectedblocks.CableConnectorFunction;
 
 import static me.zombii.horizon.common.HorizonCommon.BLOCK_MAP;
 
