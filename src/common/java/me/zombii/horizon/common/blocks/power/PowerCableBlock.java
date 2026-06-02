@@ -1,5 +1,6 @@
 package me.zombii.horizon.common.blocks.power;
 
+import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.BlockEventGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.BlockGenerator;
@@ -99,10 +100,7 @@ public class PowerCableBlock implements IDCPowerBlock {
     public boolean canConnect(BlockState state, Direction direction, BlockState target) {
         IGameTagList list = target.getTags();
         if (list == null) return false;
-        IDCPowerBlock block = (IDCPowerBlock) BlockLoader.INSTANCE.getModdedFromVanillaBlock(target.getBlock());
-        boolean passesTags = list.contains(HorizonTags.TAG_POWER_HUB) || list.contains(HorizonTags.TAG_POWER_CABLE) ||  list.contains(HorizonTags.TAG_POWER_SOURCE);
-        if (block == null || block == this) return passesTags;
-        return passesTags && block.canConnect(target, direction.getOpposite(), state);
+        return list.contains(HorizonTags.TAG_POWER_HUB) || list.contains(HorizonTags.TAG_POWER_CABLE) ||  list.contains(HorizonTags.TAG_POWER_SOURCE);
     }
 
     @Override

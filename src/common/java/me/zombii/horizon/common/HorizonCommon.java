@@ -7,10 +7,14 @@ import dev.puzzleshq.puzzleloader.cosmic.game.events.block.EventRegisterBlockEve
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.util.GameTag;
+import me.zombii.horizon.common.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.be.power.PowerNetworkHubBlockEntity;
+import me.zombii.horizon.common.blocks.energy.BatteryBlock;
+import me.zombii.horizon.common.blocks.energy.EnergyHubBlock;
 import me.zombii.horizon.common.blocks.power.PowerCableBlock;
 import me.zombii.horizon.common.blocks.power.BatteryPowerBlock;
 import me.zombii.horizon.common.blocks.power.PowerNetworkHubBlock;
+import me.zombii.horizon.common.network.energy.nodes.EnergyBatteryNode;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.HashMap;
@@ -20,22 +24,15 @@ public class HorizonCommon implements ModInit {
 
     public static final String NAMESPACE = "horizon";
 
-    public static Map<Block, IModBlock> BLOCK_MAP = new HashMap<>();
-
-    public static GameTag TAG_POWERABLE;
-    public static GameTag TAG_POWERSOURCE;
-
     public HorizonCommon() {
     }
 
     @Override
     public void onInit() {
-        TAG_POWERABLE = GameTag.get("powerable");
-        TAG_POWERSOURCE = GameTag.get("powersource");
-
         GameRegistries.COSMIC_EVENT_BUS.register(this);
 
         PowerNetworkHubBlockEntity.register();
+        EnergyNetworkHubBlockEntity.register();
     }
 
     @SubscribeEvent
@@ -47,6 +44,8 @@ public class HorizonCommon implements ModInit {
 //        e.register(new FlatWireBlock());
 //        e.register(new ItemPipeBlock());
 //        e.register(new DataCableBlock());
+        e.register(new EnergyHubBlock());
+        e.register(new BatteryBlock());
     }
 
     @SubscribeEvent

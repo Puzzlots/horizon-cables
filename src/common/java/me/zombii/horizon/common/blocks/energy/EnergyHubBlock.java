@@ -2,7 +2,6 @@ package me.zombii.horizon.common.blocks.energy;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.BlockEventGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.BlockModelGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.ModelCuboid;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.enhanced.EnhancedBlockModelGenerator;
@@ -11,26 +10,23 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
-import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
-import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.util.IGameTagList;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
+import me.zombii.horizon.common.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.network.AbstractNetwork;
 import me.zombii.horizon.common.network.AbstractNode;
-import me.zombii.horizon.common.network.NetworkManager;
-import me.zombii.horizon.common.network.energy.EnergyNetwork;
 import me.zombii.horizon.common.network.energy.interfaces.IEnergyBlock;
-import me.zombii.horizon.common.network.energy.interfaces.IEnergyHubBlockEntity;
 import me.zombii.horizon.common.network.energy.nodes.EnergyBatteryNode;
+import me.zombii.horizon.common.network.energy.nodes.EnergyCableNode;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class BatteryBlock implements IEnergyBlock {
+public class EnergyHubBlock implements IEnergyBlock {
 
     private static final Direction[] PORTS = {
             Direction.POS_X, Direction.POS_Z,
@@ -39,18 +35,19 @@ public class BatteryBlock implements IEnergyBlock {
 
     private static final List<Direction> PORT_LIST = Arrays.asList(PORTS);
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "energy-battery-block");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "energy-hub-block");
 
     private final BlockGenerator blockGenerator;
-    private final BlockEventGenerator eventGenerator;
     private final EnhancedBlockModelGenerator modelGenerator;
 
-    public BatteryBlock() {
-        FileHandle modelFile = GameAssetLoader.loadAsset(Identifier.of(HorizonCommon.NAMESPACE, "energy/large-battery.json"));
+    public EnergyHubBlock() {
+        FileHandle modelFile = GameAssetLoader.loadAsset(Identifier.of(HorizonCommon.NAMESPACE, "energy/energy-network-hub.json"));
 
         this.blockGenerator = new BlockGenerator(ID);
+        this.blockGenerator.setBlockEntity(EnergyNetworkHubBlockEntity.ID);
+
         this.modelGenerator = EnhancedBlockModelGenerator.fromEntityModelJsonAsPlanes(
-                "horizon-energy-battery-model",
+                "horizon-energy-network-hub-model",
                 modelFile.readString(),
                 false
         );
@@ -60,46 +57,10 @@ public class BatteryBlock implements IEnergyBlock {
         Arrays.fill(collisionCube.faces, null);
         this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
 
-        this.eventGenerator = new BlockEventGenerator(BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID, ID);
-        this.eventGenerator.inheritParentContents();
-        this.eventGenerator.inject(-1, "onPlace", this::onPlace);
-        this.eventGenerator.inject(0, "onBreak", this::onBreak);
-
         State defaultState = this.blockGenerator.createState("default");
         defaultState.isOpaque.set(false);
         defaultState.modelId = this.modelGenerator.getName();
         defaultState.lightAttenuation = 0;
-        defaultState.blockEventId = this.eventGenerator.getId();
-    }
-
-    @Override
-    public void onPlace(BlockEventArgs args) {
-        if (!GameSingletons.isHost()) return;
-        
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        NetworkManager.build(network, args.blockPos, false);
-    }
-
-    @Override
-    public void onBreak(BlockEventArgs args) {
-        if (!GameSingletons.isHost()) return;
-
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        network.removeNode(args.blockPos);
     }
 
     @Override
@@ -116,15 +77,12 @@ public class BatteryBlock implements IEnergyBlock {
 
     @Override
     public AbstractNode createNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state) {
-        EnergyBatteryNode node = new EnergyBatteryNode(network, pos, state, this);
-        node.setEnergyConsumedPerTick(1);
-        node.setEnergyProducedPerTick(1);
-        return node;
+        return new EnergyCableNode(network, pos, state, this);
     }
 
     @Override
     public AbstractNode createEmptyNode() {
-        return new EnergyBatteryNode();
+        return new EnergyCableNode();
     }
 
     @Override
@@ -135,11 +93,6 @@ public class BatteryBlock implements IEnergyBlock {
     @Override
     public BlockModelGenerator[] getModelGenerators() {
         return new BlockModelGenerator[]{modelGenerator};
-    }
-
-    @Override
-    public BlockEventGenerator[] getEventGenerators() {
-        return new BlockEventGenerator[]{eventGenerator};
     }
 
     @Override

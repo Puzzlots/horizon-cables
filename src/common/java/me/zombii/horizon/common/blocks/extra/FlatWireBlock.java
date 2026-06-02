@@ -10,8 +10,6 @@ import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.util.Identifier;
 
-import static me.zombii.horizon.common.HorizonCommon.BLOCK_MAP;
-
 public class FlatWireBlock implements IModBlock {
 
     static final Identifier ID = Identifier.of("horizon", "flat_wire");
@@ -68,12 +66,9 @@ public class FlatWireBlock implements IModBlock {
 
     @Override
     public void onRegistered(Block block) {
-        BLOCK_MAP.put(block, this);
-
         ISidedBlockConnector connector = ISidedBlockConnector.getInstance();
         connector.registerAsConnectedBlock(block, connectorFunction);
         for (BlockState blockState : block.blockStates.values()) {
-            blockState.initTagList();
         }
     }
 

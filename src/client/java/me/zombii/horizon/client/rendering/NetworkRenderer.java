@@ -16,9 +16,14 @@ public class NetworkRenderer {
     private static final Vector3 tmpVecA = new Vector3();
     private static final Vector3 tmpVecB = new Vector3();
 
-    public static void renderAllNetworks(ShapeRenderer renderer) {
-//        List<AbstractNetwork> networks = NetworkManager.networks;
-        List<DCPowerNetwork> networks = NetworkGroups.dcPowerNetworkGroup.getNetworks();
+    public static void renderAllGroups(ShapeRenderer renderer) {
+        NetworkGroups.GROUP_REGISTRY.forEach(group -> {
+            renderGroup(renderer, group);
+        });
+    }
+
+    public static void renderGroup(ShapeRenderer renderer, NetworkGroup<?> group) {
+        List<AbstractNetwork> networks = (List<AbstractNetwork>) group.getNetworks();
         for (AbstractNetwork network : networks) {
             render(renderer, network);
         }

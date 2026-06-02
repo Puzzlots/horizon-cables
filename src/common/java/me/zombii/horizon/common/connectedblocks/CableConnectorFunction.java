@@ -1,9 +1,11 @@
 package me.zombii.horizon.common.connectedblocks;
 
 import com.badlogic.gdx.math.Vector3;
+import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.ModelCuboid;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.enhanced.EnhancedBlockModelGenerator;
+import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.BlockLoader;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.ISidedModelLoader;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.rendering.IMeshData;
@@ -107,7 +109,14 @@ public class CableConnectorFunction implements ISidedBlockConnector.ConnectorFun
     }
 
     public boolean canConnect(BlockState state, Direction direction, BlockState target) {
-        return this.networkedBlock.canConnect(state, direction, target);
+        if (target == null) return false;
+        boolean canConnectA = this.networkedBlock.canConnect(state, direction, target);
+
+        IModBlock modBlock = BlockLoader.INSTANCE.getModdedFromVanillaBlock(target.getBlock());
+        if (!(modBlock instanceof INetworkedBlock)) return canConnectA;
+        boolean canConnectB = this.networkedBlock.canConnect(target, direction.getOpposite(), state);
+
+        return canConnectA && canConnectB;
     }
 
     short[] pipeBlockLightLevels = new short[8];

@@ -26,6 +26,9 @@ public class MixinChunkSaver {
         File file = new File(SaveLocation.getWorldSaveFolderLocation(world.worldFolderName) + "/networks.json");
         System.out.println("Saving world: " + file.getAbsolutePath() + " with networks");
         if (!file.exists()) {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
             try {
                 file.createNewFile();
             } catch (IOException e) {

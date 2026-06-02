@@ -12,8 +12,6 @@ import finalforeach.cosmicreach.util.Identifier;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.connectedblocks.CableConnectorFunction;
 
-import static me.zombii.horizon.common.HorizonCommon.BLOCK_MAP;
-
 public class DataCableBlock implements IModBlock {
 
     public static final Identifier ID =
@@ -88,8 +86,6 @@ public class DataCableBlock implements IModBlock {
                 block,
                 connectorFunction
         );
-        BLOCK_MAP.put(block, this);
-
         for (BlockState value : block.blockStates.values()) {
             value.initTagList();
 
