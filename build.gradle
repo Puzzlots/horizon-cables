@@ -21,6 +21,9 @@ jigsawInject {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url "https://raw.githubusercontent.com/Mr-Zombii/git-maven/refs/heads/main/"
+    }
 }
 
 dependencies {
@@ -29,7 +32,18 @@ dependencies {
 
     cosmicReach("finalforeach:cosmic-reach:${cosmic_reach_version}")
 
-    commonImplementation "com.github.PuzzlesHQ:cosmic-api:${cosmic_api_version}"
+    clientImplementation commonImplementation("com.github.PuzzlesHQ:cosmic-api:${cosmic_api_version}:merged")
+
+    clientImplementation commonImplementation("com.github.stephengold:Libbulletjme:21.2.1")
+    clientImplementation commonImplementation("commons-io:commons-io:2.16.1")
+    clientImplementation commonImplementation("com.github.mgsx-dev.gdx-gltf:gltf:2.2.1") {
+        exclude group: "com.badlogicgames.gdx", module: "gdx"
+    }
+
+    commonImplementation "me.zombii:quicknet:$quiknet_version"
+    commonImplementation "it.unimi.dsi:fastutil:$fastutil_version"
+
+    testImplementation("org.hjson:hjson:3.1.0")
 }
 
 processCommonResources {

@@ -1,0 +1,18 @@
+{
+	"textures": {
+		"pipe-white.png": {
+			"fileName": "pipe-white.png"
+		}
+	},
+	"cuboids": [{
+			"localBounds": [5,11,5,11,16,11],
+			"faces": {
+				"localPosY": {"uv":[16,16,15,15],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":90},
+				"localNegY": {"uv":[15,15,16,16],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0},
+				"localNegZ": {"uv":[12,0,6,5],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0},
+				"localPosZ": {"uv":[12,0,6,5],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0},
+				"localPosX": {"uv":[12,0,6,5],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0},
+				"localNegX": {"uv":[12,0,6,5],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0}
+			}
+		}]
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.zombii.horizon.common.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinChunkLoader",
+    "MixinChunkSaver"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

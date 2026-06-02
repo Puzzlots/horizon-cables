@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.zombii.horizon.client.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "DebugRenderMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

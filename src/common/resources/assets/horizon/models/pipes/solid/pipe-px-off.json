@@ -1,0 +1,1 @@
+{"textures":{"pipe-white.png":{"fileName":"horizon:textures/pipes/pipe-white.png"}},"cuboids":[{"localBounds":[11,5,5,11,11,11],"faces":{"localPosX":{"uv":[0,0,6,6],"ambientocclusion":false,"cullFace":false,"texture":"pipe-white.png","uvRotation":0}}}],"isTransparent":true}
