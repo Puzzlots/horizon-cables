@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import finalforeach.cosmicreach.rendering.entities.EntityDebugRenderer;
 import finalforeach.cosmicreach.world.Zone;
-import me.zombii.horizon.client.rendering.NetworkRenderer;
+import me.zombii.horizon.client.wired.rendering.NetworkRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

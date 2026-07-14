@@ -44,6 +44,10 @@ dependencies {
     commonBundle commonImplementation ("it.unimi.dsi:fastutil:$fastutil_version")
 
     testImplementation("org.hjson:hjson:3.1.0")
+
+    testImplementation commonImplementation(clientImplementation('party.iroiro.luajava:luajava:4.1.0'))
+    testImplementation commonImplementation(clientImplementation('party.iroiro.luajava:luajit:4.1.0'))
+    testImplementation commonImplementation(clientImplementation('party.iroiro.luajava:luajit-platform:4.1.0:natives-desktop'))
 }
 
 processCommonResources {

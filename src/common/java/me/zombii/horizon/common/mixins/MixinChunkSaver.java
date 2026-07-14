@@ -4,10 +4,10 @@ import finalforeach.cosmicreach.io.ChunkSaver;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.SaveLocation;
 import finalforeach.cosmicreach.world.World;
-import me.zombii.horizon.common.network.NetworkGroup;
-import me.zombii.horizon.common.network.NetworkGroups;
+import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
+import me.zombii.horizon.common.wired.network.NetworkGroup;
+import me.zombii.horizon.common.wired.network.NetworkGroups;
 import org.hjson.JsonObject;
-import org.hjson.JsonValue;
 import org.hjson.Stringify;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +23,9 @@ public class MixinChunkSaver {
 
     @Inject(method = "saveWorldInfo", at = @At("HEAD"))
     private static void saveWorldInfo(World world, boolean overwrite, CallbackInfo ci) {
-        File file = new File(SaveLocation.getWorldSaveFolderLocation(world.worldFolderName) + "/networks.json");
+        File worldLocation = new File(SaveLocation.getWorldSaveFolderLocation(world.worldFolderName));
+
+        File file = new File(worldLocation,  "networks.json");
         System.out.println("Saving world: " + file.getAbsolutePath() + " with networks");
         if (!file.exists()) {
             if (!file.getParentFile().exists()) {
@@ -34,6 +36,12 @@ public class MixinChunkSaver {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        try {
+            AbstractDataStorageDevice.saveComponents(worldLocation);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         try {

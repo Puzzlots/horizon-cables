@@ -4,9 +4,9 @@ import finalforeach.cosmicreach.io.ChunkLoader;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.SaveLocation;
 import finalforeach.cosmicreach.world.World;
-import me.zombii.horizon.common.network.NetworkGroup;
-import me.zombii.horizon.common.network.NetworkGroups;
-import org.hjson.JsonArray;
+import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
+import me.zombii.horizon.common.wired.network.NetworkGroup;
+import me.zombii.horizon.common.wired.network.NetworkGroups;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,8 +21,17 @@ public class MixinChunkLoader {
 
     @Inject(method = "loadWorld", at = @At("HEAD"))
     private static void loadWorld(String worldFolderName, CallbackInfoReturnable<World> cir) {
-        File file = new File(SaveLocation.getWorldSaveFolderLocation(worldFolderName) + "/networks.json");
+        File worldLocation = new File(SaveLocation.getWorldSaveFolderLocation(worldFolderName));
+
+        File file = new File(worldLocation, "networks.json");
         System.out.println("Loading world: " + file.getAbsolutePath() + " with networks");
+
+        try {
+            AbstractDataStorageDevice.loadComponents(worldLocation);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if (file.exists()) {
             try {
                 FileInputStream stream = new FileInputStream(file);
