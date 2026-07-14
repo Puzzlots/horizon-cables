@@ -10,6 +10,7 @@ public class BiosChipItem extends AbstractCosmicItem {
 
     public BiosChipItem() {
         super(ID);
+        addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "bios_chip.png"));
     }
 
     @Override
@@ -17,4 +18,8 @@ public class BiosChipItem extends AbstractCosmicItem {
         return 1;
     }
 
+    @Override
+    public String getName() {
+        return "Bios Chip";
+    }
 }

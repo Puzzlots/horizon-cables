@@ -4,7 +4,9 @@ import dev.puzzleshq.puzzleloader.cosmic.game.GameRegistries;
 import dev.puzzleshq.puzzleloader.cosmic.game.events.block.EventModBlockRegister;
 import dev.puzzleshq.puzzleloader.cosmic.game.events.block.EventRegisterBlockEvent;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
+import io.github.puzzle.cosmic.item.AbstractCosmicItem;
 import me.zombii.horizon.common.cc.blocks.BiosFlasherBlock;
+import me.zombii.horizon.common.cc.items.BiosChipItem;
 import me.zombii.horizon.common.wired.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.wired.blocks.energy.BatteryBlock;
 import me.zombii.horizon.common.wired.blocks.energy.EnergyHubBlock;
@@ -21,6 +23,7 @@ public class HorizonCommon implements ModInit {
     @Override
     public void onInit() {
         GameRegistries.COSMIC_EVENT_BUS.register(this);
+        AbstractCosmicItem.register(new BiosChipItem());
 
 //        PowerNetworkHubBlockEntity.register();
         EnergyNetworkHubBlockEntity.register();
