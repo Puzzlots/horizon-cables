@@ -9,5 +9,6 @@ public record ScreenOpenInfo(
         Player player,
         Identifier screenId,
         IReadBlockPosition position,
-        ItemStack stack
+        ItemStack stack,
+        int windowId
 ) {}

@@ -23,7 +23,7 @@ public class MiniCDRWDisk extends AbstractDataStorageDevice {
 
     @Override
     public int getMaxDiskSize() {
-        return ComputerConstants.BASIC_MINI_CD_SIZE;
+        return ComputerConstants.BASIC_COMPACT_DISK_SIZE;
     }
 
 }

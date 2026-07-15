@@ -3,9 +3,12 @@
   "minVersion": "0.8",
   "package": "me.zombii.horizon.common.mixins",
   "compatibilityLevel": "JAVA_17",
+  "mixinextras": {"minVersion": "0.5.4"},
   "mixins": [
     "MixinChunkLoader",
-    "MixinChunkSaver"
+    "MixinChunkSaver",
+    "ItemSlotMixin",
+    "SlotContainerMixin"
   ],
   "server": [
   ],

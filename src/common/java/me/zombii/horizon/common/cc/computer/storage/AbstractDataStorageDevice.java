@@ -27,22 +27,14 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
     private int slot = -1;
     public abstract Identifier getID();
 
-    public void save(OutputStream outputStream) {
+    public void save(DataOutputStream outputStream) throws IOException {
         if (!initialized) init();
-        try {
-            outputStream.write(data);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        outputStream.write(data);
     }
 
-    public void load(InputStream inputStream) {
+    public void load(DataInputStream inputStream) throws IOException {
         if (!initialized) init();
-        try {
-            inputStream.read(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        inputStream.read(data);
     }
 
     public void delete() {
@@ -52,7 +44,7 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
     }
 
     public static void saveComponents(File worldLocation) throws IOException {
-        File partFolder = new File(worldLocation.getParentFile(), "pc_components");
+        File partFolder = new File(worldLocation, "pc_components");
         File partIndex = new File(partFolder, "index.bin");
         if (!partFolder.exists()) partFolder.mkdir();
         if (!partIndex.exists()) partIndex.createNewFile();
@@ -85,8 +77,9 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
                 FileOutputStream stream = new FileOutputStream(componentFile);
                 GZIPOutputStream gzipStream = new GZIPOutputStream(stream);
-                component.save(gzipStream);
-                stream.close();
+                DataOutputStream dataStream = new DataOutputStream(gzipStream);
+                component.save(dataStream);
+                dataStream.close();
                 dataOutputStream.writeUTF(component.getID().toString());
                 dataOutputStream.writeInt(component.slot);
             }
@@ -97,7 +90,7 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
     public static void loadComponents(File worldLocation) throws IOException {
         COMPONENTS.clear();
 
-        File partFolder = new File(worldLocation.getParentFile(), "pc_components");
+        File partFolder = new File(worldLocation, "pc_components");
         if (!partFolder.exists()) return;
 
         File partIndex = new File(partFolder, "index.bin");
@@ -129,9 +122,10 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
             FileInputStream stream = new FileInputStream(componentFile);
             GZIPInputStream gzipStream = new GZIPInputStream(stream);
+            DataInputStream dataStream = new DataInputStream(gzipStream);
 
-            component.load(gzipStream);
-            gzipStream.close();
+            component.load(dataStream);
+            dataStream.close();
             COMPONENTS.add(component);
         }
         gzipInputStream.close();
@@ -164,4 +158,7 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
         return initialized;
     }
 
+    public int getSlot() {
+        return slot;
+    }
 }

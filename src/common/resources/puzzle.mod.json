@@ -36,8 +36,9 @@
 
   "depends": {
     "cosmic-reach": ">=0.5.20-alpha",
-    "puzzle-loader-cosmic": ">=1.6.2-alpha",
-    "puzzle-loader-core": ">=1.4.0-alpha"
+    "puzzle-loader-cosmic": ">=1.7.2-alpha",
+    "puzzle-loader-core": ">=1.4.1-alpha",
+    "cosmic-api": ">=1.4.4-0.5.25"
   },
 
   "access-writers": [
