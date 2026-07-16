@@ -25,6 +25,12 @@ public class HorizonStyles {
     public static Button.ButtonStyle buttonStyle;
     public static TextButton.TextButtonStyle textButtonStyle;
 
+    public static Button.ButtonStyle powerButtonOnStyle;
+    public static TextButton.TextButtonStyle powerTextButtonOnStyle;
+
+    public static Button.ButtonStyle powerButtonOffStyle;
+    public static TextButton.TextButtonStyle powerTextButtonOffStyle;
+
     public static void init() {
         background9Patch = new NinePatch(GameTexture.load("horizon:textures/ui/transparent-monochrome-background.png").get(), 9, 9, 9, 9);
         slotPatch = newNinePatch("horizon:textures/ui/rounded-item-slot.png");
