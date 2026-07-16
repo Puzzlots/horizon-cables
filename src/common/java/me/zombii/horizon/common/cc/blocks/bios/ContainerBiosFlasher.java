@@ -1,13 +1,12 @@
-package me.zombii.horizon.common.cc.blocks;
+package me.zombii.horizon.common.cc.blocks.bios;
 
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.items.ItemStack;
 import finalforeach.cosmicreach.items.containers.SlotContainer;
-import me.zombii.horizon.common.HorizonTags;
 
-public class BiosFlasherContainer extends SlotContainer {
+public class ContainerBiosFlasher extends SlotContainer {
 
-    public BiosFlasherContainer(int count) {
+    public ContainerBiosFlasher(int count) {
         super(count);
     }
 
@@ -16,7 +15,7 @@ public class BiosFlasherContainer extends SlotContainer {
         return new ItemSlot(this, slotNum) {
             @Override
             public boolean allowedToInput(ItemStack itemStack) {
-                return BiosFlasherBlockEntity.isValid(itemStack);
+                return itemStack == null || BlockEntityBiosFlasher.isValid(itemStack);
             }
         };
     }

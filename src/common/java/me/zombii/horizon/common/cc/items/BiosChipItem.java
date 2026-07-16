@@ -35,4 +35,5 @@ public class BiosChipItem extends AbstractCosmicItem {
     public String getName() {
         return "Bios Chip";
     }
+
 }

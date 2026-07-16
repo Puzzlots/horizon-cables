@@ -19,7 +19,6 @@ public abstract class ItemSlotMixin {
 
     @Inject(method = "merge", at = @At("HEAD"), cancellable = true)
     private void merge(ItemStack stackFrom, CallbackInfoReturnable<Boolean> cir) {
-        System.out.println(stackFrom);
         if (!this.allowedToInput(stackFrom)) {
             cir.setReturnValue(false);
         }
@@ -27,7 +26,6 @@ public abstract class ItemSlotMixin {
 
     @Inject(method = "addItemStack*", at = @At("HEAD"), cancellable = true)
     private void merge2(ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
-        System.out.println(itemStack);
         if (!this.allowedToInput(itemStack)) {
             cir.setReturnValue(false);
         }

@@ -11,20 +11,21 @@ import finalforeach.cosmicreach.ui.widgets.ContainerSlotWidget;
 import me.zombii.horizon.client.screen.CloseScreenIfTooFarAction;
 import me.zombii.horizon.client.screen.HorizonBaseScreen;
 import me.zombii.horizon.client.screen.HorizonStyles;
-import me.zombii.horizon.common.cc.blocks.BiosFlasherBlockEntity;
+import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 
-public class BiosFlasherScreen extends HorizonBaseScreen implements ISlotContainerParent {
+public class ScreenBiosFlasher extends HorizonBaseScreen implements ISlotContainerParent {
 
     private final ContainerSlotWidget slotWidget;
     private final SlotContainer container;
 
-    public BiosFlasherScreen(ScreenOpenInfo info) {
+    public ScreenBiosFlasher(ScreenOpenInfo info) {
         super(info.windowId(), info);
 
-        BiosFlasherBlockEntity entity = (BiosFlasherBlockEntity) info.position().getBlockEntity();
+        BlockEntityBiosFlasher entity = (BlockEntityBiosFlasher) info.position().getBlockEntity();
         container = entity.getContainer();
         SlotContainerWindows.set(container, info.windowId());
+        UI.openContainers.add(container);
 
         this.slotWidget = new ContainerSlotWidget(
                 windowId,
@@ -35,7 +36,6 @@ public class BiosFlasherScreen extends HorizonBaseScreen implements ISlotContain
                 new NinePatchDrawable(HorizonStyles.slotPatch),
                 new NinePatchDrawable(HorizonStyles.slotPatch)
         );
-        UI.openContainers.add(container);
 
         TextButton flashButton = new TextButton("Flash", HorizonStyles.textButtonStyle);
         flashButton.addAction(new Action() {

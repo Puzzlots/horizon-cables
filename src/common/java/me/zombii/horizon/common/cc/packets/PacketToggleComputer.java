@@ -6,17 +6,24 @@ import finalforeach.cosmicreach.networking.NetworkIdentity;
 import finalforeach.cosmicreach.singletons.GameSingletons;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
+import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 
-public class PacketFlashBIOS extends GamePacket {
+public class PacketToggleComputer extends GamePacket {
 
-    public PacketFlashBIOS() {
+    public PacketToggleComputer() {
     }
 
     private final BlockPosition position = new BlockPosition();
+    private boolean powerState;
 
-    public PacketFlashBIOS(BlockEntityBiosFlasher be) {
-        position.setGlobal(be.getZone(), be.getGlobalX(), be.getGlobalY(), be.getGlobalZ());
+    public PacketToggleComputer(BlockEntityDevComputer be, boolean powerState) {
+        position.setGlobal(
+                be.getZone(),
+                be.getGlobalX(),
+                be.getGlobalY(),
+                be.getGlobalZ()
+        );
+        this.powerState = powerState;
     }
 
     @Override
@@ -27,6 +34,7 @@ public class PacketFlashBIOS extends GamePacket {
                 readInt(in),
                 readInt(in)
         );
+        powerState = readBoolean(in);
     }
 
     @Override
@@ -35,6 +43,7 @@ public class PacketFlashBIOS extends GamePacket {
         writeInt(position.getGlobalX());
         writeInt(position.getGlobalY());
         writeInt(position.getGlobalZ());
+        writeBoolean(powerState);
     }
 
     public static final int validDistance = 8;
@@ -42,18 +51,17 @@ public class PacketFlashBIOS extends GamePacket {
 
     @Override
     public void handle(NetworkIdentity networkIdentity, ChannelHandlerContext channelHandlerContext) {
-        if (networkIdentity.isServer() && position.getBlockEntity() instanceof BlockEntityBiosFlasher entity) {
+        if (networkIdentity.isServer() && position.getBlockEntity() instanceof BlockEntityDevComputer entity) {
             if (
-                    networkIdentity.getPlayer().getPosition().dst2(
-                            position.getGlobalX(),
-                            position.getGlobalY(),
-                            position.getGlobalZ()
-                    ) <= dst2
+                networkIdentity.getPlayer().getPosition().dst2(
+                    position.getGlobalX(),
+                    position.getGlobalY(),
+                    position.getGlobalZ()
+                ) <= dst2
             ) {
-                entity.flashChip(networkIdentity.getPlayer());
+                entity.setPowerState(powerState);
             }
         }
     }
-
 
 }

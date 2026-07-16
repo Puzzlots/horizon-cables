@@ -5,13 +5,13 @@ import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.ComputerConstants;
 
-public class CompactDiskItem extends AbstractDataStorageItem {
+public class HardDiskDriveItem extends AbstractDataStorageItem {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "compact-disk");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "hard-disk-drive");
 
-    public CompactDiskItem() {
-        super(ID, true);
-        addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "compact-disk.png"));
+    public HardDiskDriveItem() {
+        super(ID, false);
+        addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "hard-disk-drive.png"));
     }
 
     @Override
@@ -21,11 +21,11 @@ public class CompactDiskItem extends AbstractDataStorageItem {
 
     @Override
     public String getName() {
-        return "Compat Disc";
+        return "Hard Disk Drive";
     }
 
     @Override
     public int getSize() {
-        return ComputerConstants.BASIC_COMPACT_DISK_SIZE;
+        return ComputerConstants.BASIC_HDD_SIZE;
     }
 }

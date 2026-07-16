@@ -6,6 +6,7 @@ import me.zombii.horizon.common.HorizonRegistries;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 
 import javax.naming.SizeLimitExceededException;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,14 +30,14 @@ public class BiosChip extends AbstractDataStorageDevice {
 
     @Override
     public void save(DataOutputStream outputStream) throws IOException {
-        super.save(outputStream);
         outputStream.writeInt(maxSize);
+        super.save(outputStream);
     }
 
     @Override
     public void load(DataInputStream inputStream) throws IOException {
-        super.load(inputStream);
         maxSize = inputStream.readInt();
+        super.load(inputStream);
     }
 
     @Override
@@ -54,11 +55,22 @@ public class BiosChip extends AbstractDataStorageDevice {
         if (bytes.length > chip.getMaxDiskSize()) {
             throw new SizeLimitExceededException("Tried to write lua code that was " + (bytes.length - chip.getMaxDiskSize() - 4) + " over the max bytes of " + (chip.getMaxDiskSize() - 4));
         }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(baos);
+        try {
+            stream.writeInt(bytes.length);
+            stream.write(bytes);
+            stream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         chip.init();
 
+        byte[] newData = baos.toByteArray();
+
         byte[] data = chip.getData();
-        System.arraycopy(bytes, 0, data, 0, bytes.length);
+        System.arraycopy(newData, 0, data, 0, newData.length);
     }
 
 }

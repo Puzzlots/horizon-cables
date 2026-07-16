@@ -12,7 +12,7 @@ public class FloppyDiskItem extends AbstractDataStorageItem {
     public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "floppy-disk");
 
     public FloppyDiskItem() {
-        super(ID);
+        super(ID, true);
         addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "floppy-disk.png"));
     }
 

@@ -1,5 +1,7 @@
-package me.zombii.horizon.common.cc.blocks;
+package me.zombii.horizon.common.cc.blocks.bios;
 
+import dev.puzzleshq.puzzleloader.loader.util.RawAssetLoader;
+import dev.puzzleshq.puzzleloader.loader.util.ResourceLocation;
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
@@ -11,8 +13,9 @@ import finalforeach.cosmicreach.networking.server.ServerSingletons;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
 import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.singletons.GameSingletons;
+import finalforeach.cosmicreach.util.Identifier;
+import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.world.Zone;
-import io.github.puzzle.cosmic.item.AbstractCosmicItem;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
@@ -22,17 +25,17 @@ import me.zombii.horizon.common.screen.ScreenOpenInfo;
 
 import javax.naming.SizeLimitExceededException;
 
-public class BiosFlasherBlockEntity extends BlockEntity {
+public class BlockEntityBiosFlasher extends BlockEntity {
 
     public static void register() {
         BlockEntityCreator.registerBlockEntityCreator(
-                BiosFlasherBlock.BE_ID.toString(),
+                BlockBiosFlasher.BE_ID.toString(),
                 (block, zone, x, y, z) ->
-                        new BiosFlasherBlockEntity(zone, x, y, z)
+                        new BlockEntityBiosFlasher(zone, x, y, z)
         );
     }
 
-    private final BiosFlasherContainer container;
+    private final ContainerBiosFlasher container;
 
     public static boolean isValid(ItemStack stack) {
         if (stack == null) return false;
@@ -40,17 +43,17 @@ public class BiosFlasherBlockEntity extends BlockEntity {
                 stack.getItem().hasIntProperty("bios-chip-size");
     }
 
-    public BiosFlasherContainer getContainer() {
+    public ContainerBiosFlasher getContainer() {
         return container;
     }
 
-    public BiosFlasherBlockEntity() {
+    public BlockEntityBiosFlasher() {
         this(null, 0, 0, 0);
     }
 
-    public BiosFlasherBlockEntity(Zone zone, int globalX, int globalY, int globalZ) {
+    public BlockEntityBiosFlasher(Zone zone, int globalX, int globalY, int globalZ) {
         super(zone, globalX, globalY, globalZ);
-        this.container = new BiosFlasherContainer(1);
+        this.container = new ContainerBiosFlasher(1);
     }
 
     private final BlockPosition position = new BlockPosition();
@@ -64,7 +67,7 @@ public class BiosFlasherBlockEntity extends BlockEntity {
                 position.setGlobal(zone, getGlobalX(), getGlobalY(), getGlobalZ());
                 ScreenOpenInfo info = new ScreenOpenInfo(
                         player,
-                        BiosFlasherBlock.SCREEN_ID,
+                        BlockBiosFlasher.SCREEN_ID,
                         position,
                         null,
                         SlotContainerWindows.add(container)
@@ -78,7 +81,7 @@ public class BiosFlasherBlockEntity extends BlockEntity {
 
     @Override
     public String getBlockEntityId() {
-        return BiosFlasherBlock.BE_ID.toString();
+        return BlockBiosFlasher.BE_ID.toString();
     }
 
     @Override
@@ -98,19 +101,33 @@ public class BiosFlasherBlockEntity extends BlockEntity {
         container.getSlot(0).setItemStack(deserial.readObj("bios-chip", ItemStack.class));
     }
 
+    public static BiosChip getOrCreateBiosChip(ItemStack stack) {
+        if (!isValid(stack)) {
+            return null;
+        }
+
+        BiosChip chip = (BiosChip) AbstractDataStorageDevice.COMPONENTS_BY_ID.get(stack.stackMetadata.getInt("bios-chip-id", -1));
+        if (chip == null) {
+            chip = new BiosChip(
+                    stack.getItem().getIntProperty("bios-chip-size", -1)
+            );
+        }
+
+        return chip;
+    }
+
     public void flashChip(Player player) {
-        ItemStack item = container.getSlot(0).getItemStack();
-        if (isValid(item)) {
+        ItemStack stack = container.getSlot(0).getItemStack();
+        if (isValid(stack)) {
             if (GameSingletons.isHost()) {
-                BiosChip chip = (BiosChip) AbstractDataStorageDevice.COMPONENTS_BY_ID.get(item.stackMetadata.getInt("bios-chip-id", -1));
-                if (chip == null) {
-                    chip = new BiosChip(
-                            item.getItem().getIntProperty("bios-chip-size", -1)
-                    );
-                }
+                BiosChip chip = getOrCreateBiosChip(stack);
 
                 try {
-                    BiosChip.flashChip(chip, "print(\"Hello World!\")");
+                    assert chip != null;
+                    BiosChip.flashChip(
+                            chip,
+                            RawAssetLoader.getClassPathAsset(ResourceLocation.of("horizon:lua/bios.lua")).getString()
+                    );
                 } catch (SizeLimitExceededException e) {
                     throw new RuntimeException(e);
                 }
@@ -121,7 +138,7 @@ public class BiosFlasherBlockEntity extends BlockEntity {
                     ServerSingletons.getConnection(player).sendChatMessage("Flashed Chip");
                 }
 
-                item.setMetadataInt("bios-chip-id", chip.getSlot());
+                stack.setMetadataInt("bios-chip-id", chip.getSlot());
             } else {
                 GameSingletons.client().sendAsClient(new PacketFlashBIOS(this));
             }

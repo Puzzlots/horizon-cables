@@ -45,8 +45,8 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
     public static void saveComponents(File worldLocation) throws IOException {
         File partFolder = new File(worldLocation, "pc_components");
-        File partIndex = new File(partFolder, "index.bin");
         if (!partFolder.exists()) partFolder.mkdir();
+        File partIndex = new File(partFolder, "index.bin");
         if (!partIndex.exists()) partIndex.createNewFile();
 
         FileOutputStream indexStream = new FileOutputStream(partIndex);
@@ -94,6 +94,7 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
         if (!partFolder.exists()) return;
 
         File partIndex = new File(partFolder, "index.bin");
+        if (!partIndex.exists()) return;
 
         FileInputStream indexStream = new FileInputStream(partIndex);
         GZIPInputStream gzipInputStream = new GZIPInputStream(indexStream);
