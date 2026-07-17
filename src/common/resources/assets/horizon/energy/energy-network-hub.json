@@ -1,0 +1,56 @@
+{
+	"id": "Cosmic Reach Model Editor",
+	"texture_width": 64,
+	"texture_height": 64,
+	"textures": {
+		"diffuse": "horizon:energy/energy-network-hub-texture.png"
+	},
+	"bones": [{
+			"name": "circuit-board",
+			"pivot": [-8.5,8,8.5],
+			"cubes": [{"origin":[-5,10,-5],"size":[10,1,10],"uv":[0,52],"pivot":[-7,-6,-7]},
+				{"origin":[-2,11,-2],"size":[4,1,4],"uv":[45,21],"pivot":[-7,-6,-7]}
+		]
+		}, {
+			"name": "cable-A",
+			"pivot": [0,8,0],
+			"parent": "connections",
+			"cubes": [{"origin":[-2,6,7],"size":[4,4,1],"uv":[1,6],"pivot":[-8,8,-8]},
+				{"origin":[-1,7,6],"size":[2,2,1],"uv":[1,12],"pivot":[-10,8,-8]}
+		]
+		}, {
+			"name": "cable-B",
+			"pivot": [0,8,0],
+			"rotation": [0,-180,0],
+			"parent": "connections",
+			"cubes": [{"origin":[-2,6,7],"size":[4,4,1],"uv":[1,6],"pivot":[-8,8,-8]},
+				{"origin":[-1,7,6],"size":[2,2,1],"uv":[1,12],"pivot":[-10,8,-8]}
+		]
+		}, {
+			"name": "cable-C",
+			"pivot": [0,8,0],
+			"rotation": [0,90,0],
+			"parent": "connections",
+			"cubes": [{"origin":[-2,6,7],"size":[4,4,1],"uv":[1,6],"pivot":[-8,8,-8]},
+				{"origin":[-1,7,6],"size":[2,2,1],"uv":[1,12],"pivot":[-10,8,-8]}
+		]
+		}, {
+			"name": "cable-D",
+			"pivot": [0,8,0],
+			"rotation": [0,-90,0],
+			"parent": "connections",
+			"cubes": [{"origin":[-2,6,7],"size":[4,4,1],"uv":[1,6],"pivot":[-8,8,-8]},
+				{"origin":[-1,7,5.75],"size":[2,2,1.25],"uv":[1,12],"pivot":[-10,8,-8]}
+		]
+		}, {
+			"name": "connections",
+			"pivot": [0,8,0]
+		}, {
+			"name": "base",
+			"pivot": [-8,0,-8],
+			"cubes": [{"origin":[-6,3,-6],"size":[12,7,12],"uv":[0,33],"pivot":[-7,-6,-7]}, 
+				{"origin":[-7,1,-7],"size":[14,2,14],"uv":[0,17],"pivot":[-7,0,-7]}, 
+				{"origin":[-8,0,-8],"size":[16,1,16],"uv":[0,0],"pivot":[-7,0,-7]}  
+		]
+		}]
+}

@@ -1,0 +1,58 @@
+{
+	"textures": {
+		"wire-hub.png": {
+			"fileName": "horizon:textures/blocks/wire-hub.png"
+		}
+	},
+	"cuboids": [{
+			"localBounds": [0,6,6,6,10,10],
+			"faces": {
+				"localPosY": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localNegY": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localNegZ": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localPosZ": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localPosX": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegX": {"uv":[4,4,8,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [10,6,6,16,10,10],
+			"faces": {
+				"localPosY": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localNegY": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localNegZ": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localPosZ": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180},
+				"localPosX": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegX": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [6,0,6,10,6,10],
+			"faces": {
+				"localPosY": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegY": {"uv":[4,4,8,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegZ": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localPosZ": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localPosX": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localNegX": {"uv":[10,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90}
+			}
+		}, {
+			"localBounds": [6,10,6,10,16,10],
+			"faces": {
+				"localPosY": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegY": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegZ": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localPosZ": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localPosX": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90},
+				"localNegX": {"uv":[0,0,6,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":90}
+			}
+		}, {
+			"localBounds": [6,6,0,10,10,16],
+			"faces": {
+				"localPosY": {"uv":[0,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":270},
+				"localNegY": {"uv":[16,4,0,0],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":270},
+				"localNegZ": {"uv":[4,4,8,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localPosZ": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localPosX": {"uv":[0,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":0},
+				"localNegX": {"uv":[0,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"wire-hub.png","uvRotation":180}
+			}
+		}]
+}

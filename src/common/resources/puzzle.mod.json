@@ -1,0 +1,52 @@
+{
+  "formatVersion": 3,
+  "display-name": "${p_name}",
+  "id": "${p_id}",
+  "version": "${p_version}",
+  "description": "${p_desc}",
+  "authors": [
+    "${p_author}"
+  ],
+  "can-load-on": {
+    "client": true,
+    "server": true
+  },
+
+  "meta": {
+    "icon": "${p_id}:icons/icon.png"
+  },
+
+  "entrypoints": {
+    "client-init": "${p_group}.client.HorizonClient",
+    "init": "${p_group}.common.HorizonCommon",
+    "server-init": "${p_group}.server.HorizonServer"
+  },
+
+  "mixins": [
+    "${p_id}.common.mixins.json",
+    {
+      "config": "${p_id}.client.mixins.json",
+      "environment": "client"
+    },
+    {
+      "config": "${p_id}.server.mixins.json",
+      "environment": "server"
+    }
+  ],
+
+  "depends": {
+    "cosmic-reach": ">=0.5.20-alpha",
+    "puzzle-loader-cosmic": ">=1.7.2-alpha",
+    "puzzle-loader-core": ">=1.4.1-alpha",
+    "cosmic-api": ">=1.4.4-0.5.25"
+  },
+
+  "access-writers": [
+    "${p_id}.manipulator"
+  ],
+
+  "custom": {
+    "loom:injected_interfaces": {
+    }
+  }
+}

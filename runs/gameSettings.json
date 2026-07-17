@@ -1,0 +1,11 @@
+{
+"offlineMode": true,
+"difficultyLevel": "NORMAL",
+"defaultGamemode": "creative",
+"chosenLangTag": "en_us",
+"serverName": "Cosmic Reach Server",
+"serverPort": 47137,
+"whitelistEnabled": false,
+"serverAuthChallenge": 396863520,
+"pvpEnabled": true
+}
