@@ -18,8 +18,8 @@ public class ContainerDevComputer extends SlotContainer {
                 if (itemStack == null) return true;
                 return switch (slotNum) {
                     case 0 -> BlockEntityDevComputer.isValidBiosChip(itemStack);
-                    case 1 -> BlockEntityDevComputer.isValidNonPortableMedia(itemStack);
-                    case 2 -> BlockEntityDevComputer.isValidPortableMedia(itemStack);
+                    case 1 -> BlockEntityDevComputer.isValidStorageMedia(itemStack);
+                    case 2 -> BlockEntityDevComputer.isValidStorageMedia(itemStack);
                     default -> false;
                 };
 

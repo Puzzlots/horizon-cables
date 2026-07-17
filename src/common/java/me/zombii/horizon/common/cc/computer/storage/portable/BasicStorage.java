@@ -4,27 +4,27 @@ import finalforeach.cosmicreach.util.Identifier;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonRegistries;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
-import me.zombii.horizon.common.cc.computer.ComputerConstants;
 
 import javax.naming.SizeLimitExceededException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class PortableStorage extends AbstractDataStorageDevice {
+public class BasicStorage extends AbstractDataStorageDevice {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "portable-storage");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "basic-storage");
 
     public static void register() {
-        HorizonRegistries.PC_COMPONENT_REGISTRY.store(ID, PortableStorage::new);
+        HorizonRegistries.PC_COMPONENT_REGISTRY.store(ID, BasicStorage::new);
     }
 
     private int size;
+    private boolean readOnly;
 
-    public PortableStorage() {
+    public BasicStorage() {
     }
 
-    public PortableStorage(int size) {
+    public BasicStorage(int size) {
         this.size = size;
     }
 
@@ -50,7 +50,7 @@ public class PortableStorage extends AbstractDataStorageDevice {
         return size;
     }
 
-    public static void write(PortableStorage device, int offset, byte[] bytes) throws SizeLimitExceededException {
+    public static void write(BasicStorage device, int offset, byte[] bytes) throws SizeLimitExceededException {
         if (device.size < offset) throw new SizeLimitExceededException("Can't perform writes outside the device size range");
         if (device.size < (bytes.length + offset)) throw new SizeLimitExceededException("Can't perform writes larger than the storage");
 

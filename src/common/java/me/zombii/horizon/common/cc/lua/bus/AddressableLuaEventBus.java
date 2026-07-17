@@ -79,9 +79,9 @@ public class AddressableLuaEventBus {
         if (args.length != 2)
             L.error("eventbus.register must have 2 arguments.");
         if (!args[0].type().equals(Lua.LuaType.STRING))
-            L.error("1st argument must be a string - eventbus.register");
+            L.error("Argument #1 of 'eventbus.register' must be a string, not '" + args[0].type() + "'");
         if (!args[1].type().equals(Lua.LuaType.FUNCTION))
-            L.error("2nd argument must be a function - eventbus.register");
+            L.error("Argument #2 of 'eventbus.register' must be a function, not '" + args[1].type() + "'");
 
         String yourAddress = args[0].toString();
         LuaValue listener = args[1];

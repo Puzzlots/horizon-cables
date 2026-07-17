@@ -5,8 +5,8 @@ import finalforeach.cosmicreach.util.GameTag;
 public class HorizonTags {
 
     public static final GameTag TAG_BIOS_CHIP = GameTag.get("horizon-bios-chip-item");
-    public static final GameTag TAG_NON_PORTABLE_STORAGE = GameTag.get("horizon-non-portable-storage-device");
-    public static final GameTag TAG_PORTABLE_STORAGE = GameTag.get("horizon-portable-storage-device");
+    public static final GameTag TAG_STORAGE_DEVICE = GameTag.get("horizon-storage-device");
+    public static final GameTag TAG_REQUIRES_BURNER_TO_WRITE = GameTag.get("horizon-read-only-device");
 
     public static final GameTag TAG_POWER_SOURCE = GameTag.get("horizon-power-source");
     public static final GameTag TAG_POWER_HUB = GameTag.get("horizon-power-hub");

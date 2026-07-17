@@ -1,13 +1,15 @@
 package me.zombii.horizon.common.cc.items;
 
 import finalforeach.cosmicreach.items.ItemStack;
+import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import me.zombii.horizon.common.cc.lua.bus.SmartEventBusHandle;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
+import party.iroiro.luajava.Lua;
 
 public interface IPeripheralItem {
 
-    default void register(SmartEventBusHandle handle, ItemStack stack) {
+    default boolean register(Lua L, SmartEventBusHandle handle, ItemStack stack) {
         handle.registerEventHandler((fromAddress, toAddress, eventName, eventDataStr) -> {
             if (fromAddress.equals(toAddress)) return;
             if (fromAddress.equals(handle.getAddress())) return;
@@ -26,8 +28,8 @@ public interface IPeripheralItem {
                     handle.postEvent(fromAddress, "cc:pong", "{}");
                 }
             }
-
         });
+        return false;
     }
 
 

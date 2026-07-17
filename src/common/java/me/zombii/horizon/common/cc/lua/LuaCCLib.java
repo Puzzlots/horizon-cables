@@ -22,7 +22,7 @@ public class LuaCCLib {
 
     public static void inject(BlockEntityDevComputer computer) {
         Lua lua = computer.getLuaState();
-        AddressableLuaEventBus internalBus = computer.getInternalPeripheralEventBus();
+        AddressableLuaEventBus internalBus = computer.getInternalBus();
 
         lua.openLibraries();
         lua.pushNil();
@@ -36,6 +36,8 @@ public class LuaCCLib {
         lua.setField(t, "eventBus");
         pushBios(lua, computer);
         lua.setField(t, "bios");
+        LuaPeripheralApi.push(lua, computer);
+        lua.setField(t, "peripherals");
 
         lua.setGlobal("cc");
     }
@@ -78,17 +80,17 @@ public class LuaCCLib {
     }
 
     public static void pushBios(Lua L, BlockEntityDevComputer computer) {
-        LuaBiosChip chip = computer.getBios();
+        BiosChip chip = computer.getBios();
         if (chip == null) return;
 
         L.newTable();
         int t = L.getTop();
 
-        String initCode = getInitScript(chip.getChip());
+        String initCode = getInitScript(chip);
         L.load(initCode);
         L.setField(t, "init");
 
-        chip.push(L);
+        LuaStorageApi.push(L, chip, true);
         L.setField(t, "chip");
     }
 

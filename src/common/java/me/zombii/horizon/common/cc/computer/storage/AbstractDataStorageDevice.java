@@ -166,15 +166,18 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
     }
 
     public byte[] getBytes(int position, int size, byte[] buf) {
+        init();
         System.arraycopy(data, position, buf, 0, size);
         return buf;
     }
 
     public byte[] getBytes(int position, int size) {
+        init();
         return getBytes(position, size, new byte[size]);
     }
 
     public int readInt(int position) {
+        init();
         return (data[position] & 0xFF) << 24
                 | (data[position + 1] & 0xFF) << 16
                 | (data[position + 2] & 0xFF) << 8
@@ -182,12 +185,38 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
     }
 
     public short readShort(int position) {
+        init();
         return (short) ((data[position] & 0xFF) << 8
                 | (data[position + 1] & 0xFF));
     }
 
     public byte readByte(int position) {
+        init();
         return data[position];
+    }
+
+    public void writeBytes(int position, byte[] bytes, int offset, int length) {
+        init();
+        System.arraycopy(bytes, offset, data, position, length);
+    }
+
+    public void writeInt(int position, int value) {
+        init();
+        data[position] = (byte) ((value >>> 24) & 0xFF);
+        data[position + 1] = (byte) ((value >>> 16) & 0xFF);
+        data[position + 2] = (byte) ((value >>> 8) & 0xFF);
+        data[position + 3] = (byte) (value & 0xFF);
+    }
+
+    public void writeShort(int position, short value) {
+        init();
+        data[position] = (byte) ((value >>> 8) & 0xFF);
+        data[position + 1] = (byte) (value & 0xFF);
+    }
+
+    public void writeByte(int position, byte value) {
+        init();
+        data[position] = value;
     }
 
 }
