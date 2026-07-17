@@ -8,6 +8,7 @@ build/
 
 ### Puzzle Loader ###
 run/
+runs/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
