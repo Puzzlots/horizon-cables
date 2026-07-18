@@ -1,7 +1,5 @@
 package me.zombii.horizon.common.cc.blocks.bios;
 
-import dev.puzzleshq.puzzleloader.loader.util.RawAssetLoader;
-import dev.puzzleshq.puzzleloader.loader.util.ResourceLocation;
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
@@ -13,8 +11,6 @@ import finalforeach.cosmicreach.networking.server.ServerSingletons;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
 import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.singletons.GameSingletons;
-import finalforeach.cosmicreach.util.Identifier;
-import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
@@ -141,8 +137,9 @@ public class BlockEntityBiosFlasher extends BlockEntity {
                     assert chip != null;
                     BiosChip.flashChip(
                             chip,
-                            "horizon:lua/bios.lua",
-                            "horizon:lua/json.lua"
+                            "horizon:lua/bios/init.lua",
+                            "horizon:lua/bios/qjson.lua",
+                            "horizon:lua/bios/font.png"
                     );
                 } catch (SizeLimitExceededException e) {
                     throw new RuntimeException(e);

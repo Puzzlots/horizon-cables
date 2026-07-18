@@ -1,7 +1,6 @@
 package me.zombii.horizon.common.cc.items;
 
 import finalforeach.cosmicreach.items.ItemStack;
-import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import me.zombii.horizon.common.cc.lua.bus.SmartEventBusHandle;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
@@ -21,7 +20,7 @@ public interface IPeripheralItem {
                     if (data.isObject() && data.asObject().get("peripheral_type") != null) return;
 
                     JsonObject response = new JsonObject();
-                    response.set("peripheral_type", getType());
+                    response.set("peripheral_type", getPeripheralType());
                     handle.postEvent(fromAddress, eventName, response.toString());
                 }
                 case "cc:ping" -> {
@@ -37,6 +36,7 @@ public interface IPeripheralItem {
         handle.freeHandle();
     }
 
-    String getType();
+    String getPeripheralID();
+    String getPeripheralType();
 
 }

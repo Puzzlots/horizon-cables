@@ -27,6 +27,11 @@ public class FloppyDiskItem extends AbstractDataStorageItem {
     }
 
     @Override
+    public String getPeripheralID() {
+        return "cc:floppy-disk";
+    }
+
+    @Override
     public int getSize() {
         return ComputerConstants.BASIC_FLOPPY_SIZE;
     }

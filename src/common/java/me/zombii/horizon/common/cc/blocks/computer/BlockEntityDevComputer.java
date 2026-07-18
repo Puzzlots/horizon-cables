@@ -99,7 +99,7 @@ public class BlockEntityDevComputer extends BlockEntity {
 
     @Override
     public String getBlockEntityId() {
-        return BlockBiosFlasher.BE_ID.toString();
+        return BlockDevComputer.BE_ID.toString();
     }
 
     @Override

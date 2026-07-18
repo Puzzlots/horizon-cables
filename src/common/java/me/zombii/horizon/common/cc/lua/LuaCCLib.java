@@ -38,6 +38,8 @@ public class LuaCCLib {
         lua.setField(t, "bios");
         LuaPeripheralApi.push(lua, computer);
         lua.setField(t, "peripherals");
+        LuaImageApi.push(lua);
+        lua.setField(t, "imageio");
 
         lua.setGlobal("cc");
     }

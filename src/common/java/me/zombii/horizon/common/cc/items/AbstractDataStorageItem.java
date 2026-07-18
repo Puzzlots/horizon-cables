@@ -53,7 +53,7 @@ public abstract class AbstractDataStorageItem extends AbstractCosmicItem impleme
     }
 
     @Override
-    public String getType() {
+    public String getPeripheralType() {
         return "cc:storage-device";
     }
 }

@@ -15,7 +15,7 @@ import me.zombii.horizon.common.cc.commands.CommandCheckBiosChip;
 import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
 import me.zombii.horizon.common.cc.computer.storage.portable.BasicStorage;
 import me.zombii.horizon.common.cc.items.BiosChipItem;
-import me.zombii.horizon.common.cc.items.CompactDiskItem;
+import me.zombii.horizon.common.cc.items.CompactDiscItem;
 import me.zombii.horizon.common.cc.items.FloppyDiskItem;
 import me.zombii.horizon.common.cc.items.HardDiskDriveItem;
 import me.zombii.horizon.common.cc.packets.PacketFlashBIOS;
@@ -48,7 +48,7 @@ public class HorizonCommon implements ModInit {
 
         AbstractCosmicItem.register(new BiosChipItem());
         AbstractCosmicItem.register(new FloppyDiskItem());
-        AbstractCosmicItem.register(new CompactDiskItem());
+        AbstractCosmicItem.register(new CompactDiscItem());
         AbstractCosmicItem.register(new HardDiskDriveItem());
 
         BiosChip.register();

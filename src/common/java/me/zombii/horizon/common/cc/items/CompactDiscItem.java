@@ -2,16 +2,15 @@ package me.zombii.horizon.common.cc.items;
 
 import finalforeach.cosmicreach.util.Identifier;
 import me.zombii.horizon.common.HorizonCommon;
-import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.ComputerConstants;
 
-public class CompactDiskItem extends AbstractDataStorageItem {
+public class CompactDiscItem extends AbstractDataStorageItem {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "compact-disk");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "compact-disc");
 
-    public CompactDiskItem() {
+    public CompactDiscItem() {
         super(ID, true);
-        addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "compact-disk.png"));
+        addTexture(ItemModelType.ITEM_MODEL_3D, Identifier.of(HorizonCommon.NAMESPACE, "compact-disc.png"));
     }
 
     @Override
@@ -22,6 +21,11 @@ public class CompactDiskItem extends AbstractDataStorageItem {
     @Override
     public String getName() {
         return "Compat Disc";
+    }
+
+    @Override
+    public String getPeripheralID() {
+        return "cc:compact-disc";
     }
 
     @Override

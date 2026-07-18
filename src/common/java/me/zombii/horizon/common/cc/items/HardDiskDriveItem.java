@@ -24,6 +24,11 @@ public class HardDiskDriveItem extends AbstractDataStorageItem {
     }
 
     @Override
+    public String getPeripheralID() {
+        return "cc:hard-disk-drive";
+    }
+
+    @Override
     public int getSize() {
         return ComputerConstants.BASIC_HDD_SIZE;
     }

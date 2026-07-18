@@ -3,7 +3,6 @@ package me.zombii.horizon.common.cc.lua;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import org.apache.commons.lang3.function.TriFunction;
 import party.iroiro.luajava.Lua;
-import party.iroiro.luajava.LuaException;
 import party.iroiro.luajava.value.LuaValue;
 
 public class LuaStorageApi {
@@ -46,15 +45,15 @@ public class LuaStorageApi {
         if (args.length < 2 || args.length > 3)
             L.error("'storage.getBytes' requires 2 or 3 arguments, not " + args.length);
 
-        checkArg(L, "storage.getBytes", args, 0, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.getBytes", args, 1, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.getBytes", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.getBytes", args, 1, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
         int size = Math.toIntExact(args[1].toInteger());
         byte[] data = device.getData();
 
         if (args.length == 3) {
-            checkArg(L, "storage.getBytes", args, 2, Lua.LuaType.TABLE);
+            LuaUtil.checkArg("storage.getBytes", args, 2, Lua.LuaType.TABLE);
 
             L.push(args[2]);
             int t = L.getTop();
@@ -75,7 +74,7 @@ public class LuaStorageApi {
         if (args.length != 1)
             L.error("'storage.readInt' requires 1 argument!");
 
-        checkArg(L, "storage.readInt", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.readInt", args, 0, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
 
@@ -87,7 +86,7 @@ public class LuaStorageApi {
         if (args.length != 1)
             L.error("'storage.readShort' requires 1 argument!");
 
-        checkArg(L, "storage.readShort", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.readShort", args, 0, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
 
@@ -99,7 +98,7 @@ public class LuaStorageApi {
         if (args.length != 1)
             L.error("'storage.readByte' requires 1 argument!");
 
-        checkArg(L, "storage.readByte", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.readByte", args, 0, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
 
@@ -111,8 +110,8 @@ public class LuaStorageApi {
         if (args.length != 2)
             L.error("'storage.writeByte' requires 2 arguments");
 
-        checkArg(L, "storage.writeByte", args, 0, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.writeByte", args, 1, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeByte", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeByte", args, 1, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
         byte value = (byte) (Math.toIntExact(args[1].toInteger()) & 0xFF);
@@ -125,8 +124,8 @@ public class LuaStorageApi {
         if (args.length != 2)
             L.error("'storage.writeShort' requires 2 arguments");
 
-        checkArg(L, "storage.writeShort", args, 0, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.writeShort", args, 1, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeShort", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeShort", args, 1, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
         short value = (short) (Math.toIntExact(args[1].toInteger()) & 0xFFFF);
@@ -139,8 +138,8 @@ public class LuaStorageApi {
         if (args.length != 2)
             L.error("'storage.writeInt' requires 2 arguments");
 
-        checkArg(L, "storage.writeInt", args, 0, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.writeInt", args, 1, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeInt", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeInt", args, 1, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
         int value = (int) (Math.toIntExact(args[1].toInteger()) & 0xFFFFFFFFL);
@@ -153,10 +152,10 @@ public class LuaStorageApi {
         if (args.length != 4)
             L.error("'storage.writeBytes' requires 2 arguments");
 
-        checkArg(L, "storage.writeBytes", args, 0, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.writeBytes", args, 1, Lua.LuaType.TABLE);
-        checkArg(L, "storage.writeBytes", args, 2, Lua.LuaType.NUMBER);
-        checkArg(L, "storage.writeBytes", args, 3, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeBytes", args, 0, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeBytes", args, 1, Lua.LuaType.TABLE);
+        LuaUtil.checkArg("storage.writeBytes", args, 2, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeBytes", args, 3, Lua.LuaType.NUMBER);
 
         int position = Math.toIntExact(args[0].toInteger());
         int offset = Math.toIntExact(args[2].toInteger());
@@ -167,12 +166,6 @@ public class LuaStorageApi {
         }
 
         return LuaCCLib.EMPTY;
-    }
-
-    public static void checkArg(Lua L, String name, LuaValue[] args, int idx, Lua.LuaType expected) {
-        if (args[idx].type() != expected) {
-            throw new LuaException(LuaException.LuaError.RUNTIME, "Argument #" + (idx + 1) + " of '" + name + "' must be a " + expected + ", not '" + args[idx].type() + "'");
-        }
     }
 
 }

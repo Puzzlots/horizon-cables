@@ -61,7 +61,7 @@ public class BiosChip extends AbstractDataStorageDevice {
                 RawAssetLoader.RawFileHandle handle = IndependentAssetLoader.loadAsset(Identifier.of(file));
                 totalBytesWritten += handle.getBytes().length + 4;
                 if (totalBytesWritten >= chip.getMaxDiskSize()) {
-                    throw new SizeLimitExceededException("Tried to write lua code that was " + (totalBytesWritten - chip.getMaxDiskSize()) + " over the max bytes of " + chip.getMaxDiskSize() + ": " + file);
+                    throw new SizeLimitExceededException("Tried to write data that was " + (totalBytesWritten - chip.getMaxDiskSize()) + " over the max bytes of " + chip.getMaxDiskSize() + ": " + file);
                 }
 
                 outputStream.writeInt(handle.getBytes().length);
