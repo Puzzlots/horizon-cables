@@ -1,29 +1,10 @@
 package me.zombii.horizon.common.cc.blocks.peripherals.screen;
 
-import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
-import finalforeach.cosmicreach.entities.player.Player;
-import finalforeach.cosmicreach.items.ItemStack;
-import finalforeach.cosmicreach.items.SlotContainerWindows;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
 import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
-import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.world.Zone;
-import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.common.cc.blocks.bios.BlockBiosFlasher;
-import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
-import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
-import me.zombii.horizon.common.cc.blocks.computer.ContainerDevComputer;
-import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
-import me.zombii.horizon.common.cc.lua.LuaCCLib;
-import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
-import me.zombii.horizon.common.cc.packets.PacketToggleComputer;
-import me.zombii.horizon.common.screen.ScreenManager;
-import me.zombii.horizon.common.screen.ScreenOpenInfo;
-import party.iroiro.luajava.Lua;
-import party.iroiro.luajava.LuaException;
-import party.iroiro.luajava.lua55.Lua55;
 
 public class BlockEntityScreenPeripheral extends BlockEntity {
 

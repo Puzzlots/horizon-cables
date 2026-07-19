@@ -9,7 +9,6 @@ import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import me.zombii.horizon.common.cc.computer.storage.portable.BasicStorage;
 import me.zombii.horizon.common.cc.lua.LuaStorageApi;
-import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import me.zombii.horizon.common.cc.lua.bus.SmartEventBusHandle;
 import party.iroiro.luajava.Lua;
 

@@ -7,7 +7,10 @@ import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.util.constants.Direction;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiFunction;
 
 public class NetworkManager {

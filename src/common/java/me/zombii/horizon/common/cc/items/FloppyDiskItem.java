@@ -1,10 +1,7 @@
 package me.zombii.horizon.common.cc.items;
 
 import finalforeach.cosmicreach.util.Identifier;
-import io.github.puzzle.cosmic.impl.data.point.single.IntegerDataPoint;
-import io.github.puzzle.cosmic.item.AbstractCosmicItem;
 import me.zombii.horizon.common.HorizonCommon;
-import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.computer.ComputerConstants;
 
 public class FloppyDiskItem extends AbstractDataStorageItem {

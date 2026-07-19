@@ -6,8 +6,8 @@ import me.zombii.horizon.client.cc.screens.ScreenBiosFlasher;
 import me.zombii.horizon.client.cc.screens.ScreenDevComputer;
 import me.zombii.horizon.client.screen.HorizonStyles;
 import me.zombii.horizon.common.IHorizonClientBound;
-import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
 import me.zombii.horizon.common.cc.blocks.bios.BlockBiosFlasher;
+import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 
 public class HorizonClient implements ClientModInit {

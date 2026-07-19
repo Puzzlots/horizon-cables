@@ -7,10 +7,10 @@ import dev.puzzleshq.puzzleloader.cosmic.game.events.command.EventRegisterComman
 import dev.puzzleshq.puzzleloader.cosmic.game.events.net.EventRegisterPacket;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import io.github.puzzle.cosmic.item.AbstractCosmicItem;
-import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
-import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.cc.blocks.bios.BlockBiosFlasher;
 import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
+import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
+import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.cc.commands.CommandCheckBiosChip;
 import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
 import me.zombii.horizon.common.cc.computer.storage.portable.BasicStorage;

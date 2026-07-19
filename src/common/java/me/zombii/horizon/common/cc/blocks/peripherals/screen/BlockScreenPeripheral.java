@@ -25,4 +25,5 @@ public class BlockScreenPeripheral implements IModBlock {
     public Identifier getId() {
         return ID;
     }
+    
 }

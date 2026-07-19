@@ -4,13 +4,10 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import finalforeach.cosmicreach.items.ItemSlot;
-import finalforeach.cosmicreach.items.ItemSlotInteractions;
 import finalforeach.cosmicreach.items.containers.SlotContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(SlotContainer.class)
 public class SlotContainerMixin {

@@ -9,8 +9,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.zombii.horizon.common.HorizonRegistries;
 import me.zombii.horizon.common.cc.computer.peripherals.AbstractPeripheral;
-import party.iroiro.luajava.Lua;
-import party.iroiro.luajava.value.LuaValue;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
