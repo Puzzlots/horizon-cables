@@ -66,7 +66,8 @@ public class BlockEntityBiosFlasher extends BlockEntity {
                         BlockBiosFlasher.SCREEN_ID,
                         position,
                         null,
-                        SlotContainerWindows.add(container)
+                        SlotContainerWindows.add(container),
+                        false
                 );
                 ScreenManager.openScreen(info);
             } catch (Exception e) {

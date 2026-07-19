@@ -35,7 +35,7 @@ public class PacketOpenScreen extends GamePacket {
         deserializer.prepareForRead(in.nioBuffer());
         ItemStack stack = deserializer.readObj("heldStack", ItemStack.class);
 
-        screenOpenInfo = new ScreenOpenInfo(player, screenId, blockPosition, stack, windowId);
+        screenOpenInfo = new ScreenOpenInfo(player, screenId, blockPosition, stack, windowId, readBoolean(in));
     }
 
     @Override
@@ -47,6 +47,7 @@ public class PacketOpenScreen extends GamePacket {
         CRBinSerializer serial = new CRBinSerializer();
         serial.writeObj("heldStack", screenOpenInfo.stack());
         this.writeCRBin(serial);
+        writeBoolean(screenOpenInfo.isGameState());
     }
 
     @Override

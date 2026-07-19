@@ -150,16 +150,16 @@ public class LuaStorageApi {
 
     public static LuaValue[] writeBytes(AbstractDataStorageDevice device, Lua L, LuaValue[] args) {
         if (args.length != 4)
-            L.error("'storage.writeBytes' requires 2 arguments");
+            L.error("'storage.writeBytes' requires 4 arguments");
 
         LuaUtil.checkArg("storage.writeBytes", args, 0, Lua.LuaType.NUMBER);
-        LuaUtil.checkArg("storage.writeBytes", args, 1, Lua.LuaType.TABLE);
+        LuaUtil.checkArg("storage.writeBytes", args, 1, Lua.LuaType.NUMBER);
         LuaUtil.checkArg("storage.writeBytes", args, 2, Lua.LuaType.NUMBER);
-        LuaUtil.checkArg("storage.writeBytes", args, 3, Lua.LuaType.NUMBER);
+        LuaUtil.checkArg("storage.writeBytes", args, 3, Lua.LuaType.TABLE);
 
         int position = Math.toIntExact(args[0].toInteger());
-        int offset = Math.toIntExact(args[2].toInteger());
-        int length = Math.toIntExact(args[3].toInteger());
+        int offset = Math.toIntExact(args[1].toInteger());
+        int length = Math.toIntExact(args[2].toInteger());
 
         for (int i = 0; i < length; i++) {
             device.writeByte(position + i, (byte) (Math.toIntExact(args[1].get(1 + i + offset).toInteger()) & 0xFF));

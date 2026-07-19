@@ -10,5 +10,6 @@ public record ScreenOpenInfo(
         Identifier screenId,
         IReadBlockPosition position,
         ItemStack stack,
-        int windowId
+        int windowId,
+        boolean isGameState
 ) {}

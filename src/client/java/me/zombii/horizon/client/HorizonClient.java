@@ -1,7 +1,9 @@
 package me.zombii.horizon.client;
 
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.client.ClientModInit;
+import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.ui.UI;
+import me.zombii.horizon.client.cc.gamestate.GameStateDevComputer;
 import me.zombii.horizon.client.cc.screens.ScreenBiosFlasher;
 import me.zombii.horizon.client.cc.screens.ScreenDevComputer;
 import me.zombii.horizon.client.screen.HorizonStyles;
@@ -19,14 +21,28 @@ public class HorizonClient implements ClientModInit {
                 BlockBiosFlasher.SCREEN_ID,
                 ScreenBiosFlasher::new
         );
-        HorizonClientRegistries.SCREEN_REGISTRY.store(
+
+//        HorizonClientRegistries.SCREEN_REGISTRY.store(
+//                BlockDevComputer.SCREEN_ID,
+//                ScreenDevComputer::new
+//        );
+
+        HorizonClientRegistries.GAMESTATE_REGISTRY.store(
                 BlockDevComputer.SCREEN_ID,
-                ScreenDevComputer::new
+                GameStateDevComputer::new
         );
 
         IHorizonClientBound.INSTANCE.set(new IHorizonClientBound() {
             @Override
             public void openScreen(ScreenOpenInfo info) {
+                if (info.isGameState()) {
+                    GameState.switchToGameState(
+                            HorizonClientRegistries.GAMESTATE_REGISTRY.get(
+                                    info.screenId()
+                            ).apply(info)
+                    );
+                    return;
+                }
                 UI.addOpenScreen(
                         () -> HorizonClientRegistries.SCREEN_REGISTRY.get(
                                 info.screenId()

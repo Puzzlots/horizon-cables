@@ -17,7 +17,6 @@ public interface INetworkedBlock<T extends AbstractNetwork> extends IModBlock {
         return canConnect(state, direction, target.getBlockState());
     }
 
-
     boolean canConnect(
             BlockState state,
             Direction direction,

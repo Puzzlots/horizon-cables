@@ -15,11 +15,13 @@ end
 --    local jsonLibBytes = cc.bios.chip.getBytes(8 + initSize, jsonLibSize)
 --    local jsonLibCode = bytesToString(jsonLibBytes)
 --
---    jsonLib = load(jsonLibCode, "qjson.lua", "t")()
+--    jsonLib = loadstring(jsonLibCode, "qjson.lua")()
 --    return jsonLib
 --end
 
 local __font_table = {}
+
+if _G["cc"] ~= nil then return end
 
 local function loadFont()
     local initSize = cc.bios.chip.readInt(0)
@@ -66,6 +68,18 @@ local computerAddress = handle.getAddress()
 
 print("Computer IP: " .. computerAddress)
 
+local bootLoaderEntry = {
+    storageDevice = nil,
+    initCodeSize = 0,
+    initCodeAddress = 0
+}
+
+function bootLoaderEntry:getInitCode()
+    if self.__initCode == nil then
+        self.__initCode = bytesToString(self.storageDevice.api.getBytes(self.initCodeAddress + 4, self.initCodeSize))
+    end
+end
+
 local function findBootLoader(storage)
     local hasBootloader = storage.api.readInt(0) == 0x55AA
     if not hasBootloader then
@@ -73,17 +87,15 @@ local function findBootLoader(storage)
     end
     local initAddress = storage.api.readInt(4)
     local initSize = storage.api.readInt(initAddress)
-    return {
-        storageDevice = storage,
-        initCodeSize = initSize,
-        initCodeAddress = initAddress,
-        __initCode = nil,
-        getInitCode = function(self)
-            if self.__initCode == nil then
-                self.__initCode = bytesToString(self.storageDevice.api.getBytes(self.initCodeAddress + 4, self.initCodeSize))
-            end
-        end
-    }
+    return setmetatable(
+        {
+                storageDevice = storage,
+                initCodeSize = initSize,
+                initCodeAddress = initAddress,
+                __initCode = nil
+            },
+        bootLoaderEntry
+        )
 end
 
 local function findBootloaders()

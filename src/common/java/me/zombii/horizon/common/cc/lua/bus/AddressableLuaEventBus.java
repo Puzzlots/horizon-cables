@@ -46,7 +46,11 @@ public class AddressableLuaEventBus {
             return new SmartEventBusHandle(this, freedAddresses.removeFirst());
         }
 
-        String ipAddress = random.nextInt(0, 999) + "." + random.nextInt(0, 999);
+        String ipAddress;
+        do {
+            ipAddress = random.nextInt(0, 999) + "." + random.nextInt(0, 999);
+        } while (usedAddresses.contains(ipAddress));
+
         usedAddresses.add(ipAddress);
 
         return new SmartEventBusHandle(this, ipAddress);

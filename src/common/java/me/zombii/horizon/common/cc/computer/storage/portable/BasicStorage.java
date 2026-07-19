@@ -21,8 +21,7 @@ public class BasicStorage extends AbstractDataStorageDevice {
     private int size;
     private boolean readOnly;
 
-    public BasicStorage() {
-    }
+    public BasicStorage() {}
 
     public BasicStorage(int size) {
         this.size = size;

@@ -16,11 +16,14 @@ import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
 import me.zombii.horizon.common.cc.lua.LuaCCLib;
 import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import me.zombii.horizon.common.cc.packets.PacketToggleComputer;
+import me.zombii.horizon.common.cc.display.CCPalette;
+import me.zombii.horizon.common.cc.display.CCScreen;
+import me.zombii.horizon.common.cc.display.ICCPalette;
+import me.zombii.horizon.common.cc.display.ICCScreen;
 import me.zombii.horizon.common.screen.ScreenManager;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 import party.iroiro.luajava.Lua;
 import party.iroiro.luajava.LuaException;
-import party.iroiro.luajava.lua55.Lua55;
 
 public class BlockEntityDevComputer extends BlockEntity {
 
@@ -36,6 +39,9 @@ public class BlockEntityDevComputer extends BlockEntity {
     private boolean powerState;
     private Lua luaState;
     private AddressableLuaEventBus internalPeripheralEventBus;
+
+    public ICCPalette palette;
+    public ICCScreen screen;
 
     public static boolean isValidBiosChip(ItemStack stack) {
         return BlockEntityBiosFlasher.isValid(stack);
@@ -60,6 +66,10 @@ public class BlockEntityDevComputer extends BlockEntity {
         this.container = new ContainerDevComputer(3);
         if (GameSingletons.isHost()) {
             this.internalPeripheralEventBus = new AddressableLuaEventBus();
+            this.palette = new CCPalette(2)
+                    .setColor(1, (short) -1);
+            this.screen = new CCScreen(200, 200, this.palette);
+            this.screen.fill((byte) 1);
         }
     }
 
@@ -77,7 +87,8 @@ public class BlockEntityDevComputer extends BlockEntity {
                         BlockDevComputer.SCREEN_ID,
                         position,
                         null,
-                        SlotContainerWindows.add(container)
+                        SlotContainerWindows.add(container),
+                        true
                 );
                 ScreenManager.openScreen(info);
             } catch (Exception e) {
@@ -132,7 +143,7 @@ public class BlockEntityDevComputer extends BlockEntity {
         if (powerState) {
             if (!container.getSlot(0).hasItemStack()) return;
             if (!BlockEntityBiosFlasher.chipIsInitialized(container.getSlot(0).getItemStack())) return;
-            this.luaState = new Lua55();
+            this.luaState = LuaCCLib.newLua();
             LuaCCLib.inject(this);
 
             try {

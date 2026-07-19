@@ -9,6 +9,7 @@ import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
 import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import party.iroiro.luajava.Lua;
+import party.iroiro.luajava.luajit.LuaJit;
 import party.iroiro.luajava.value.LuaFunction;
 import party.iroiro.luajava.value.LuaValue;
 
@@ -20,13 +21,27 @@ public class LuaCCLib {
 
     public static final LuaValue[] EMPTY = new LuaValue[0];
 
+    public static Lua newLua() {
+        return new LuaJit();
+    }
+
+    private static void removeGlobal(Lua L, String name) {
+        L.pushNil();
+        L.setGlobal(name);
+    }
+
     public static void inject(BlockEntityDevComputer computer) {
         Lua lua = computer.getLuaState();
         AddressableLuaEventBus internalBus = computer.getInternalBus();
 
         lua.openLibraries();
-        lua.pushNil();
-        lua.setGlobal("java");
+        removeGlobal(lua, "java");
+        removeGlobal(lua, "io");
+        removeGlobal(lua, "ffi");
+        removeGlobal(lua, "jit");
+        removeGlobal(lua, "dofile");
+        removeGlobal(lua, "loadfile");
+        removeGlobal(lua, "require");
 
         lua.register("print", printFunction());
 
