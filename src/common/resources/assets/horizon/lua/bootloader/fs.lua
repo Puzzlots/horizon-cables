@@ -31,5 +31,5 @@ function fs:format(disk)
     local entriesPerFatSect = sectorSize // 4
 
 
-    
+
 end
