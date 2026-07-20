@@ -52,30 +52,70 @@ public class BiosChip extends AbstractDataStorageDevice {
         return maxSize;
     }
 
-    public static void flashChip(BiosChip chip, String... files) throws SizeLimitExceededException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream outputStream = new DataOutputStream(baos);
-        try {
-            int totalBytesWritten = 0;
-            for (String file : files) {
-                RawAssetLoader.RawFileHandle handle = IndependentAssetLoader.loadAsset(Identifier.of(file));
-                totalBytesWritten += handle.getBytes().length + 4;
-                if (totalBytesWritten >= chip.getMaxDiskSize()) {
-                    throw new SizeLimitExceededException("Tried to write data that was " + (totalBytesWritten - chip.getMaxDiskSize()) + " over the max bytes of " + chip.getMaxDiskSize() + ": " + file);
-                }
+    public static String getInitCode(BiosChip chip) {
+        int entryCount = chip.readInt(0);
+        int offs = 4;
 
-                outputStream.writeInt(handle.getBytes().length);
+        int initAddr = 0;
+        int initSize = 0;
+
+        for (int i = 0; i < entryCount; i++) {
+            int nameLen = chip.readInt(offs);
+            String name = new String(chip.getBytes(offs + 4, nameLen));
+            offs += nameLen + 4;
+            int size = chip.readInt(offs);
+            int addr = chip.readInt(offs + 4);
+            offs += 8;
+            if (name.equals("init.lua")) {
+                initSize = size;
+                initAddr = addr;
+            }
+        }
+        byte[] initCodeBytes = chip.getBytes(offs + initAddr, initSize);
+        return new String(initCodeBytes, StandardCharsets.UTF_8);
+    }
+
+    public static void flashChip(BiosChip chip, String... files) throws SizeLimitExceededException {
+        try {
+            ByteArrayOutputStream header = new ByteArrayOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(header);
+            dataOutputStream.writeInt(files.length / 2);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream outputStream = new DataOutputStream(baos);
+            int totalBytesWritten = 0;
+            for (int i = 0; i < files.length; i += 2) {
+                String file = files[i];
+                String name = files[i + 1];
+
+                RawAssetLoader.RawFileHandle handle = IndependentAssetLoader.loadAsset(Identifier.of(file));
+                dataOutputStream.writeInt(name.length());
+                dataOutputStream.write(name.getBytes(StandardCharsets.UTF_8));
+                dataOutputStream.writeInt(handle.getBytes().length);
+                dataOutputStream.writeInt(totalBytesWritten);
+                totalBytesWritten += handle.getBytes().length;
+
                 outputStream.write(handle.getBytes());
             }
+            dataOutputStream.close();
             outputStream.close();
+
+            ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+            baos2.write(header.toByteArray());
+            baos2.write(baos.toByteArray());
+
+            byte[] bytes = baos2.toByteArray();
+
+            if (bytes.length >= chip.getMaxDiskSize()) {
+                throw new SizeLimitExceededException("Tried to write data that was " + (bytes.length - chip.getMaxDiskSize()) + " over the max bytes of " + chip.getMaxDiskSize());
+            }
+
+            chip.init();
+
+            System.arraycopy(bytes, 0, chip.getData(), 0, bytes.length);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        chip.init();
-
-        byte[] bytes = baos.toByteArray();
-        System.arraycopy(bytes, 0, chip.getData(), 0, bytes.length);
     }
 
     public static void flashChip(BiosChip chip, String luaCode) throws SizeLimitExceededException {

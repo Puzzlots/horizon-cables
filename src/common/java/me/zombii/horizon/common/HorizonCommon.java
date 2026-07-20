@@ -20,6 +20,7 @@ import me.zombii.horizon.common.cc.items.FloppyDiskItem;
 import me.zombii.horizon.common.cc.items.HardDiskDriveItem;
 import me.zombii.horizon.common.cc.packets.PacketFlashBIOS;
 import me.zombii.horizon.common.cc.packets.PacketOpenScreen;
+import me.zombii.horizon.common.cc.packets.PacketScreenState;
 import me.zombii.horizon.common.cc.packets.PacketToggleComputer;
 import me.zombii.horizon.common.wired.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.wired.blocks.energy.BatteryBlock;
@@ -65,6 +66,7 @@ public class HorizonCommon implements ModInit {
         e.registerPacket("open-screen", 9200, PacketOpenScreen.class);
         e.registerPacket("flash-bios", 9201, PacketFlashBIOS.class);
         e.registerPacket("set-computer-power", 9202, PacketToggleComputer.class);
+        e.registerPacket("screen-update", 9203, PacketScreenState.class);
     }
 
     @SubscribeEvent

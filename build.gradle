@@ -15,7 +15,6 @@ jigsawAccess {
 }
 
 jigsawInject {
-    setModJson(file("$projectDir/src/common/resources/puzzle.mod.json"))
 }
 
 repositories {

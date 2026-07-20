@@ -127,7 +127,6 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
             component.load(dataStream);
             dataStream.close();
-            COMPONENTS.add(component);
         }
         gzipInputStream.close();
     }
@@ -145,8 +144,10 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
             }
         }
 
-        COMPONENTS.add(this);
-        COMPONENTS_BY_ID.put(slot, this);
+        if (!COMPONENTS.contains(this)) {
+            COMPONENTS.add(this);
+            COMPONENTS_BY_ID.put(slot, this);
+        }
     }
 
     public abstract int getMaxDiskSize();

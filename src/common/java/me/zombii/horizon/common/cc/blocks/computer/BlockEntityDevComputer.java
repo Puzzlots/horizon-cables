@@ -1,15 +1,21 @@
 package me.zombii.horizon.common.cc.blocks.computer;
 
+import com.badlogic.gdx.utils.ByteArray;
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
 import finalforeach.cosmicreach.entities.player.Player;
+import finalforeach.cosmicreach.io.ByteArrayUtils;
 import finalforeach.cosmicreach.items.ItemStack;
 import finalforeach.cosmicreach.items.SlotContainerWindows;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
 import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.world.Zone;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
 import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
@@ -24,6 +30,9 @@ import me.zombii.horizon.common.screen.ScreenManager;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 import party.iroiro.luajava.Lua;
 import party.iroiro.luajava.LuaException;
+
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 public class BlockEntityDevComputer extends BlockEntity {
 
@@ -64,12 +73,16 @@ public class BlockEntityDevComputer extends BlockEntity {
     public BlockEntityDevComputer(Zone zone, int globalX, int globalY, int globalZ) {
         super(zone, globalX, globalY, globalZ);
         this.container = new ContainerDevComputer(3);
+
+        if (zone != null) {
+            this.palette = CCPalette.getOrMake(UUID.randomUUID(), 2)
+                    .setColor(0, (short) 0)
+                    .setColor(1, (short) -1);
+            this.screen = CCScreen.getOrMake(UUID.randomUUID(), palette, 200, 200);
+        }
+
         if (GameSingletons.isHost()) {
             this.internalPeripheralEventBus = new AddressableLuaEventBus();
-            this.palette = new CCPalette(2)
-                    .setColor(1, (short) -1);
-            this.screen = new CCScreen(200, 200, this.palette);
-            this.screen.fill((byte) 1);
         }
     }
 
@@ -77,6 +90,7 @@ public class BlockEntityDevComputer extends BlockEntity {
 
     @Override
     public void onInteract(Player player, Zone zone) {
+        setTicking(true);
         super.onInteract(player, zone);
 
         if (GameSingletons.isHost()) {
@@ -88,7 +102,7 @@ public class BlockEntityDevComputer extends BlockEntity {
                         position,
                         null,
                         SlotContainerWindows.add(container),
-                        true
+                        false
                 );
                 ScreenManager.openScreen(info);
             } catch (Exception e) {
@@ -101,7 +115,8 @@ public class BlockEntityDevComputer extends BlockEntity {
     public void onRemove() {
         super.onRemove();
         if (GameSingletons.isHost()) {
-            luaState.close();
+            if (luaState != null)
+                luaState.close();
         }
     }
 
@@ -110,9 +125,24 @@ public class BlockEntityDevComputer extends BlockEntity {
         return BlockDevComputer.BE_ID.toString();
     }
 
+    int inc = 0;
+
+    int a = 0;
+
     @Override
-    public boolean isTicking() {
-        return false;
+    public void onTick() {
+        if (inc % 100 == 0) {
+            if (a == 1) {
+                a = 0;
+            } else {
+                a = 1;
+            }
+
+            System.out.println("Flip " + a);
+            screen.fill((byte) a);
+            screen.swap();
+        }
+        inc++;
     }
 
     @Override
@@ -120,6 +150,10 @@ public class BlockEntityDevComputer extends BlockEntity {
         super.write(serial);
         container.write(serial);
         serial.writeBoolean("power-state", powerState);
+
+        ByteArray array = new ByteArray();
+        write(array);
+        serial.writeByteArray("screen", array.items);
     }
 
     @Override
@@ -127,6 +161,45 @@ public class BlockEntityDevComputer extends BlockEntity {
         super.read(deserial);
         container.read(deserial);
         setPower(deserial.readBoolean("power-state", false));
+
+        byte[] screen = deserial.readByteArray("screen");
+        ByteBuf buf = Unpooled.wrappedBuffer(screen);
+        receive(buf);
+        buf.release();
+    }
+
+    public void receive(ByteBuf byteBuf) {
+        long uuidAA = byteBuf.readLong();
+        long uuidAB = byteBuf.readLong();
+        long uuidBA = byteBuf.readLong();
+        long uuidBB = byteBuf.readLong();
+
+        UUID uuidA = new UUID(uuidAA, uuidAB);
+        UUID uuidB = new UUID(uuidBA, uuidBB);
+
+        int width = byteBuf.readInt();
+        int height = byteBuf.readInt();
+        int paletteSize = byteBuf.readInt();
+
+        ICCPalette palette = CCPalette.getOrMake(uuidA, paletteSize);
+        screen = CCScreen.getOrMake(uuidB, palette, width, height);
+        screen.read(byteBuf.nioBuffer());
+
+//        position = readBlockPositionZoneless(byteBuf);
+    }
+
+    public void write(ByteArray array) {
+        ByteArrayUtils.writeLong(array, screen.getUUID().getMostSignificantBits());
+        ByteArrayUtils.writeLong(array, screen.getUUID().getLeastSignificantBits());
+        ByteArrayUtils.writeLong(array, screen.getPalette().getUUID().getMostSignificantBits());
+        ByteArrayUtils.writeLong(array, screen.getPalette().getUUID().getLeastSignificantBits());
+
+        ByteArrayUtils.writeInt(array, screen.getWidth());
+        ByteArrayUtils.writeInt(array, screen.getHeight());
+        ByteArrayUtils.writeInt(array, screen.getPalette().getSize());
+        screen.write(array);
+
+//        writeBlockPosition(position);
     }
 
     public boolean getPowerState() {
@@ -187,4 +260,5 @@ public class BlockEntityDevComputer extends BlockEntity {
         }
         return null;
     }
+
 }

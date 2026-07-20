@@ -21,4 +21,6 @@ public interface ICCPalette {
     ICCPalette setUUID(UUID uuid);
 
     UUID getUUID();
+
+    void update(ICCPalette palette);
 }

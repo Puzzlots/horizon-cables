@@ -1,26 +1,35 @@
 package me.zombii.horizon.client.cc.gamestate;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.IGameStateInWorld;
 import finalforeach.cosmicreach.gamestates.InGame;
-import finalforeach.cosmicreach.items.ItemSlotInteractions;
 import finalforeach.cosmicreach.items.SlotContainerWindows;
 import finalforeach.cosmicreach.items.containers.SlotContainer;
 import finalforeach.cosmicreach.ui.UI;
+import finalforeach.cosmicreach.ui.screens.ItemScreenComponent;
 import finalforeach.cosmicreach.ui.widgets.ContainerSlotWidget;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import me.zombii.horizon.client.cc.screens.CCScreenRenderer;
 import me.zombii.horizon.client.screen.HorizonGameState;
 import me.zombii.horizon.client.screen.HorizonStyles;
 import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 public class GameStateDevComputer extends HorizonGameState implements IGameStateInWorld {
 
     public GameStateDevComputer(ScreenOpenInfo info) {
         super(info);
     }
+
+    private final ObjectList<ContainerSlotWidget> widgets = new ObjectArrayList<>();
 
     public void initInventory(Stack inventory) {
         Image inventoryBackground = new Image(HorizonStyles.background9Patch);
@@ -38,50 +47,52 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
             ContainerSlotWidget slotWidget = new ContainerSlotWidget(
                     0, getInfo().player(), () -> slotContainer, i
             );
-            slotWidget.itemStackWidget.doDraw = true;
-            inventoryTable.add(slotWidget).size(50);
-            if (((i - 10) + 1) % 7 == 0) {
+            widgets.add(slotWidget);
+            inventoryTable.add(slotWidget).size(40);
+            if (((i - 10) + 1) % 3 == 0) {
                 inventoryTable.row();
             }
         }
-        for (int i = 0; i < 10; i++) {
-            ContainerSlotWidget slotWidget = new ContainerSlotWidget(
-                    0, getInfo().player(), () -> slotContainer, i
-            );
-            slotWidget.itemStackWidget.doDraw = true;
-            inventoryTable.add(slotWidget).size(50);
-            if (((slotContainer.numberOfSlots + i - 10) + 1) % 7 == 0) {
-                inventoryTable.row();
-            }
-        }
+    }
 
+    CCScreenRenderer renderer;
+    BlockEntityDevComputer entity;
+
+    private Image initScreen() {
+        renderer = CCScreenRenderer.getOrNew(entity.screen);
+
+        Image screen = new Image(renderer.getTexture());
+        return screen;
     }
 
     @Override
     public void onSwitchTo() {
         super.onSwitchTo();
-        UI.setInventoryOpen(true);
+
         UI.openContainers.add(getInfo().player().inventory);
         UI.openContainers.add(getInfo().player().cursor);
 
-        BlockEntityDevComputer entity = (BlockEntityDevComputer) getInfo().position().getBlockEntity();
         SlotContainer container = entity.getContainer();
         SlotContainerWindows.set(container, getInfo().windowId());
         UI.openContainers.add(container);
+        stage.getActors().add(InGame.IN_GAME.inGameUI.hotbarScreen.getActor());
+        stage.getActors().add(UI.itemCursor);
     }
 
     @Override
     public void switchAwayTo(GameState gameState) {
         super.switchAwayTo(gameState);
-        UI.setInventoryOpen(false);
-        UI.canDropItemCursorOnClick = false;
         UI.openContainers.removeValue(getInfo().player().inventory, true);
         UI.openContainers.removeValue(getInfo().player().cursor, true);
+        stage.getActors().removeValue(InGame.IN_GAME.inGameUI.hotbarScreen.getActor(), false);
+        stage.getActors().removeValue(UI.itemCursor, false);
     }
 
     @Override
     public void create() {
         super.create();
+        entity = (BlockEntityDevComputer) getInfo().position().getBlockEntity();
+
         Image computerBackground = new Image(HorizonStyles.background9Patch);
 
         Stack inventory = new Stack();
@@ -91,30 +102,73 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
         float width = newUiViewport.getWorldWidth() - (2 * margin);
         float height = newUiViewport.getWorldHeight() - (2 * margin);
 
+        Table computerTable = new Table();
+        computerTable.add(initScreen()).center().width(400).height(400);
+        computerTable.row().height(height / 2);
+
         float x = margin;
         float y = margin;
 
         float margin2 = 5;
 
         inventory.setSize(
-                (width / 2) - (margin2 * 2),
+                (width / 5) - (margin2 * 2),
                 height
         );
         inventory.setPosition(x, y);
         computerBackground.setSize(
-                inventory.getWidth(),
+                (width - (margin2 * 2)) - inventory.getWidth(),
                 inventory.getHeight()
         );
-        computerBackground.setPosition(newUiViewport.getWorldWidth() - margin - inventory.getWidth(), y);
+        computerBackground.setPosition(
+                newUiViewport.getWorldWidth() - margin - computerBackground.getWidth(),
+                y
+        );
+        computerTable.setSize(computerBackground.getWidth(), computerBackground.getHeight());
+        computerTable.setPosition(computerBackground.getX(), computerBackground.getY());
 
         stage.addActor(computerBackground);
         stage.addActor(inventory);
-        stage.setDebugAll(true);
+        stage.addActor(computerTable);
+        stage.setDebugAll(false);
     }
 
     @Override
     public void render() {
         super.render();
-        UI.canDropItemCursorOnClick = false;
+        GL11.glCullFace(GL11.GL_BACK);
+        GL11.glDepthFunc(GL11.GL_ALWAYS);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        for (ContainerSlotWidget widget : widgets) {
+            widget.itemStackWidget.drawItem(ItemScreenComponent.itemViewport);
+        }
+        InGame.IN_GAME.inGameUI.hotbarScreen.drawItems();
+        UI.itemCursor.itemStackWidget.drawItem(ItemScreenComponent.itemViewport);
+
+        stage.getViewport().apply(true);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        GL11.glCullFace(GL11.GL_FRONT);
+        GL20.glActiveTexture(GL20.GL_TEXTURE0);
+        GL20.glBindTexture(GL20.GL_TEXTURE_2D, 0);
+
+        Batch stageBatch = stage.getBatch();
+        stageBatch.begin();
+        stageBatch.setColor(Color.WHITE);
+
+        InGame.IN_GAME.inGameUI.hotbarScreen.drawItemCounts(stageBatch);
+        for (ContainerSlotWidget widget : widgets) {
+            widget.itemStackWidget.drawItemCountWithDropShadow(stageBatch, 0.0F, 0.0F, Color.DARK_GRAY);
+        }
+
+        for (ContainerSlotWidget widget : widgets) {
+            widget.itemStackWidget.drawTooltip(stageBatch);
+        }
+
+        UI.itemCursor.itemStackWidget.drawItemCountWithDropShadow(stageBatch, 0.0F, 0.0F, Color.DARK_GRAY);
+        stageBatch.end();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
+
 }

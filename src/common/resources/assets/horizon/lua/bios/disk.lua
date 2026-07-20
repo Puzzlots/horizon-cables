@@ -22,7 +22,6 @@ function disk.new(p, capacity, sectorSize)
     }, disk)
 end
 
-
 -- returns a boolean on whether the sector argument is correct and within the count
 function disk:isValidSector(sector)
     return type(sector) == "number" and sector >= 0 and sector < self.sectorCount

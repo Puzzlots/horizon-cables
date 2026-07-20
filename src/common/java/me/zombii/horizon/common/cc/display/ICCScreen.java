@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.ByteArray;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public interface ICCScreen {
 
@@ -25,4 +26,11 @@ public interface ICCScreen {
     void setPixel(int x, int y, byte idx);
     void fill(byte idx);
 
+    void update(ICCScreen screen);
+
+    byte[] getFrameBuffer();
+
+    byte[] getBackBuffer();
+
+    void setOnSwap(Consumer<ICCScreen> onSwap);
 }

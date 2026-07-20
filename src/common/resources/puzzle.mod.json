@@ -43,10 +43,5 @@
 
   "access-writers": [
     "${p_id}.manipulator"
-  ],
-
-  "custom": {
-    "loom:injected_interfaces": {
-    }
-  }
+  ]
 }

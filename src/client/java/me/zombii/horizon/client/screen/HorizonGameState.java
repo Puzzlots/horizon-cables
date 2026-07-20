@@ -1,17 +1,14 @@
 package me.zombii.horizon.client.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.IGameStateInWorld;
 import finalforeach.cosmicreach.gamestates.InGame;
 import finalforeach.cosmicreach.settings.Controls;
-import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.ui.InGameUI;
 import finalforeach.cosmicreach.ui.UI;
 import finalforeach.cosmicreach.ui.screens.BaseScreen;
@@ -44,6 +41,8 @@ public class HorizonGameState extends GameState implements IGameStateInWorld {
         super.create();
     }
 
+    private boolean hiddenUI;
+
     @Override
     public void onSwitchTo() {
         super.onSwitchTo();
@@ -58,6 +57,7 @@ public class HorizonGameState extends GameState implements IGameStateInWorld {
         Gdx.input.setInputProcessor(null);
         Gdx.input.setCursorCatched(true);
         batch.setProjectionMatrix(uiViewport.getCamera().combined);
+        UI.renderUI = true;
     }
 
     @Override
@@ -66,9 +66,23 @@ public class HorizonGameState extends GameState implements IGameStateInWorld {
         InGame.IN_GAME.update(deltaTime);
     }
 
+    public static final EventListener EVENT_LISTENER = (event) -> {
+            if (event instanceof InputEvent ie) {
+                switch (ie.getType()) {
+                    case exit -> UI.canDropItemCursorOnClick = true;
+                    case enter -> UI.canDropItemCursorOnClick = false;
+                }
+            }
+
+            return false;
+    };
+
     @Override
     public void render() {
         super.render();
+        UI.canDropItemCursorOnClick = false;
+        UI.renderUI = false;
+        UI.renderDebugInfo = false;
         InGame.IN_GAME.render();
         stage.act();
 
@@ -84,6 +98,11 @@ public class HorizonGameState extends GameState implements IGameStateInWorld {
         GL11.glCullFace(GL11.GL_FRONT);
 
         stage.draw();
+    }
+
+    @Override
+    public boolean dropsCursorItems() {
+        return false;
     }
 
     public ScreenOpenInfo getInfo() {

@@ -1,5 +1,6 @@
 package me.zombii.horizon.common.cc.blocks.bios;
 
+import com.badlogic.gdx.utils.JsonValue;
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
@@ -138,9 +139,10 @@ public class BlockEntityBiosFlasher extends BlockEntity {
                     assert chip != null;
                     BiosChip.flashChip(
                             chip,
-                            "horizon:lua/bios/init.lua",
-                            "horizon:lua/bios/qjson.lua",
-                            "horizon:lua/bios/font.png"
+                            "horizon:lua/bios/font.png", "font.png",
+                            "horizon:lua/bios/init.lua", "init.lua",
+                            "horizon:lua/bios/font.lua", "font.lua",
+                            "horizon:lua/bios/disk.lua", "disk.lua"
                     );
                 } catch (SizeLimitExceededException e) {
                     throw new RuntimeException(e);

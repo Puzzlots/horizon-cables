@@ -2,8 +2,13 @@ package me.zombii.horizon.common.cc.display;
 
 import com.badlogic.gdx.utils.ByteArray;
 import finalforeach.cosmicreach.io.ByteArrayUtils;
+import finalforeach.cosmicreach.networking.NetworkIdentity;
+import finalforeach.cosmicreach.networking.server.ServerSingletons;
+import finalforeach.cosmicreach.singletons.GameSingletonPlayers;
+import finalforeach.cosmicreach.singletons.GameSingletons;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import me.zombii.horizon.common.cc.packets.PacketScreenState;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -54,6 +59,7 @@ public class CCScreen implements ICCScreen {
         return uuid;
     }
 
+    @Override
     public byte[] getFrameBuffer() {
         return frameBuffer.get();
     }
@@ -68,8 +74,17 @@ public class CCScreen implements ICCScreen {
 
     @Override
     public void swap() {
-        this.backBuffer.set(this.frameBuffer.getAndSet(this.backBuffer.get()));
+        byte[] back = this.backBuffer.get();
+        byte[] front = this.frameBuffer.get();
+        this.backBuffer.set(front);
+        this.frameBuffer.set(back);
         onSwap.accept(this);
+        if (!GameSingletons.isClient()) {
+            for (NetworkIdentity allNetId : ServerSingletons.getAllNetIds()) {
+                System.out.println("Send " + allNetId.getPlayer().getUsername());
+                allNetId.send(new PacketScreenState(this));
+            }
+        }
     }
 
     @Override
@@ -124,6 +139,16 @@ public class CCScreen implements ICCScreen {
     @Override
     public void fill(byte idx) {
         Arrays.fill(backBuffer.get(), idx);
+    }
+
+    @Override
+    public void update(ICCScreen screen) {
+        if (!screen.getUUID().equals(this.uuid)) return;
+        if (!screen.getPalette().getUUID().equals(getPalette().getUUID())) return;
+
+        palette.update(screen.getPalette());
+        System.arraycopy(getBackBuffer(), 0, screen.getBackBuffer(), 0, getBackBuffer().length);
+        swap();
     }
 
     private static final Object2ObjectMap<UUID, ICCScreen> SCREEN_CACHE = new Object2ObjectOpenHashMap<>();

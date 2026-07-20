@@ -83,17 +83,7 @@ public class LuaCCLib {
     }
 
     private static String getInitScript(BiosChip chip) {
-        DataInputStream stream = new DataInputStream(new ByteArrayInputStream(chip.getData()));
-        try {
-            int byteCount = stream.readInt();
-            byte[] data = new byte[byteCount];
-            stream.read(data);
-            stream.close();
-
-            return new String(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return BiosChip.getInitCode(chip);
     }
 
     public static void pushBios(Lua L, BlockEntityDevComputer computer) {

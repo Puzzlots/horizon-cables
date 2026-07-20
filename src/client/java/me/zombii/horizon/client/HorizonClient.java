@@ -1,6 +1,7 @@
 package me.zombii.horizon.client;
 
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.client.ClientModInit;
+import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.ui.UI;
 import me.zombii.horizon.client.cc.gamestate.GameStateDevComputer;
@@ -10,6 +11,7 @@ import me.zombii.horizon.client.screen.HorizonStyles;
 import me.zombii.horizon.common.IHorizonClientBound;
 import me.zombii.horizon.common.cc.blocks.bios.BlockBiosFlasher;
 import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
+import me.zombii.horizon.common.cc.display.ICCScreen;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 
 public class HorizonClient implements ClientModInit {
@@ -22,10 +24,10 @@ public class HorizonClient implements ClientModInit {
                 ScreenBiosFlasher::new
         );
 
-//        HorizonClientRegistries.SCREEN_REGISTRY.store(
-//                BlockDevComputer.SCREEN_ID,
-//                ScreenDevComputer::new
-//        );
+        HorizonClientRegistries.SCREEN_REGISTRY.store(
+                BlockDevComputer.SCREEN_ID,
+                ScreenDevComputer::new
+        );
 
         HorizonClientRegistries.GAMESTATE_REGISTRY.store(
                 BlockDevComputer.SCREEN_ID,
@@ -49,6 +51,7 @@ public class HorizonClient implements ClientModInit {
                         ).apply(info)
                 );
             }
+
         });
     }
 

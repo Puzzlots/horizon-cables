@@ -1,11 +1,13 @@
 package me.zombii.horizon.common.cc.display;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ByteArray;
 import finalforeach.cosmicreach.io.ByteArrayUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class CCPalette implements ICCPalette {
@@ -67,6 +69,14 @@ public class CCPalette implements ICCPalette {
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public void update(ICCPalette palette) {
+        if (!getUUID().equals(palette.getUUID())) return;
+
+        if (Arrays.equals(((CCPalette)palette).palette, this.palette)) return;
+        System.arraycopy(((CCPalette)palette).palette, 0, this.palette, 0, size);
     }
 
     public static final ICCPalette DEFAULT_MONOCHROME = new CCPalette(2)

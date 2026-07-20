@@ -6,6 +6,8 @@ import finalforeach.cosmicreach.networking.GamePacket;
 import finalforeach.cosmicreach.networking.NetworkIdentity;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import me.zombii.horizon.common.IHorizonClientBound;
+import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.cc.display.CCPalette;
 import me.zombii.horizon.common.cc.display.CCScreen;
 import me.zombii.horizon.common.cc.display.ICCPalette;
@@ -18,12 +20,15 @@ public class PacketScreenState extends GamePacket {
     public PacketScreenState() {
     }
 
+//    private BlockPosition position;
     private ICCScreen screen;
-    private BlockPosition position;
 
-    public PacketScreenState(ICCScreen screen, BlockPosition position) {
+    public PacketScreenState(
+            ICCScreen screen
+//            , BlockPosition position
+    ) {
         this.screen = screen;
-        this.position = position;
+//        this.position = position;
     }
 
     @Override
@@ -42,8 +47,9 @@ public class PacketScreenState extends GamePacket {
 
         ICCPalette palette = CCPalette.getOrMake(uuidA, paletteSize);
         screen = CCScreen.getOrMake(uuidB, palette, width, height);
+        screen.read(byteBuf.nioBuffer());
 
-        position = readBlockPositionZoneless(byteBuf);
+//        position = readBlockPositionZoneless(byteBuf);
     }
 
     @Override
@@ -58,15 +64,19 @@ public class PacketScreenState extends GamePacket {
         writeInt(screen.getPalette().getSize());
         screen.write(backingArray);
 
-        writeBlockPosition(position);
+//        writeBlockPosition(position);
+    }
+
+    public ICCScreen getScreen() {
+        return screen;
     }
 
     @Override
     public void handle(NetworkIdentity networkIdentity, ChannelHandlerContext channelHandlerContext) {
         if (networkIdentity.isServer()) return;
 
-        Player player = networkIdentity.getPlayer();
-        position.setGlobal(player.getZone(), position.getGlobalX(), position.getGlobalY(), position.getGlobalZ());
+//        Player player = networkIdentity.getPlayer();
+//        position.setGlobal(player.getZone(), position.getGlobalX(), position.getGlobalY(), position.getGlobalZ());
     }
 
 }

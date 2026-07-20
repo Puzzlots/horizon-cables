@@ -55,7 +55,7 @@ public class PacketRequestScreenState extends GamePacket {
                             position.getGlobalZ()
                     ) <= dst2
             ) {
-                networkIdentity.send(new PacketScreenState(entity.screen, position));
+//                networkIdentity.send(new PacketScreenState(entity.screen, position));
             }
         }
     }

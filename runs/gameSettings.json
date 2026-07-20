@@ -1,11 +1,22 @@
 {
+"musicFrequency": 5,
 "offlineMode": true,
+"voiceVolume": 1,
+"mouseSensitivity": 1,
+"renderDistanceInChunks": 16,
 "difficultyLevel": "NORMAL",
 "defaultGamemode": "creative",
 "chosenLangTag": "en_us",
 "serverName": "Cosmic Reach Server",
+"maxFPS": 120,
 "serverPort": 47137,
+"pvpEnabled": true,
+"soundVolume": 1,
+"micVolume": 1,
+"fieldOfView": 70,
+"keybind_hideUI": 56,
 "whitelistEnabled": false,
+"musicVolume": 0,
 "serverAuthChallenge": 396863520,
-"pvpEnabled": true
+"keybindDisplay_hideUI": "."
 }
