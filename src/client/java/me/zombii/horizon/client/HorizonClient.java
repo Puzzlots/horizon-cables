@@ -31,7 +31,7 @@ public class HorizonClient implements ClientModInit {
 
         HorizonClientRegistries.GAMESTATE_REGISTRY.store(
                 BlockDevComputer.SCREEN_ID,
-                GameStateDevComputer::new
+                GameStateDevComputer.INSTANCE::open
         );
 
         IHorizonClientBound.INSTANCE.set(new IHorizonClientBound() {

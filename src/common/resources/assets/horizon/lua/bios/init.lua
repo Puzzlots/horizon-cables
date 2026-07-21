@@ -103,7 +103,7 @@ local computerAddress = handle.getAddress()
 print("Computer IP: " .. computerAddress)
 
 local bootLoaderEntry = {
-    storageDevice = nil,
+    storageDevice = {},
     initCodeSize = 0,
     initCodeAddress = 0
 }

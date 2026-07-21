@@ -112,7 +112,8 @@ public class BiosChip extends AbstractDataStorageDevice {
 
             chip.init();
 
-            System.arraycopy(bytes, 0, chip.getData(), 0, bytes.length);
+            byte[] data = chip.getData();
+            System.arraycopy(bytes, 0, data, 0, bytes.length);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -2,14 +2,17 @@ package me.zombii.horizon.client.cc.gamestate;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.IGameStateInWorld;
 import finalforeach.cosmicreach.gamestates.InGame;
 import finalforeach.cosmicreach.items.SlotContainerWindows;
 import finalforeach.cosmicreach.items.containers.SlotContainer;
+import finalforeach.cosmicreach.ui.GameStyles;
 import finalforeach.cosmicreach.ui.UI;
 import finalforeach.cosmicreach.ui.screens.ItemScreenComponent;
 import finalforeach.cosmicreach.ui.widgets.ContainerSlotWidget;
@@ -55,14 +58,33 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
         }
     }
 
-    CCScreenRenderer renderer;
-    BlockEntityDevComputer entity;
+    private CCScreenRenderer renderer;
+    private BlockEntityDevComputer entity;
+
+    public static final GameStateDevComputer INSTANCE = new GameStateDevComputer(new ScreenOpenInfo(
+            null, null, null, null, 0, true
+    ));
+
+    public HorizonGameState open(
+            ScreenOpenInfo info
+    ) {
+        setInfo(info);
+        setWindowId(info.windowId());
+        entity = (BlockEntityDevComputer) getInfo().position().getBlockEntity();
+        renderer = CCScreenRenderer.getOrNew(entity.screen);
+        if (screenImage == null) {
+            screenImage = new Image(new TextureRegionDrawable(region = new TextureRegion(region.getTexture())));
+        } else {
+            region.setRegion(renderer.getTexture());
+        }
+        return INSTANCE;
+    }
+
+    private Image screenImage;
+    private TextureRegion region;
 
     private Image initScreen() {
-        renderer = CCScreenRenderer.getOrNew(entity.screen);
-
-        Image screen = new Image(renderer.getTexture());
-        return screen;
+        return screenImage;
     }
 
     @Override
@@ -91,7 +113,6 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
     @Override
     public void create() {
         super.create();
-        entity = (BlockEntityDevComputer) getInfo().position().getBlockEntity();
 
         Image computerBackground = new Image(HorizonStyles.background9Patch);
 

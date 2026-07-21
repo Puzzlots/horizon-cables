@@ -1,6 +1,7 @@
 package me.zombii.horizon.common.cc.computer.storage;
 
 import finalforeach.cosmicreach.util.Identifier;
+import finalforeach.cosmicreach.util.logging.Logger;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -11,8 +12,12 @@ import me.zombii.horizon.common.HorizonRegistries;
 import me.zombii.horizon.common.cc.computer.peripherals.AbstractPeripheral;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
@@ -34,7 +39,7 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
 
     public void load(DataInputStream inputStream) throws IOException {
         if (!initialized) init();
-        inputStream.read(data);
+        inputStream.readFully(data);
     }
 
     public void delete() {
@@ -49,42 +54,53 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
         File partIndex = new File(partFolder, "index.bin");
         if (!partIndex.exists()) partIndex.createNewFile();
 
-        FileOutputStream indexStream = new FileOutputStream(partIndex);
-        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(indexStream);
-        DataOutputStream dataOutputStream = new DataOutputStream(gzipOutputStream);
-        dataOutputStream.writeInt(nextSlot);
-        dataOutputStream.writeInt(deletedSlots.size());
-        for (Integer deletedSlot : deletedSlots) {
-            dataOutputStream.writeInt(deletedSlot);
+        try (
+            FileOutputStream indexStream = new FileOutputStream(partIndex);
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(indexStream);
+            DataOutputStream dataOutputStream = new DataOutputStream(gzipOutputStream);
+        ) {
+            dataOutputStream.writeInt(nextSlot);
+            dataOutputStream.writeInt(deletedSlots.size());
+            for (Integer deletedSlot : deletedSlots) {
+                dataOutputStream.writeInt(deletedSlot);
 
-            File removedComponentFile = new File(partFolder,  "data-" + deletedSlot + ".bin");
-            if (removedComponentFile.exists()) {
-                removedComponentFile.delete();
+                File removedComponentFile = new File(partFolder,  "data-" + deletedSlot + ".bin");
+                if (removedComponentFile.exists()) {
+                    removedComponentFile.delete();
+                }
+            }
+
+            int savableComponents = 0;
+            for (AbstractDataStorageDevice component : COMPONENTS) {
+                if (component.isInitialized()) savableComponents++;
+            }
+
+            dataOutputStream.writeInt(savableComponents);
+
+            for (AbstractDataStorageDevice component : COMPONENTS) {
+                if (component.isInitialized()) {
+                    File componentFile = new File(partFolder,  "data-" + component.slot + ".bin");
+                    if (!componentFile.exists()) componentFile.createNewFile();
+
+                    dataOutputStream.writeUTF(component.getID().toString());
+                    dataOutputStream.writeInt(component.slot);
+
+                    Path target = componentFile.toPath();
+                    Path tmp = target.resolveSibling(componentFile.getName() + ".tmp");
+
+                    try (
+                            FileOutputStream stream = new FileOutputStream(tmp.toFile());
+                            BufferedOutputStream bufStream = new BufferedOutputStream(stream);
+                            GZIPOutputStream gzipStream = new GZIPOutputStream(bufStream);
+                            DataOutputStream dataStream = new DataOutputStream(gzipStream);
+                    ) {
+                        component.save(dataStream);
+                    }
+
+                    Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                }
             }
         }
-
-        int savableComponents = 0;
-        for (AbstractDataStorageDevice component : COMPONENTS) {
-            if (component.isInitialized()) savableComponents++;
-        }
-
-        dataOutputStream.writeInt(savableComponents);
-
-        for (AbstractDataStorageDevice component : COMPONENTS) {
-            if (component.isInitialized()) {
-                File componentFile = new File(partFolder,  "data-" + component.slot + ".bin");
-                if (!componentFile.exists()) componentFile.createNewFile();
-
-                FileOutputStream stream = new FileOutputStream(componentFile);
-                GZIPOutputStream gzipStream = new GZIPOutputStream(stream);
-                DataOutputStream dataStream = new DataOutputStream(gzipStream);
-                component.save(dataStream);
-                dataStream.close();
-                dataOutputStream.writeUTF(component.getID().toString());
-                dataOutputStream.writeInt(component.slot);
-            }
-        }
-        dataOutputStream.close();
     }
 
     public static void loadComponents(File worldLocation) throws IOException {
@@ -96,39 +112,44 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
         File partIndex = new File(partFolder, "index.bin");
         if (!partIndex.exists()) return;
 
-        FileInputStream indexStream = new FileInputStream(partIndex);
-        GZIPInputStream gzipInputStream = new GZIPInputStream(indexStream);
-        DataInputStream dataInputStream = new DataInputStream(gzipInputStream);
-
-        nextSlot = dataInputStream.readInt();
-        deletedSlots.clear();
-        int deletedSlotsSize = dataInputStream.readInt();
-        for (int i = 0; i < deletedSlotsSize; i++) {
-            deletedSlots.add(dataInputStream.readInt());
-        }
-
-        int savedComponentsCount = dataInputStream.readInt();
-        for (int i = 0; i < savedComponentsCount; i++) {
-            Identifier componentID = Identifier.of(dataInputStream.readUTF());
-            int slot = dataInputStream.readInt();
-
-            AbstractDataStorageDevice component = HorizonRegistries.PC_COMPONENT_REGISTRY.get(componentID).get();
-            component.slot = slot;
-
-            File componentFile = new File(partFolder,  "data-" + slot + ".bin");
-            if (!componentFile.exists()) {
-                System.out.println("Missing component file for ID: " + slot);
-                continue;
+        try (
+                FileInputStream indexStream = new FileInputStream(partIndex);
+                GZIPInputStream gzipInputStream = new GZIPInputStream(indexStream);
+                DataInputStream dataInputStream = new DataInputStream(gzipInputStream);
+        ) {
+            nextSlot = dataInputStream.readInt();
+            int deletedSlotsSize = dataInputStream.readInt();
+            deletedSlots.clear();
+            for (int i = 0; i < deletedSlotsSize; i++) {
+                deletedSlots.add(dataInputStream.readInt());
             }
 
-            FileInputStream stream = new FileInputStream(componentFile);
-            GZIPInputStream gzipStream = new GZIPInputStream(stream);
-            DataInputStream dataStream = new DataInputStream(gzipStream);
+            int savedComponentsCount = dataInputStream.readInt();
+            for (int i = 0; i < savedComponentsCount; i++) {
+                Identifier componentID = Identifier.of(dataInputStream.readUTF());
+                int slot = dataInputStream.readInt();
 
-            component.load(dataStream);
-            dataStream.close();
+                AbstractDataStorageDevice component = HorizonRegistries.PC_COMPONENT_REGISTRY.get(componentID).get();
+                component.slot = slot;
+
+                File componentFile = new File(partFolder,  "data-" + slot + ".bin");
+                if (!componentFile.exists()) {
+                    System.out.println("Missing component file for ID: " + slot);
+                    continue;
+                }
+
+                try (
+                    FileInputStream stream = new FileInputStream(componentFile);
+                    GZIPInputStream gzipStream = new GZIPInputStream(stream);
+                    DataInputStream dataStream = new DataInputStream(gzipStream);
+                ) {
+                    component.load(dataStream);
+                } catch (IOException e) {
+                    // genuinely corrupted/truncated file — log it, don't crash silently
+                    Logger.error("Failed to load component from " + componentFile + ", data may be lost", e);
+                }
+            }
         }
-        gzipInputStream.close();
     }
 
     public void init() {
