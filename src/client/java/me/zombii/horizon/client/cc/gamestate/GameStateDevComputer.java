@@ -3,6 +3,7 @@ package me.zombii.horizon.client.cc.gamestate;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -25,6 +26,7 @@ import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import sun.misc.Unsafe;
 
 public class GameStateDevComputer extends HorizonGameState implements IGameStateInWorld {
 
@@ -126,6 +128,8 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
         Table computerTable = new Table();
         computerTable.add(initScreen()).center().width(400).height(400);
         computerTable.row().height(height / 2);
+        Button button = new Button(HorizonStyles.powerButtonOffStyle);
+        computerTable.add(button).center();
 
         float x = margin;
         float y = margin;

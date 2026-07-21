@@ -85,19 +85,14 @@ public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
                     dataOutputStream.writeUTF(component.getID().toString());
                     dataOutputStream.writeInt(component.slot);
 
-                    Path target = componentFile.toPath();
-                    Path tmp = target.resolveSibling(componentFile.getName() + ".tmp");
-
                     try (
-                            FileOutputStream stream = new FileOutputStream(tmp.toFile());
+                            FileOutputStream stream = new FileOutputStream(componentFile);
                             BufferedOutputStream bufStream = new BufferedOutputStream(stream);
                             GZIPOutputStream gzipStream = new GZIPOutputStream(bufStream);
                             DataOutputStream dataStream = new DataOutputStream(gzipStream);
                     ) {
                         component.save(dataStream);
                     }
-
-                    Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
                 }
             }
         }
