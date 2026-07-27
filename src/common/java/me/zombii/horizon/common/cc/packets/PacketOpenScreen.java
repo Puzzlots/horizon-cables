@@ -30,12 +30,13 @@ public class PacketOpenScreen extends GamePacket {
         Identifier screenId = Identifier.of(readString(in));
         BlockPosition blockPosition = readBlockPosition(in, player.getZone());
         int windowId = readInt(in);
+        boolean gameState = readBoolean(in);
 
         CRBinDeserializer deserializer = new CRBinDeserializer();
         deserializer.prepareForRead(in.nioBuffer());
         ItemStack stack = deserializer.readObj("heldStack", ItemStack.class);
 
-        screenOpenInfo = new ScreenOpenInfo(player, screenId, blockPosition, stack, windowId, readBoolean(in));
+        screenOpenInfo = new ScreenOpenInfo(player, screenId, blockPosition, stack, windowId, gameState);
     }
 
     @Override
@@ -43,11 +44,11 @@ public class PacketOpenScreen extends GamePacket {
         writeString(screenOpenInfo.screenId().toString());
         writeBlockPosition(screenOpenInfo.position());
         writeInt(screenOpenInfo.windowId());
+        writeBoolean(screenOpenInfo.isGameState());
 
         CRBinSerializer serial = new CRBinSerializer();
         serial.writeObj("heldStack", screenOpenInfo.stack());
         this.writeCRBin(serial);
-        writeBoolean(screenOpenInfo.isGameState());
     }
 
     @Override
