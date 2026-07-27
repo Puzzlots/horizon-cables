@@ -24,6 +24,7 @@ import me.zombii.horizon.common.wired.network.energy.nodes.EnergyCableNode;
 import java.util.Arrays;
 import java.util.List;
 
+// Very unfinished
 public class PowerCableBlock implements IEnergyBlock {
 
     private static final Direction[] PORTS = {

@@ -8,6 +8,7 @@
 "defaultGamemode": "creative",
 "chosenLangTag": "en_us",
 "serverName": "Cosmic Reach Server",
+"playerVoiceVol_itch_id:10223023": 1,
 "maxFPS": 120,
 "serverPort": 47137,
 "pvpEnabled": true,

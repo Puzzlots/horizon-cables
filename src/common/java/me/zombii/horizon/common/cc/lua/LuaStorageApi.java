@@ -1,11 +1,28 @@
 package me.zombii.horizon.common.cc.lua;
 
+import me.zombii.horizon.common.cc.computer.peripherals.PeripheralInstance;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import org.apache.commons.lang3.function.TriFunction;
 import party.iroiro.luajava.Lua;
+import party.iroiro.luajava.value.LuaFunction;
 import party.iroiro.luajava.value.LuaValue;
 
 public class LuaStorageApi {
+
+    public static void push(PeripheralInstance instance, AbstractDataStorageDevice d, boolean readOnly) {
+        instance.addFunction(add(d, LuaStorageApi::readByteLua), "readByte");
+        instance.addFunction(add(d, LuaStorageApi::readShortLua), "readShort");
+        instance.addFunction(add(d, LuaStorageApi::readIntLua), "readInt");
+        instance.addFunction(add(d, LuaStorageApi::getBytesLua), "getBytes");
+        instance.addFunction(add(d, LuaStorageApi::getSizeLua), "getSize");
+
+        if (!readOnly) {
+            instance.addFunction(add(d, LuaStorageApi::writeByte), "writeByte");
+            instance.addFunction(add(d, LuaStorageApi::writeShort), "writeShort");
+            instance.addFunction(add(d, LuaStorageApi::writeInt), "writeInt");
+            instance.addFunction(add(d, LuaStorageApi::writeBytes), "writeBytes");
+        }
+    }
 
     public static void push(Lua L, AbstractDataStorageDevice d, boolean readOnly) {
         L.newTable();
@@ -23,6 +40,13 @@ public class LuaStorageApi {
             pushFunction(L, t, d, LuaStorageApi::writeInt, "writeInt");
             pushFunction(L, t, d, LuaStorageApi::writeBytes, "writeBytes");
         }
+    }
+
+    private static LuaFunction add(
+            AbstractDataStorageDevice device,
+            TriFunction<AbstractDataStorageDevice, Lua, LuaValue[], LuaValue[]> f
+    ) {
+        return (L, args) -> f.apply(device, L, args);
     }
 
     private static void pushFunction(

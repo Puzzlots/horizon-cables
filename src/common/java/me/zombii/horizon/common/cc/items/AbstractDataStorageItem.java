@@ -6,6 +6,7 @@ import finalforeach.cosmicreach.util.Identifier;
 import io.github.puzzle.cosmic.impl.data.point.single.IntegerDataPoint;
 import io.github.puzzle.cosmic.item.AbstractCosmicItem;
 import me.zombii.horizon.common.HorizonTags;
+import me.zombii.horizon.common.cc.computer.peripherals.PeripheralInstance;
 import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import me.zombii.horizon.common.cc.computer.storage.portable.BasicStorage;
 import me.zombii.horizon.common.cc.lua.LuaStorageApi;
@@ -49,6 +50,15 @@ public abstract class AbstractDataStorageItem extends AbstractCosmicItem impleme
 
         LuaStorageApi.push(L, getStorage(stack), getTags().contains(HorizonTags.TAG_REQUIRES_BURNER_TO_WRITE));
         return true;
+    }
+
+    @Override
+    public PeripheralInstance registerInstance(Lua luaState, SmartEventBusHandle handle, ItemStack stack) {
+        PeripheralInstance instance = register(luaState, handle);
+        instance.begin();
+        LuaStorageApi.push(instance, getStorage(stack), getTags().contains(HorizonTags.TAG_REQUIRES_BURNER_TO_WRITE));
+        instance.end();
+        return instance;
     }
 
     @Override

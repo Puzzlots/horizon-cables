@@ -7,10 +7,7 @@ import me.zombii.horizon.common.cc.lua.LuaCCLib;
 import party.iroiro.luajava.Lua;
 import party.iroiro.luajava.value.LuaValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class AddressableLuaEventBus {
@@ -18,6 +15,11 @@ public class AddressableLuaEventBus {
     private final Object2ObjectMap<String, List<LuaEventConsumer>> listeners = new Object2ObjectOpenHashMap<>();
     private final List<String> usedAddresses = new ObjectArrayList<>();
     private final List<String> freedAddresses = new ObjectArrayList<>();
+    private final UUID busID = UUID.randomUUID();
+
+    public UUID getBusID() {
+        return busID;
+    }
 
     private static final Random random = new Random();
 

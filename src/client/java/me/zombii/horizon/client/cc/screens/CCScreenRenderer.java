@@ -10,29 +10,36 @@ import me.zombii.horizon.common.cc.display.ICCPalette;
 import me.zombii.horizon.common.cc.display.ICCScreen;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class CCScreenRenderer {
 
     private final Pixmap pixmap;
-    private final Texture texture;
+    private Texture texture;
     private final ICCScreen screen;
 
     private static final Object2ObjectMap<UUID, CCScreenRenderer> renderers = new Object2ObjectOpenHashMap<>();
 
-    public static CCScreenRenderer getOrNew(ICCScreen screen) {
-        CCScreenRenderer renderer = renderers.get(screen);
+    public static CCScreenRenderer getOrNew(ICCScreen screen, Consumer<CCScreenRenderer> consumer) {
+        CCScreenRenderer renderer = renderers.get(screen.getUUID());
         if (renderer == null) {
-            renderer = new CCScreenRenderer(screen);
+            renderer = new CCScreenRenderer(screen, consumer);
             renderers.put(screen.getUUID(), renderer);
+        } else {
+            consumer.accept(renderer);
         }
         return renderer;
     }
 
     public CCScreenRenderer(
-            ICCScreen screen
+            ICCScreen screen,
+            Consumer<CCScreenRenderer> consumer
     ) {
         this.pixmap = new Pixmap(screen.getWidth(), screen.getHeight(), Pixmap.Format.RGB565);
-        this.texture = new Texture(screen.getWidth(), screen.getHeight(), Pixmap.Format.RGB565);
+        Gdx.app.postRunnable(() -> {
+            this.texture = new Texture(screen.getWidth(), screen.getHeight(), Pixmap.Format.RGB565);
+            consumer.accept(this);
+        });
         this.screen = screen;
         screen.setOnSwap((c) -> writeToPix());
     }

@@ -21,7 +21,7 @@ import me.zombii.horizon.common.cc.items.HardDiskDriveItem;
 import me.zombii.horizon.common.cc.packets.PacketFlashBIOS;
 import me.zombii.horizon.common.cc.packets.PacketOpenScreen;
 import me.zombii.horizon.common.cc.packets.PacketScreenState;
-import me.zombii.horizon.common.cc.packets.PacketToggleComputer;
+import me.zombii.horizon.common.cc.packets.PacketSetComputerPower;
 import me.zombii.horizon.common.wired.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.wired.blocks.energy.BatteryBlock;
 import me.zombii.horizon.common.wired.blocks.energy.EnergyHubBlock;
@@ -41,7 +41,7 @@ public class HorizonCommon implements ModInit {
     public void onInit() {
 
 //        PowerNetworkHubBlockEntity.register();
-        EnergyNetworkHubBlockEntity.register();
+//        EnergyNetworkHubBlockEntity.register();
 
         // Computer Mod
         BlockEntityBiosFlasher.register();
@@ -65,15 +65,15 @@ public class HorizonCommon implements ModInit {
     public void onEvent(EventRegisterPacket e) {
         e.registerPacket("open-screen", 9200, PacketOpenScreen.class);
         e.registerPacket("flash-bios", 9201, PacketFlashBIOS.class);
-        e.registerPacket("set-computer-power", 9202, PacketToggleComputer.class);
+        e.registerPacket("set-computer-power", 9202, PacketSetComputerPower.class);
         e.registerPacket("screen-update", 9203, PacketScreenState.class);
     }
 
     @SubscribeEvent
     public void onEvent(EventModBlockRegister e) {
-        e.register(new PowerCableBlock());
-        e.register(new EnergyHubBlock());
-        e.register(new BatteryBlock());
+//        e.register(new PowerCableBlock());
+//        e.register(new EnergyHubBlock());
+//        e.register(new BatteryBlock());
 
         // Computer Mod
         e.register(new BlockBiosFlasher());

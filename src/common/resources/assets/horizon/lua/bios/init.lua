@@ -1,16 +1,7 @@
-print("Hello from BIOS :)")
-
-if (table.unpack == nil) then
-    table.unpack = unpack
-end
-if (bit32 == nil) then
-    bit32 = bit
-end
-
 local function bytesToString(bytes)
     local charTable = {}
     for i = 1, #bytes do
-        charTable[i] = string.char(bit32.band(bytes[i], 0xFF))
+        charTable[i] = string.char(bit.band(bytes[i], 0xFF))
     end
     return table.concat(charTable)
 end
@@ -71,7 +62,7 @@ end
 local modEnv = {
     math = math,
     bit = bit,
-    bit32 = bit32,
+    bit32 = bit,
     string = string,
     table = table,
     require = require,
@@ -90,13 +81,71 @@ local modEnv = {
 
 modEnv._G = modEnv
 
+------------------------------------------------
 local fontLib = loadfile("font.lua", modEnv)()
+local screenP = cc.peripherals.internal.findPeripherals("cc:screen", "cc:screen")
+local sapi = screenP[1].api
+local lineXOffset = 1
 
-local glyph = fontLib.getGlyph("H")
+local function displayGlyph(glyph, sx, sy)
+    local img = fontLib.__font_image
 
-print(bit32.band(fontLib.__font_image.getPixel(glyph.x + 1, glyph.y), 0x0000FF))
---print(getGlyphs("Hi"))
+    for x = 0, 4 do
+        for y = 0, 4 do
+            local p = img.getPixel(x + glyph.x, y + glyph.y)
+            local a = bit.rshift(bit.band(p, 0xFF000000), 24)
+            --local r = bit.rshift(bit.band(p, 0x00FF0000), 16)
+            --local g = bit.rshift(bit.band(p, 0x0000FF00), 8)
+            --local b = bit.band(p, 0x000000FF)
 
+            if a == 255 or a == 254 then
+                sapi.setPixel(sx + x, sy + y, 1)
+            else
+                sapi.setPixel(sx + x, sy + y, 0)
+            end
+        end
+    end
+end
+
+local function displayGlyphs(glyphs, sx, sy)
+    local offsX = 1
+    for _, v in ipairs(glyphs) do
+        displayGlyph(v, sx + offsX, sy)
+        offsX = offsX + 5
+    end
+end
+
+local function displayString(value, sx, sy)
+    displayGlyphs(fontLib.getGlyphs(value), sx, sy)
+end
+
+print = function(...)
+    local data = { ... }
+    local outString = ""
+    for _, v in ipairs(data) do
+        outString = outString .. tostring(v) .. " "
+    end
+
+    -- should prolly make screen not double-buffered so i dont have to do weird things, or I store all prints
+    displayString(outString, 1, lineXOffset)
+    sapi.swap()
+    lineXOffset = lineXOffset + 6
+end
+modEnv.print = print
+
+clear = function()
+    sapi.fill(0)
+    sapi.swap()
+    lineXOffset = 1
+end
+modEnv.clear = clear
+
+-- clear both buffers
+sapi.fill(0)
+sapi.swap()
+------------------------------------------------
+
+print("Hello from BIOS :)")
 local handle = cc.eventBus.getNewAddress()
 local computerAddress = handle.getAddress()
 
@@ -142,11 +191,7 @@ local function findBootloaders()
     local hardDisks = cc.peripherals.internal.findPeripherals("cc:hard-disk-drive", "cc:storage-device")
     local floppyDisks = cc.peripherals.internal.findPeripherals("cc:floppy-disk", "cc:storage-device")
     local compactDiscs = cc.peripherals.internal.findPeripherals("cc:compact-disc", "cc:storage-device")
-    local bootableMedia = table.pack(
-            table.unpack(hardDisks),
-            table.unpack(floppyDisks),
-            table.unpack(compactDiscs)
-    )
+    local bootableMedia = { unpack(hardDisks), unpack(floppyDisks), unpack(compactDiscs) }
 
     local foundBootloaders = {}
     if #bootableMedia ~= 0 then
@@ -187,7 +232,7 @@ end
 --
 --cc = nil
 
---local bootEntry = findBootloaders()[1]
+local bootEntries = findBootloaders()
 --assert(type(bootEntry) == "table")
 --setmetatable(bootEntry, bootLoaderEntry)
 --local initFunc = bootEntry:loadInit()
@@ -199,3 +244,4 @@ end
 --    },
 --    biosApi
 --);
+

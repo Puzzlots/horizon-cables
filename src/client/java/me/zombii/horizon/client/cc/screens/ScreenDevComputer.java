@@ -63,7 +63,7 @@ public class ScreenDevComputer extends HorizonBaseScreen implements ISlotContain
         );
 
         Button onButton = new Button(
-                entity.getPowerState() ?
+                entity.isOn() ?
                 HorizonStyles.powerButtonOnStyle :
                 HorizonStyles.powerButtonOffStyle
         );
@@ -77,9 +77,9 @@ public class ScreenDevComputer extends HorizonBaseScreen implements ISlotContain
                 }
                 if (wasPressed && !onButton.isPressed()) {
                     wasPressed = false;
-                    entity.setPowerState(!entity.getPowerState());
+                    entity.setPowerState(!entity.isOn());
                     onButton.setStyle(
-                            entity.getPowerState() ?
+                            entity.isOn() ?
                             HorizonStyles.powerButtonOnStyle :
                             HorizonStyles.powerButtonOffStyle
                     );

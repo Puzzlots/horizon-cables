@@ -2,6 +2,8 @@ package me.zombii.horizon.common.cc.lua;
 
 import finalforeach.cosmicreach.items.ItemStack;
 import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
+import me.zombii.horizon.common.cc.computer.peripherals.PeripheralInstance;
+import me.zombii.horizon.common.cc.items.IPeripheral;
 import me.zombii.horizon.common.cc.items.IPeripheralItem;
 import me.zombii.horizon.common.cc.lua.bus.AddressableLuaEventBus;
 import me.zombii.horizon.common.cc.lua.bus.SmartEventBusHandle;
@@ -23,7 +25,7 @@ public class LuaPeripheralApi {
     public static void pushInternal(Lua L, BlockEntityDevComputer be) {
         L.newTable();
         int t = L.getTop();
-        pushFunction(L, t, be, LuaPeripheralApi::findPeripherals, "findPeripherals");
+        pushFunction(L, t, be, LuaPeripheralApi::findPeripheralsInternal, "findPeripherals");
     }
 
     private static void pushFunction(
@@ -37,7 +39,7 @@ public class LuaPeripheralApi {
         lua.setField(idx, name);
     }
 
-    public static LuaValue[] findPeripherals(BlockEntityDevComputer device, Lua L, LuaValue[] args) {
+    public static LuaValue[] findPeripheralsInternal(BlockEntityDevComputer device, Lua L, LuaValue[] args) {
         String requestedId = null;
         String requestedType = null;
         if (args.length > 2) {
@@ -70,13 +72,13 @@ public class LuaPeripheralApi {
         L.newTable();
         int t = L.getTop();
 
-        AddressableLuaEventBus bus = device.getInternalBus();
+        PeripheralInstance[] instances = device.getPeripheralInstances();
 
         int number = 1;
-        for (int i = 0; i < device.getContainer().numberOfSlots; i++) {
-            ItemStack stack = device.getContainer().getSlot(i).getItemStack();
-            if (stack == null) continue;
-            if (!(stack.getItem() instanceof IPeripheralItem peripheral)) continue;
+        for (PeripheralInstance instance : instances) {
+            if (instance == null) continue;
+
+            IPeripheral peripheral = instance.getPeripheral();
 
             if (requestedId != null && !peripheral.getPeripheralID().equals(requestedId)) continue;
             if (requestedType != null && !peripheral.getPeripheralType().equals(requestedType)) continue;
@@ -88,16 +90,15 @@ public class LuaPeripheralApi {
             L.push(peripheral.getPeripheralType());
             L.setField(p, "peripheral_type");
 
-            SmartEventBusHandle handle = bus.getNewAddress();
-            L.push(handle.getAddress());
+            L.push(instance.getHandle().getAddress());
             L.setField(p, "address");
 
-            boolean returnedApiTable = peripheral.register(L, handle, stack);
-            if (returnedApiTable) {
-                L.setField(p, "api");
-            }
+            L.push(instance.getApi());
+            L.setField(p, "api");
+
             L.rawSetI(t, number++);
         }
+
         return new LuaValue[]{L.get()};
     }
 

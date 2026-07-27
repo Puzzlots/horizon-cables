@@ -1,6 +1,7 @@
 package me.zombii.horizon.common.cc.display;
 
 import com.badlogic.gdx.utils.ByteArray;
+import me.zombii.horizon.common.cc.items.IPeripheral;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;

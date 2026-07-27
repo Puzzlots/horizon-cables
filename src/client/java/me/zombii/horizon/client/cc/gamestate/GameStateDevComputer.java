@@ -3,6 +3,7 @@ package me.zombii.horizon.client.cc.gamestate;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -13,7 +14,6 @@ import finalforeach.cosmicreach.gamestates.IGameStateInWorld;
 import finalforeach.cosmicreach.gamestates.InGame;
 import finalforeach.cosmicreach.items.SlotContainerWindows;
 import finalforeach.cosmicreach.items.containers.SlotContainer;
-import finalforeach.cosmicreach.ui.GameStyles;
 import finalforeach.cosmicreach.ui.UI;
 import finalforeach.cosmicreach.ui.screens.ItemScreenComponent;
 import finalforeach.cosmicreach.ui.widgets.ContainerSlotWidget;
@@ -26,7 +26,6 @@ import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 import me.zombii.horizon.common.screen.ScreenOpenInfo;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import sun.misc.Unsafe;
 
 public class GameStateDevComputer extends HorizonGameState implements IGameStateInWorld {
 
@@ -67,26 +66,57 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
             null, null, null, null, 0, true
     ));
 
+    private void initButtons() {
+        if (powerButton != null) {
+            powerButton.setStyle(entity.isOn() ? HorizonStyles.powerButtonOnStyle : HorizonStyles.powerButtonOffStyle);
+        }
+        if (biosChipSlot != null) {
+            biosChipSlot.remove();
+        }
+        biosChipSlot = new ContainerSlotWidget(
+                getInfo().windowId(),
+                entity, entity::getContainer, 0,
+                false
+        );
+        biosChipSlot.itemStackWidget.doDraw = true;
+        computerTable.add(biosChipSlot).size(50).center();
+    }
+
     public HorizonGameState open(
             ScreenOpenInfo info
     ) {
         setInfo(info);
         setWindowId(info.windowId());
         entity = (BlockEntityDevComputer) getInfo().position().getBlockEntity();
-        renderer = CCScreenRenderer.getOrNew(entity.screen);
-        if (screenImage == null) {
-            screenImage = new Image(new TextureRegionDrawable(region = new TextureRegion(region.getTexture())));
-        } else {
-            region.setRegion(renderer.getTexture());
+
+        if (screenHolder == null) {
+            screenHolder = new Stack(screenImage = new Image(HorizonStyles.background9Patch));
+            screenImage.setFillParent(true);
+            screenHolder.setSize(entity.screen.getWidth(), entity.screen.getHeight());
+        }
+
+        renderer = CCScreenRenderer.getOrNew(entity.screen, (r) -> {
+            if (screenImage == null || region == null) {
+                screenHolder.clear();
+                screenImage = new Image(new TextureRegionDrawable(region = new TextureRegion(r.getTexture())));
+                screenHolder.add(screenImage);
+            } else {
+                region.setRegion(r.getTexture());
+            }
+        });
+
+        if (isCreated()) {
+            initButtons();
         }
         return INSTANCE;
     }
 
     private Image screenImage;
+    private Stack screenHolder;
     private TextureRegion region;
 
-    private Image initScreen() {
-        return screenImage;
+    private Stack initScreen() {
+        return screenHolder;
     }
 
     @Override
@@ -112,6 +142,10 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
         stage.getActors().removeValue(UI.itemCursor, false);
     }
 
+    Button powerButton;
+    ContainerSlotWidget biosChipSlot;
+    Table computerTable;
+
     @Override
     public void create() {
         super.create();
@@ -125,11 +159,33 @@ public class GameStateDevComputer extends HorizonGameState implements IGameState
         float width = newUiViewport.getWorldWidth() - (2 * margin);
         float height = newUiViewport.getWorldHeight() - (2 * margin);
 
-        Table computerTable = new Table();
-        computerTable.add(initScreen()).center().width(400).height(400);
+        computerTable = new Table();
+        computerTable.add(initScreen()).size(400).center();
         computerTable.row().height(height / 2);
-        Button button = new Button(HorizonStyles.powerButtonOffStyle);
-        computerTable.add(button).center();
+        powerButton = new Button(HorizonStyles.powerButtonOffStyle);
+        powerButton.addAction(new Action() {
+            boolean wasPressed = false;
+
+            @Override
+            public boolean act(float v) {
+                if (!wasPressed && powerButton.isPressed()) {
+                    wasPressed = true;
+                }
+                if (wasPressed && !powerButton.isPressed()) {
+                    wasPressed = false;
+                    entity.setPowerState(!entity.isOn());
+                    powerButton.setStyle(
+                            entity.isOn() ?
+                                    HorizonStyles.powerButtonOnStyle :
+                                    HorizonStyles.powerButtonOffStyle
+                    );
+//                    onButton.setText(entity.getPowerState() ? "turn off" : "turn on");
+                }
+                return false;
+            }
+        });
+        computerTable.add(powerButton).size(50).center();
+        initButtons();
 
         float x = margin;
         float y = margin;

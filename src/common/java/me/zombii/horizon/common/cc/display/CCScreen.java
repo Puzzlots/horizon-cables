@@ -76,6 +76,7 @@ public class CCScreen implements ICCScreen {
     public void swap() {
         byte[] back = this.backBuffer.get();
         byte[] front = this.frameBuffer.get();
+        System.arraycopy(back, 0, front, 0, front.length);
         this.backBuffer.set(front);
         this.frameBuffer.set(back);
         onSwap.accept(this);
@@ -133,7 +134,7 @@ public class CCScreen implements ICCScreen {
 
     @Override
     public void setPixel(int x, int y, byte idx) {
-        getFrameBuffer()[x + (width * y)] = idx;
+        getBackBuffer()[x + (width * y)] = idx;
     }
 
     @Override

@@ -9,17 +9,12 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import me.zombii.horizon.common.HorizonRegistries;
-import me.zombii.horizon.common.cc.computer.peripherals.AbstractPeripheral;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
 
-public abstract class AbstractDataStorageDevice extends AbstractPeripheral {
+public abstract class AbstractDataStorageDevice {
 
     public static final ObjectList<AbstractDataStorageDevice> COMPONENTS = new ObjectArrayList<>();
     public static final Int2ObjectMap<AbstractDataStorageDevice> COMPONENTS_BY_ID = new Int2ObjectArrayMap<>();

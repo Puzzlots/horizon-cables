@@ -1,15 +1,19 @@
 package me.zombii.horizon.common.cc.items;
 
-import finalforeach.cosmicreach.items.ItemStack;
+import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import me.zombii.horizon.common.cc.computer.peripherals.PeripheralInstance;
 import me.zombii.horizon.common.cc.lua.bus.SmartEventBusHandle;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
 import party.iroiro.luajava.Lua;
 
-public interface IPeripheralItem extends IPeripheral {
+public interface IPeripheralBlockEntity extends IPeripheral {
 
-    default boolean register(Lua L, SmartEventBusHandle handle, ItemStack stack) {
+    default PeripheralInstance registerBE(Lua L, SmartEventBusHandle handle, BlockEntity entity) {
+        return new PeripheralInstance(L, this, handle);
+    }
+
+    default boolean register(Lua L, SmartEventBusHandle handle, BlockEntity blockEntity) {
         handle.registerEventHandler((fromAddress, toAddress, eventName, eventDataStr) -> {
             if (fromAddress.equals(toAddress)) return;
             if (fromAddress.equals(handle.getAddress())) return;
@@ -32,12 +36,4 @@ public interface IPeripheralItem extends IPeripheral {
         return false;
     }
 
-    @Override
-    default void unregister(SmartEventBusHandle handle) {
-        IPeripheral.super.unregister(handle);
-    }
-
-    default PeripheralInstance registerInstance(Lua luaState, SmartEventBusHandle handle, ItemStack stack) {
-        return register(luaState, handle);
-    }
 }

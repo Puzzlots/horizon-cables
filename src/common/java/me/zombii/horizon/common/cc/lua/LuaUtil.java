@@ -6,9 +6,24 @@ import party.iroiro.luajava.value.LuaFunction;
 import party.iroiro.luajava.value.LuaValue;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class LuaUtil {
+
+    public static LuaFunction newRunnable(Runnable runnable) {
+        return (L, args) -> {
+            runnable.run();
+            return LuaCCLib.EMPTY;
+        };
+    }
+
+    public static LuaFunction newByteConsumer(Consumer<Byte> supplier) {
+        return (L, args) -> {
+            long numberA = args[0].toInteger();
+            supplier.accept((byte) (numberA & 0xFF));
+            return LuaCCLib.EMPTY;
+        };
+    }
 
     public static LuaFunction newNumberGetter(Supplier<Number> supplier) {
         return (L, args) -> {

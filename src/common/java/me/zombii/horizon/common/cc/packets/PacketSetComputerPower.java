@@ -8,15 +8,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
 
-public class PacketToggleComputer extends GamePacket {
+public class PacketSetComputerPower extends GamePacket {
 
-    public PacketToggleComputer() {
+    public PacketSetComputerPower() {
     }
 
     private final BlockPosition position = new BlockPosition();
     private boolean powerState;
 
-    public PacketToggleComputer(BlockEntityDevComputer be, boolean powerState) {
+    public PacketSetComputerPower(BlockEntityDevComputer be, boolean powerState) {
         position.setGlobal(
                 be.getZone(),
                 be.getGlobalX(),
@@ -62,6 +62,14 @@ public class PacketToggleComputer extends GamePacket {
                 entity.setPowerState(powerState);
             }
         }
+    }
+
+    public BlockPosition getPosition() {
+        return position;
+    }
+
+    public boolean getPowerState() {
+        return powerState;
     }
 
 }
