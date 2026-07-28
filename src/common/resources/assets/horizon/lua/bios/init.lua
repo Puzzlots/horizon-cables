@@ -141,8 +141,7 @@ end
 modEnv.clear = clear
 
 -- clear both buffers
-sapi.fill(0)
-sapi.swap()
+clear()
 ------------------------------------------------
 
 print("Hello from BIOS :)")
