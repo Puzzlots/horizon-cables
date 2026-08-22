@@ -14,6 +14,7 @@ import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.constants.Direction;
+import me.zombii.horizon.common.DirectionUtil;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.common.wired.network.AbstractNetwork;
@@ -84,6 +85,7 @@ public class DiodeBlock implements IEnergyBlock {
     @Override
     public void onPlace(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
+        DirectionUtil.flipOnSneak(args);
 
         EnergyNetwork network = NetworkManager.findNetwork(
                 IEnergyBlock.class,

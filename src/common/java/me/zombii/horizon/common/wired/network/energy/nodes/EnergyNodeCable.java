@@ -30,53 +30,15 @@ public class EnergyNodeCable extends EnergyNode {
     @Override
     public void onPowerOn(Direction direction) {
         Set<EnergyNode> visited = new HashSet<>();
-        Set<NodeReference> visited2 = new HashSet<>();
-        ObjectList<EnergyNodeCable> nodes = new ObjectArrayList<>();
-        nodes.add(this);
         spreadPower(visited, direction, true);
-//        spreadPower2(nodes, visited2, direction, true);
     }
 
     @Override
     public void onPowerOff(Direction direction) {
         Set<EnergyNode> visited = new HashSet<>();
-        Set<NodeReference> visited2 = new HashSet<>();
-        ObjectList<EnergyNodeCable> nodes = new ObjectArrayList<>();
-        nodes.add(this);
         spreadPower(visited, direction, false);
-//        spreadPower2(nodes, visited2, direction, false);
     }
 
-    private void spreadPower2(
-            ObjectList<EnergyNodeCable> queue,
-            Set<NodeReference> visited,
-            Direction direction,
-            boolean powerOn
-    ) {
-        push(() -> {
-            if (!queue.isEmpty()) {
-                EnergyNodeCable cable = queue.removeFirst();
-                if (!visited.add(cable.getRef())) return;
-
-                for (int i = 0; i < cable.getConnections().length; i++) {
-                    NodeReference connection = cable.getConnections()[i];
-                    if (connection != null && connection.getNetwork() != null) {
-                        EnergyNode con = (EnergyNode) connection.getNode();
-                        if (con instanceof EnergyNodeCable c) {
-                            queue.add(c);
-                            continue;
-                        }
-                        int finalI = i;
-                        if (powerOn) {
-                            push(() -> con.powerOn(Direction.ALL_DIRECTIONS[finalI]));
-                            continue;
-                        }
-                        push(() -> con.powerOn(Direction.ALL_DIRECTIONS[finalI]));
-                    }
-                }
-            }
-        });
-    }
 
     private void spreadPower(Set<EnergyNode> visited, Direction powerDir, boolean power) {
         ObjectList<NodeReference> references = new ObjectArrayList<>();
@@ -103,9 +65,6 @@ public class EnergyNodeCable extends EnergyNode {
                 } else {
                     if (power) eNode.powerOn(direction);
                     else eNode.powerOff(direction);
-//                    System.out.println(eNode);
-//                    if (isPowered()) push(() -> eNode.powerOn(direction));
-//                    else push((() -> eNode.powerOff(direction)));
                 }
             }
         }

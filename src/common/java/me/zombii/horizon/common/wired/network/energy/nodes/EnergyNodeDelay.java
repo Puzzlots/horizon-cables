@@ -26,6 +26,9 @@ public class EnergyNodeDelay extends EnergyNode {
 
     @Override
     public void powerOn(Direction direction) {
+        Direction pointing = getState().getParamDirection("direction");
+        if (direction != pointing) return;
+
         if (isWaiting.get()) {
             shouldBeOn.set(true);
             return;
@@ -36,6 +39,9 @@ public class EnergyNodeDelay extends EnergyNode {
 
     @Override
     public void powerOff(Direction direction) {
+        Direction pointing = getState().getParamDirection("direction");
+        if (direction != pointing) return;
+
         if (isWaiting.get()) {
             shouldBeOn.set(false);
             return;
@@ -48,9 +54,6 @@ public class EnergyNodeDelay extends EnergyNode {
 
     @Override
     public void onPowerOn(Direction direction) {
-        Direction pointing = getState().getParamDirection("direction");
-        if (direction != pointing) return;
-
         AbstractNode node = getNetwork().getNode(
                 getX() + direction.getXOffset(),
                 getY() + direction.getYOffset(),
@@ -86,9 +89,6 @@ public class EnergyNodeDelay extends EnergyNode {
 
     @Override
     public void onPowerOff(Direction direction) {
-        Direction pointing = getState().getParamDirection("direction");
-        if (direction != pointing) return;
-
         AbstractNode node = getNetwork().getNode(
                 getX() + direction.getXOffset(),
                 getY() + direction.getYOffset(),
