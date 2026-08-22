@@ -107,6 +107,7 @@ public abstract class AbstractNetwork {
 
         nodeMap.remove(x, y, z);
         nodeList.remove(node);
+        nodeCount.decrementAndGet();
 
         NodeReference[] connections = node.getConnections();
         for (int i = 0; i < connections.length; i++) {
@@ -114,7 +115,7 @@ public abstract class AbstractNetwork {
             Direction opposite = direction.getOpposite();
 
             NodeReference oldNodeRef = connections[i];
-            if (oldNodeRef == null) continue;
+            if (oldNodeRef == null || oldNodeRef.getNetwork() == null) continue;
             oldNodeRef.getNode().getConnections()[opposite.ordinal()] = null;
         }
     }
@@ -155,6 +156,8 @@ public abstract class AbstractNetwork {
     }
 
     public NetworkGroup<?> getGroup() {
+        System.out.println(netID);
+        if (group == null) throw new IllegalStateException("Group is null");
         return group;
     }
 

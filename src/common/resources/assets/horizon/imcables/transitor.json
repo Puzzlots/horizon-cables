@@ -1,0 +1,88 @@
+{
+	"textures": {
+		"transistor.png": {
+			"fileName": "horizon:imcables/transistor.png",
+		}
+	},
+	"cuboids": [{
+			"localBounds": [6,6,0,10,10,2],
+			"faces": {
+				"localPosY": {"uv":[8,16,12,14],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[12,14,8,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,0,4,4],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[8,16,12,14],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[12,14,8,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90}
+			}
+		}, {
+			"localBounds": [6,11,6,10,16,10],
+			"faces": {
+				"localPosY": {"uv":[0,12,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[4,12,0,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localPosZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localPosX": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[5,16,0,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":270}
+			}
+		}, {
+			"localBounds": [6,0,6,10,5,10],
+			"faces": {
+				"localPosY": {"uv":[0,12,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[4,12,0,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localPosZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localPosX": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[5,16,0,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":270}
+			}
+		}, {
+			"localBounds": [0,6,6,5,10,10],
+			"faces": {
+				"localPosY": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[5,12,0,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,16,5,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[0,8,4,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[0,12,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":270}
+			}
+		}, {
+			"localBounds": [11,6,6,16,10,10],
+			"faces": {
+				"localPosY": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[5,12,0,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,16,5,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[0,12,5,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[0,8,4,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[0,12,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":270}
+			}
+		}, {
+			"localBounds": [6,6,14,10,10,16],
+			"faces": {
+				"localPosY": {"uv":[12,16,16,14],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[16,14,12,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,0,4,4],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[12,16,16,14],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[16,14,12,16],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90}
+			}
+		}, {
+			"localBounds": [5,5,2,11,11,8],
+			"faces": {
+				"localPosY": {"uv":[10,6,16,0],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[16,0,10,6],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[4,6,10,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[10,6,16,0],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[16,0,10,6],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90}
+			}
+		}, {
+			"localBounds": [5,5,8,11,11,14],
+			"faces": {
+				"localPosY": {"uv":[10,12,16,6],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegY": {"uv":[16,6,10,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localNegZ": {"uv":[0,0,4,4],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosZ": {"uv":[4,0,10,6],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":0},
+				"localPosX": {"uv":[10,12,16,6],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90},
+				"localNegX": {"uv":[16,6,10,12],"ambientocclusion":false,"cullFace":false,"texture":"transistor.png","uvRotation":90}
+			}
+		}]
+}

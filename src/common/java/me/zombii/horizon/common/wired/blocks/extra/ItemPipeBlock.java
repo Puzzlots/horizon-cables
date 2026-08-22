@@ -43,6 +43,7 @@ public class ItemPipeBlock implements IModBlock {
     public void onRegistered(Block block) {
         ISidedBlockConnector.getInstance().registerAsConnectedBlock(block, this.connector);
         for (BlockState value : block.blockStates.values()) {
+            value.initTagList();
             value.tags.add(HorizonTags.TAG_ITEM_PIPE);
         }
     }

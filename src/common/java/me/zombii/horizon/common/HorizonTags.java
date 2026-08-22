@@ -20,4 +20,7 @@ public class HorizonTags {
 
     public static final GameTag TAG_ENERGY_COMPATIBLE = GameTag.get("horizon-energy-compatible");
 
+    public static final GameTag TAG_CABLE_CONNECTABLE = GameTag.get("immersive-receiver");
+    public static final GameTag TAG_STOP_PISTON_PUSH = GameTag.get("stops_piston_push");
+    public static final GameTag TAG_STOP_PISTON_PULL = GameTag.get("stops_piston_pull");
 }

@@ -3,6 +3,7 @@
 "offlineMode": true,
 "voiceVolume": 1,
 "mouseSensitivity": 1,
+"keybind_debugInfo": 57,
 "renderDistanceInChunks": 16,
 "difficultyLevel": "NORMAL",
 "defaultGamemode": "creative",

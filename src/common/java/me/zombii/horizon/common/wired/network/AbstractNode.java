@@ -5,6 +5,8 @@ import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.blocks.MissingBlockStateResult;
+import finalforeach.cosmicreach.singletons.GameSingletons;
+import finalforeach.cosmicreach.world.Zone;
 import org.hjson.JsonArray;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
@@ -21,10 +23,12 @@ public abstract class AbstractNode {
     public static final int POS_Z = 5;
 
     private final NodeReference[] connections;
-    private final AbstractNetwork network;
+    private AbstractNetwork network;
     private BlockState state;
     private INetworkedBlock<?> block;
     private NodeReference self;
+    private Zone zone;
+    private String zoneId;
 
     private int x, y, z;
 
@@ -33,6 +37,9 @@ public abstract class AbstractNode {
         this.network = network;
         this.state = state;
         this.block = block;
+
+        this.zone = pos.getZone();
+        this.zoneId = zone.zoneId;
 
         this.x = pos.getGlobalX();
         this.y = pos.getGlobalY();
@@ -46,12 +53,26 @@ public abstract class AbstractNode {
         this.network = null;
         this.state = null;
         this.block = null;
+        this.zone = null;
 
         this.x = 0;
         this.y = 0;
         this.z = 0;
 
         this.self = null;
+    }
+
+    public void setState(BlockState state) {
+        this.state = state;
+    }
+
+    public Zone getZone() {
+        if (zone == null) {
+            zone = GameSingletons.world.getZoneIfExists(
+                    zoneId == null ? GameSingletons.world.defaultZoneId : zoneId
+            );
+        }
+        return zone;
     }
 
     public int getX() {
@@ -98,6 +119,7 @@ public abstract class AbstractNode {
                 .add(this.getY())
                 .add(this.getZ())
         );
+        nodeObject.add("zone", getZone().zoneId);
 
         JsonArray connections = new JsonArray();
         for (NodeReference con : this.connections) {
@@ -123,6 +145,7 @@ public abstract class AbstractNode {
         this.x = positions.get(0).asInt();
         this.y = positions.get(1).asInt();
         this.z = positions.get(2).asInt();
+        this.zoneId = nodeObject.getString("zone", null);
 
         NetworkGroup<?> group = network.getGroup();
 
@@ -142,6 +165,7 @@ public abstract class AbstractNode {
             );
 
         }
+        this.network = network;
         this.self = new NodeReference(group, network.getNetworkID(), x, y, z);
         this.block = (INetworkedBlock<?>) BlockLoader.INSTANCE.getModdedFromVanillaBlock(Block.getById(nodeObject.get("blockID").asString()));
         this.state = BlockState.getInstance(nodeObject.get("stateID").asString(), MissingBlockStateResult.MISSING_OBJECT);
@@ -150,4 +174,5 @@ public abstract class AbstractNode {
     public NodeReference getRef() {
         return self;
     }
+
 }

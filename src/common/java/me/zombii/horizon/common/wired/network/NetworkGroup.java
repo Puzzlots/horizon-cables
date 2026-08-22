@@ -114,11 +114,13 @@ public class NetworkGroup<T extends AbstractNetwork> {
             T network = networkMaker.get();
             network.setGroup(this);
             network.setNetworkID(networkID);
-            network.load(networkObject);
 
             this.networks.add(network);
             idToNetwork.put(networkID, network);
             networkToId.put(network, networkID);
+
+            network.load(networkObject);
+
 //            System.out.println("Adding network: " + network);
         }
     }

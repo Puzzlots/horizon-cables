@@ -109,8 +109,8 @@ public class CableConnectorFunction implements ISidedBlockConnector.ConnectorFun
         boolean canConnectA = this.networkedBlock.canConnect(state, direction, target);
 
         IModBlock modBlock = BlockLoader.INSTANCE.getModdedFromVanillaBlock(target.getBlock());
-        if (!(modBlock instanceof INetworkedBlock)) return canConnectA;
-        boolean canConnectB = this.networkedBlock.canConnect(target, direction.getOpposite(), state);
+        if (!(modBlock instanceof INetworkedBlock networkedBlock2)) return canConnectA;
+        boolean canConnectB = networkedBlock2.canConnect(target, direction.getOpposite(), state);
 
         return canConnectA && canConnectB;
     }

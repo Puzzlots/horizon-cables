@@ -110,7 +110,8 @@ public class BatteryBlock implements IEnergyBlock {
     @Override
     public boolean canConnect(BlockState state, Direction direction, BlockState target) {
         if (!PORT_LIST.contains(direction)) return false;
-        IGameTagList list = state.getTags();
+
+        IGameTagList list = target.getTags();
         return list.contains(HorizonTags.TAG_ENERGY_COMPATIBLE);
     }
 
@@ -150,7 +151,10 @@ public class BatteryBlock implements IEnergyBlock {
     @Override
     public void onRegistered(Block block) {
         for (BlockState value : block.blockStates.values()) {
+            value.initTagList();
             value.tags.add(HorizonTags.TAG_ENERGY_COMPATIBLE);
+            value.tags.add(HorizonTags.TAG_STOP_PISTON_PUSH);
+            value.tags.add(HorizonTags.TAG_STOP_PISTON_PULL);
         }
     }
 }

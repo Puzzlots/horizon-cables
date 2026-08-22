@@ -5,6 +5,7 @@ import finalforeach.cosmicreach.blocks.blockentities.BlockEntity;
 import finalforeach.cosmicreach.blocks.blockentities.BlockEntityCreator;
 import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.entities.player.Player;
+import finalforeach.cosmicreach.networking.server.ServerSingletons;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
 import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.singletons.GameSingletons;
@@ -38,8 +39,17 @@ public class EnergyNetworkHubBlockEntity extends BlockEntity implements IEnergyH
 
     @Override
     public void onInteract(Player player, Zone zone) {
-        if (!GameSingletons.isClient()) return;
-        Chat.MAIN_CLIENT_CHAT.addMessage(null, "Hub at (" + getGlobalX() + ", " + getGlobalY() + ", " + getGlobalZ() + ") has the network ID of " + networkID);
+        if (!GameSingletons.isHost()) return;
+
+        String message = "Switch Hub at (" + getGlobalX() + ", " + getGlobalY() + ", " + getGlobalZ() + ") has the network ID of " + networkID;
+
+        if (player.getEntity().viewPositionOffset == player.sneakingViewPositionOffset) {
+            if (!GameSingletons.isClient()) {
+                ServerSingletons.getConnection(player).sendChatMessage(message);
+            } else {
+                Chat.MAIN_CLIENT_CHAT.addMessage(null, message);
+            }
+        }
     }
 
     @Override

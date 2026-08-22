@@ -19,6 +19,7 @@
   "entrypoints": {
     "client-init": "${p_group}.client.HorizonClient",
     "init": "${p_group}.common.HorizonCommon",
+    "postInit": "${p_group}.common.HorizonCommon",
     "server-init": "${p_group}.server.HorizonServer"
   },
 
@@ -35,7 +36,7 @@
   ],
 
   "depends": {
-    "cosmic-reach": ">=0.5.20-alpha",
+    "cosmic-reach": ">=0.5.28-alpha",
     "puzzle-loader-cosmic": ">=1.7.2-alpha",
     "puzzle-loader-core": ">=1.4.1-alpha",
     "cosmic-api": ">=1.4.4-0.5.25"

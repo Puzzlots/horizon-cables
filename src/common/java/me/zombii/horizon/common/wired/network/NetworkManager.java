@@ -53,8 +53,8 @@ public class NetworkManager {
                 @SuppressWarnings("unchecked")
                 N neighborNetworkedBlock = (N) neighborModBlock;
 
-                boolean canConnectA = networkedBlock.canConnect(neighborState, direction, neighborPos);
-                boolean canConnectB = neighborNetworkedBlock.canConnect(neighborState, direction.getOpposite(), currentPos);
+                boolean canConnectA = networkedBlock.canConnect(currentState, direction, neighborState);
+                boolean canConnectB = neighborNetworkedBlock.canConnect(neighborState, direction.getOpposite(), currentState);
 
                 if (canConnectA && canConnectB) queue.add(neighborPos);
             }
@@ -73,43 +73,43 @@ public class NetworkManager {
         queue.add(start);
         while (!queue.isEmpty()) {
             IReadBlockPosition current = queue.poll();
-            if (visited.contains(current)) continue;
-            visited.add(current);
+            if (!visited.add(current)) continue;
 
             BlockState currentState = current.getBlockState();
             Object block = BlockLoader.INSTANCE.getModdedFromVanillaBlock(currentState.getBlock());
-            if (networkClass.isInstance(block)) {
-                INetworkedBlock<?> networkedBlock = (INetworkedBlock<?>) block;
+            if (!networkClass.isInstance(block)) continue;
 
-                AbstractNode currentNode = network.getOrCreateNode(current, currentState, networkedBlock);
-                NodeReference[] connections = currentNode.getConnections();
+            INetworkedBlock<?> networkedBlock = (INetworkedBlock<?>) block;
 
-                for (Direction direction : networkedBlock.getConnectionFaces(currentState)) {
-                    BlockPosition neighbor = current.getOffsetBlockPos(current.getZone(), direction);
-                    BlockState neighborState = neighbor.getBlockState();
-                    Object block2 = BlockLoader.INSTANCE.getModdedFromVanillaBlock(neighborState.getBlock());
-                    if (networkClass.isInstance(block2)) {
-                        INetworkedBlock<?> networkedBlock2 = (INetworkedBlock<?>) block2;
+            AbstractNode currentNode = network.getOrCreateNode(current, currentState, networkedBlock);
+            NodeReference[] connections = currentNode.getConnections();
 
-                        AbstractNode neighborNode = network.getOrCreateNode(neighbor, neighborState, networkedBlock2);
-                        NodeReference[] neighborConnections = neighborNode.getConnections();
+            for (Direction direction : networkedBlock.getConnectionFaces(currentState)) {
+                BlockPosition neighbor = current.getOffsetBlockPos(current.getZone(), direction);
+                BlockState neighborState = neighbor.getBlockState();
+                Object block2 = BlockLoader.INSTANCE.getModdedFromVanillaBlock(neighborState.getBlock());
+                if (!networkClass.isInstance(block2)) continue;
 
-                        boolean canConnectA = networkedBlock.canConnect(
-                                currentState, direction,
-                                neighbor
-                        );
-                        boolean canConnectB = networkedBlock2.canConnect(
-                                currentState, direction.getOpposite(),
-                                current
-                        );
-                        if (canConnectA && canConnectB) {
-                            connections[direction.ordinal()] = neighborNode.getRef();
-                            neighborConnections[direction.getOpposite().ordinal()] = currentNode.getRef();
+                boolean canConnectA = networkedBlock.canConnect(
+                        currentState, direction,
+                        neighborState
+                );
+                if (!canConnectA) continue;
 
-                            queue.add(neighbor);
-                        }
-                    }
-                }
+                INetworkedBlock<?> networkedBlock2 = (INetworkedBlock<?>) block2;
+                boolean canConnectB = networkedBlock2.canConnect(
+                        neighborState, direction.getOpposite(),
+                        currentState
+                );
+                if (!canConnectB) continue;
+
+                AbstractNode neighborNode = network.getOrCreateNode(neighbor, neighborState, networkedBlock2);
+                NodeReference[] neighborConnections = neighborNode.getConnections();
+
+                connections[direction.ordinal()] = neighborNode.getRef();
+                neighborConnections[direction.getOpposite().ordinal()] = currentNode.getRef();
+
+                queue.add(neighbor);
             }
         }
 
