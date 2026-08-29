@@ -6,11 +6,7 @@ import dev.puzzleshq.puzzleloader.cosmic.game.events.command.EventRegisterComman
 import dev.puzzleshq.puzzleloader.cosmic.game.events.net.EventRegisterPacket;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.PostModInit;
-import finalforeach.cosmicreach.singletons.GameSingletons;
-import me.zombii.horizon.common.wired.be.energy.SwitchBlockEntity;
 import me.zombii.horizon.common.wired.blocks.imcables.*;
-import me.zombii.horizon.common.wired.blocks.imcables.data.*;
-import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNode;
 import me.zombii.horizon.immersivecables.be.DiodeBE;
 import me.zombii.horizon.immersivecables.be.LaserPulserBE;
 import me.zombii.horizon.immersivecables.be.SwitchBE;
@@ -28,13 +24,10 @@ public class HorizonCommon implements ModInit, PostModInit {
 
     @Override
     public void onInit() {
-//        PowerNetworkHubBlockEntity.register();
-        SwitchBlockEntity.register();
         WireBE.register();
         SwitchBE.register();
         DiodeBE.register();
         LaserPulserBE.register();
-//        EnergyNetworkHubBlockEntity.register();
 
         // Computer Mod
 //        BlockEntityBiosFlasher.register();
@@ -77,17 +70,10 @@ public class HorizonCommon implements ModInit, PostModInit {
             "yellow"
     };
 
-    public static final int UPDATES_PER_TICK = 30;
-
     @SubscribeEvent
     public void onEvent(EventModBlockRegister e) {
-//        e.register(new EnergyCableBlock());
-//        e.register(new EnergyHubBlock());
-//        e.register(new BatteryBlock());
-
         // --
         for (String cableColor : colors) {
-//            e.register(new ColoredCableBlock(cableColor));
             e.register(new IColoredWireBlock(cableColor));
         }
         e.register(new ISwitchBlock());
@@ -97,29 +83,11 @@ public class HorizonCommon implements ModInit, PostModInit {
         e.register(new IPulserBlock());
         e.register(new IHighPulserBlock());
         e.register(new IDelayBlock());
-
-//        e.register(new PulseConverterBlock());
-//        e.register(new SwitchBlock());
-//        e.register(new InverterBlock());
-//        e.register(new DiodeBlock());
-//        e.register(new DelayBlock());
         // --
 
         // Computer Mod
 //        e.register(new BlockBiosFlasher());
 //        e.register(new BlockDevComputer());
-
-        GameSingletons.updateObservers.add((d) -> {
-            int budget = UPDATES_PER_TICK;
-            while (!EnergyNode.buffer.isEmpty()) {
-                if (budget == 0) return;
-                Runnable r = EnergyNode.buffer.removeFirst();
-                try {
-                    r.run();
-                } catch (Exception _) {}
-                budget--;
-            }
-        });
     }
 
 }

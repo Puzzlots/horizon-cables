@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables.data;
+package me.zombii.horizon.common.wired.blocks.imcables;
 
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.BlockEventGenerator;

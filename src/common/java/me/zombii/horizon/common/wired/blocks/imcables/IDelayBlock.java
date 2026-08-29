@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables.data;
+package me.zombii.horizon.common.wired.blocks.imcables;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
@@ -15,33 +15,32 @@ import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.DirectionUtil;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.immersivecables.PulseCondition;
-import me.zombii.horizon.immersivecables.be.LaserPulserBE;
+import me.zombii.horizon.immersivecables.be.DiodeBE;
 import org.hjson.JsonArray;
 import org.hjson.JsonValue;
 
 import java.util.Arrays;
 
-public class IHighPulserBlock implements IModBlock {
+public class IDelayBlock implements IModBlock {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-high-pulser-block");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-delay-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public IHighPulserBlock() {
+    public IDelayBlock() {
         this.blockGenerator = new BlockGenerator(ID);
-        this.blockGenerator.setBlockEntity(Identifier.of(LaserPulserBE.ID));
+        this.blockGenerator.setBlockEntity(Identifier.of(DiodeBE.ID));
         JsonArray portArrayA = new JsonArray().add(Direction.NEG_Z.toString());
         JsonArray portArrayB = new JsonArray().add(Direction.POS_Z.toString());
         this.blockGenerator.getBlockEntityParams().put("inPorts", portArrayA);
         this.blockGenerator.getBlockEntityParams().put("outPorts", portArrayB);
-        this.blockGenerator.getBlockEntityParams().put("pulseCondition", JsonValue.valueOf(PulseCondition.ON.toString()));
         this.blockGenerator.getBlockEntityParams().put("rotatePorts", JsonValue.valueOf(true));
+        this.blockGenerator.getBlockEntityParams().put("delay", JsonValue.valueOf(6));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "ipulser-high-block-events")
+                Identifier.of("horizon", "idelay-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -55,7 +54,7 @@ public class IHighPulserBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/high-pulse-converter.json";
+        defaultProperties.modelId = "horizon:imcables/delay.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;

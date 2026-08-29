@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables.data;
+package me.zombii.horizon.common.wired.blocks.imcables;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
@@ -21,26 +21,26 @@ import org.hjson.JsonValue;
 
 import java.util.Arrays;
 
-public class IDelayBlock implements IModBlock {
+public class INotGateBlock implements IModBlock {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-delay-block");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-inverter-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public IDelayBlock() {
+    public INotGateBlock() {
         this.blockGenerator = new BlockGenerator(ID);
         this.blockGenerator.setBlockEntity(Identifier.of(DiodeBE.ID));
         JsonArray portArrayA = new JsonArray().add(Direction.NEG_Z.toString());
         JsonArray portArrayB = new JsonArray().add(Direction.POS_Z.toString());
         this.blockGenerator.getBlockEntityParams().put("inPorts", portArrayA);
         this.blockGenerator.getBlockEntityParams().put("outPorts", portArrayB);
+        this.blockGenerator.getBlockEntityParams().put("invertOutputs", JsonValue.valueOf(true));
         this.blockGenerator.getBlockEntityParams().put("rotatePorts", JsonValue.valueOf(true));
-        this.blockGenerator.getBlockEntityParams().put("delay", JsonValue.valueOf(6));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "idelay-block-events")
+                Identifier.of("horizon", "inot-gate-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -54,7 +54,7 @@ public class IDelayBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/delay.json";
+        defaultProperties.modelId = "horizon:imcables/inverter.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;

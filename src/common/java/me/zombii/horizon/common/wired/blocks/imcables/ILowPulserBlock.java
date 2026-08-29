@@ -6,10 +6,8 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.Block
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.ModelCuboid;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.BlockGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.loading.BlockLoader;
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
-import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.singletons.GameSingletons;
 import finalforeach.cosmicreach.util.Identifier;
@@ -17,32 +15,33 @@ import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.DirectionUtil;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.common.wired.network.AbstractNetwork;
-import me.zombii.horizon.common.wired.network.AbstractNode;
-import me.zombii.horizon.common.wired.network.NetworkManager;
-import me.zombii.horizon.common.wired.network.energy.EnergyNetwork;
-import me.zombii.horizon.common.wired.network.energy.interfaces.IEnergyBlock;
-import me.zombii.horizon.common.wired.network.energy.interfaces.IEnergyHubBlockEntity;
-import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNode;
-import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNodeCable;
-import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNodePulseConverter;
+import me.zombii.horizon.immersivecables.PulseCondition;
+import me.zombii.horizon.immersivecables.be.LaserPulserBE;
+import org.hjson.JsonArray;
+import org.hjson.JsonValue;
 
 import java.util.Arrays;
-import java.util.List;
 
-public class PulseConverterBlock implements IEnergyBlock {
+public class ILowPulserBlock implements IModBlock {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "pulse-converter");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-low-pulser-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public PulseConverterBlock() {
+    public ILowPulserBlock() {
         this.blockGenerator = new BlockGenerator(ID);
+        this.blockGenerator.setBlockEntity(Identifier.of(LaserPulserBE.ID));
+        JsonArray portArrayA = new JsonArray().add(Direction.NEG_Z.toString());
+        JsonArray portArrayB = new JsonArray().add(Direction.POS_Z.toString());
+        this.blockGenerator.getBlockEntityParams().put("inPorts", portArrayA);
+        this.blockGenerator.getBlockEntityParams().put("outPorts", portArrayB);
+        this.blockGenerator.getBlockEntityParams().put("pulseCondition", JsonValue.valueOf(PulseCondition.OFF.toString()));
+        this.blockGenerator.getBlockEntityParams().put("rotatePorts", JsonValue.valueOf(true));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "pulse-converter-block-events")
+                Identifier.of("horizon", "ipulser-low-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -56,7 +55,7 @@ public class PulseConverterBlock implements IEnergyBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/pulse-converter.json";
+        defaultProperties.modelId = "horizon:imcables/low-pulse-converter.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;
@@ -87,78 +86,15 @@ public class PulseConverterBlock implements IEnergyBlock {
     public void onPlace(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
         DirectionUtil.flipOnSneak(args);
-
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        NetworkManager.build(network, args.blockPos, false);
-
-        Direction direction = args.srcBlockState.getParamDirection("direction");
-        EnergyNode selfNode = (EnergyNode) network.getNode(
-                args.blockPos.getGlobalX(),
-                args.blockPos.getGlobalY(),
-                args.blockPos.getGlobalZ()
-        );
-        AbstractNode backwardNode = network.getNode(
-                args.blockPos.getGlobalX() - direction.getXOffset(),
-                args.blockPos.getGlobalY() - direction.getYOffset(),
-                args.blockPos.getGlobalZ() - direction.getZOffset()
-        );
-        if (!(backwardNode instanceof EnergyNode eNode2)) return;
-        if (eNode2.isPowered()) {
-            selfNode.powerOn(direction);
-        }
     }
 
     public void onBreak(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
-
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        network.removeNode(args.blockPos);
-    }
-
-    @Override
-    public Direction[] getConnectionFaces(BlockState state) {
-        Direction direction = state.getParamDirection("direction");
-        return new Direction[]{direction, direction.getOpposite()};
-    }
-
-    @Override
-    public boolean canConnect(BlockState state, Direction direction, BlockState target) {
-        IModBlock modBlock = BlockLoader.getModdedFromVanillaBlockGlobal(target.getBlock());
-        if (modBlock instanceof PulseConverterBlock) return false;
-
-        Direction dir = state.getParamDirection("direction");
-        if (dir.getOpposite().equals(direction)) return target.tags.contains(HorizonTags.TAG_CABLE_CONNECTABLE);
-
-        return false;
-    }
-
-    @Override
-    public AbstractNode createNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state) {
-        return new EnergyNodePulseConverter(network, pos, state, this);
     }
 
     @Override
     public BlockEventGenerator[] getEventGenerators() {
         return new BlockEventGenerator[]{eventGenerator};
-    }
-
-    @Override
-    public AbstractNode createEmptyNode() {
-        return new EnergyNodePulseConverter();
     }
 
     @Override
@@ -177,8 +113,6 @@ public class PulseConverterBlock implements IEnergyBlock {
             value.initTagList();
             value.tags.add(HorizonTags.TAG_ENERGY_COMPATIBLE);
             value.tags.add(HorizonTags.TAG_CABLE_CONNECTABLE);
-            value.tags.add(HorizonTags.TAG_STOP_PISTON_PUSH);
-            value.tags.add(HorizonTags.TAG_STOP_PISTON_PULL);
         }
     }
 }

@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables.data;
+package me.zombii.horizon.common.wired.blocks.imcables;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import finalforeach.cosmicreach.rendering.entities.EntityDebugRenderer;
 import finalforeach.cosmicreach.world.Zone;
-import me.zombii.horizon.client.wired.rendering.NetworkRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +18,6 @@ public class DebugRenderMixin {
 
     @Inject(method = "drawEntityDebugBoundingBoxes", at = @At(shift = At.Shift.AFTER, value = "INVOKE", target = "Lcom/badlogic/gdx/graphics/glutils/ShapeRenderer;setProjectionMatrix(Lcom/badlogic/gdx/math/Matrix4;)V"))
     private static void add(Zone playerZone, Camera rawWorldCamera, CallbackInfo ci) {
-        NetworkRenderer.renderAllGroups(sr);
     }
 
 }

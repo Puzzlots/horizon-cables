@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables.data;
+package me.zombii.horizon.common.wired.blocks.imcables;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
@@ -15,32 +15,31 @@ import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.DirectionUtil;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.immersivecables.be.DiodeBE;
+import me.zombii.horizon.immersivecables.be.LaserPulserBE;
 import org.hjson.JsonArray;
 import org.hjson.JsonValue;
 
 import java.util.Arrays;
 
-public class IDiodeBlock implements IModBlock {
+public class IPulserBlock implements IModBlock {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-diode-block");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-pulser-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public IDiodeBlock() {
+    public IPulserBlock() {
         this.blockGenerator = new BlockGenerator(ID);
-        this.blockGenerator.setBlockEntity(Identifier.of(DiodeBE.ID));
+        this.blockGenerator.setBlockEntity(Identifier.of(LaserPulserBE.ID));
         JsonArray portArrayA = new JsonArray().add(Direction.NEG_Z.toString());
         JsonArray portArrayB = new JsonArray().add(Direction.POS_Z.toString());
         this.blockGenerator.getBlockEntityParams().put("inPorts", portArrayA);
         this.blockGenerator.getBlockEntityParams().put("outPorts", portArrayB);
         this.blockGenerator.getBlockEntityParams().put("rotatePorts", JsonValue.valueOf(true));
-        this.blockGenerator.getBlockEntityParams().put("delay", JsonValue.valueOf(1));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "idiode-block-events")
+                Identifier.of("horizon", "ipulser-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -54,7 +53,7 @@ public class IDiodeBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/diode.json";
+        defaultProperties.modelId = "horizon:imcables/pulse-converter.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;
