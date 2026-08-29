@@ -39,6 +39,13 @@ invertOutputs: true or false
 // 'delay' when used will add an x-tick delay to the
 // when removing or sending out power
 delay: 0 to infinity
+
+// 'gateType' changes how the inputs are
+// used to create the output. (examples ignore inversion)
+// OR - outputs true if any input is true.
+// AND - outputs true if all inputs are true.
+// XOR - outputs true if an odd number of inputs are on, else false.
+gateType: "OR" or "AND" or "XOR"
 ```
 
 BlockEntity Signals (`usable with the "base:block_entity_signal" block action`)

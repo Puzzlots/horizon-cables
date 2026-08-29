@@ -34,73 +34,6 @@ public class LaserPulserBE extends AbstractEnergyBE {
     private Direction facingDirection;
     private PulseCondition condition;
 
-    /*
-    * front  POS_Z
-    * back   NEG_Z
-    * top    POS_Y
-    * bottom NEG_Y
-    * right  POS_X
-    * left   NEG_X
-    */
-
-    private void rotatePorts(Direction[] directions) {
-        if (!rotatePorts) return;
-        if (facingDirection == Direction.POS_Z) return;
-        switch (facingDirection) {
-            case NEG_Z: {
-                for (int i = 0; i < directions.length; i++) {
-                    Direction dir = directions[i];
-                    if (dir.isYAxis()) continue;
-                    directions[i] = dir.getOpposite();
-                }
-                break;
-            }
-            case POS_X: {
-                for (int i = 0; i < directions.length; i++) {
-                    Direction dir = directions[i];
-                    if (dir.isYAxis()) continue;
-                    directions[i] = dir.getLeft();
-                }
-                break;
-            }
-            case NEG_X: {
-                for (int i = 0; i < directions.length; i++) {
-                    Direction dir = directions[i];
-                    if (dir.isYAxis()) continue;
-                    directions[i] = dir.getRight();
-                }
-                break;
-            }
-            case POS_Y: {
-                for (int i = 0; i < directions.length; i++) {
-                    Direction dir = directions[i];
-                    if (dir.isXAxis()) continue;
-                    switch (dir) {
-                        case POS_Z: directions[i] = Direction.POS_Y; break;
-                        case NEG_Z: directions[i] = Direction.NEG_Y; break;
-                        case POS_Y: directions[i] = Direction.NEG_Z; break;
-                        case NEG_Y: directions[i] = Direction.POS_Z; break;
-                    }
-                }
-                break;
-            }
-            case NEG_Y: {
-                for (int i = 0; i < directions.length; i++) {
-                    Direction dir = directions[i];
-                    if (dir.isXAxis()) continue;
-                    switch (dir) {
-                        case POS_Z: directions[i] = Direction.NEG_Y; break;
-                        case NEG_Z: directions[i] = Direction.POS_Y; break;
-                        case POS_Y: directions[i] = Direction.POS_Z; break;
-                        case NEG_Y: directions[i] = Direction.NEG_Z; break;
-                    }
-                }
-                break;
-            }
-        }
-
-    }
-
     public LaserPulserBE() {}
 
     public LaserPulserBE(BlockState state, Zone zone, int gX, int gY, int gZ) {
@@ -132,7 +65,7 @@ public class LaserPulserBE extends AbstractEnergyBE {
     public boolean canConnect(BlockState state, BlockState target, BlockEntity beTarget, Direction direction) {
         initPorts();
         if (beTarget instanceof LaserPulserBE) return false;
-        if (Arrays.binarySearch(inPorts, direction) < 0) return false;
+        if (Arrays.stream(inPorts).noneMatch(i -> i == direction)) return false;
 
         IGameTagList list = target.getTags();
         return (list != null && list.contains(HorizonTags.TAG_CABLE_CONNECTABLE)) || beTarget instanceof IEnergyBE;
@@ -209,7 +142,7 @@ public class LaserPulserBE extends AbstractEnergyBE {
                     this.inPorts[i] = Direction.valueOf(direction.toUpperCase());
                 }
             }
-            rotatePorts(inPorts);
+            rotatePorts(rotatePorts, facingDirection, inPorts);
         }
         if (outPorts == null) {
             Array<String> directions = getBlockEntityParam(getBlockState().getBlock(), "outPorts");
@@ -222,7 +155,7 @@ public class LaserPulserBE extends AbstractEnergyBE {
                     this.outPorts[i] = Direction.valueOf(direction.toUpperCase());
                 }
             }
-            rotatePorts(outPorts);
+            rotatePorts(rotatePorts, facingDirection, outPorts);
         }
     }
 

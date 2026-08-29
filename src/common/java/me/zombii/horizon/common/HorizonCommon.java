@@ -7,10 +7,8 @@ import dev.puzzleshq.puzzleloader.cosmic.game.events.net.EventRegisterPacket;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.PostModInit;
 import me.zombii.horizon.common.wired.blocks.imcables.*;
-import me.zombii.horizon.immersivecables.be.DiodeBE;
-import me.zombii.horizon.immersivecables.be.LaserPulserBE;
-import me.zombii.horizon.immersivecables.be.SwitchBE;
-import me.zombii.horizon.immersivecables.be.WireBE;
+import me.zombii.horizon.immersivecables.LogicGate;
+import me.zombii.horizon.immersivecables.be.*;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class HorizonCommon implements ModInit, PostModInit {
@@ -28,6 +26,7 @@ public class HorizonCommon implements ModInit, PostModInit {
         SwitchBE.register();
         DiodeBE.register();
         LaserPulserBE.register();
+        LogicGateBE.register();
 
         // Computer Mod
 //        BlockEntityBiosFlasher.register();
@@ -83,6 +82,7 @@ public class HorizonCommon implements ModInit, PostModInit {
         e.register(new IPulserBlock());
         e.register(new IHighPulserBlock());
         e.register(new IDelayBlock());
+        e.register(new IAndGateBlock());
         // --
 
         // Computer Mod

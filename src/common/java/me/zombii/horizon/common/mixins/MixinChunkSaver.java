@@ -3,7 +3,7 @@ package me.zombii.horizon.common.mixins;
 import finalforeach.cosmicreach.io.ChunkSaver;
 import finalforeach.cosmicreach.util.SaveLocation;
 import finalforeach.cosmicreach.world.World;
-import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
+//import me.zombii.horizon.common.cc.computer.storage.AbstractDataStorageDevice;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,11 +32,11 @@ public class MixinChunkSaver {
             }
         }
 
-        try {
-            AbstractDataStorageDevice.saveComponents(worldLocation);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            AbstractDataStorageDevice.saveComponents(worldLocation);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 }

@@ -3,7 +3,6 @@ package me.zombii.horizon.common.screen;
 import finalforeach.cosmicreach.networking.server.ServerSingletons;
 import finalforeach.cosmicreach.singletons.GameSingletons;
 import me.zombii.horizon.common.IHorizonClientBound;
-import me.zombii.horizon.common.cc.packets.PacketOpenScreen;
 
 public class ScreenManager {
 

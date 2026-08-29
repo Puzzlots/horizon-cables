@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.cc.packets;
+package me.zombii.horizon.common.screen;
 
 import finalforeach.cosmicreach.blocks.BlockPosition;
 import finalforeach.cosmicreach.entities.player.Player;
@@ -12,7 +12,6 @@ import finalforeach.cosmicreach.util.Identifier;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import me.zombii.horizon.common.IHorizonClientBound;
-import me.zombii.horizon.common.screen.ScreenOpenInfo;
 
 public class PacketOpenScreen extends GamePacket {
 

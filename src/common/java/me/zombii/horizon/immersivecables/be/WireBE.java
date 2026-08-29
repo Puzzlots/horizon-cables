@@ -28,7 +28,6 @@ public class WireBE extends AbstractEnergyBE {
     }
 
     private String channel;
-    private boolean isOn;
     private final Direction[] ports = Direction.ALL_DIRECTIONS;
 
     public WireBE() {}

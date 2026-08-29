@@ -13,15 +13,18 @@ import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.immersivecables.AbstractEnergyBE;
 import me.zombii.horizon.immersivecables.IEnergyBE;
+import me.zombii.horizon.immersivecables.LogicGate;
+import me.zombii.horizon.immersivecables.PulseCondition;
 
 import java.util.Arrays;
+import java.util.Locale;
 
-public class DiodeBE extends AbstractEnergyBE {
+public class LogicGateBE extends AbstractEnergyBE {
 
-    public static final String ID = "horizon:diode-block-entity";
+    public static final String ID = "horizon:logic-gate-block-entity";
 
     public static void register() {
-        BlockEntityCreator.registerBlockEntityCreator(ID, DiodeBE::new);
+        BlockEntityCreator.registerBlockEntityCreator(ID, LogicGateBE::new);
     }
 
     private Direction[] inPorts;
@@ -33,15 +36,26 @@ public class DiodeBE extends AbstractEnergyBE {
     private int delay;
     private int remainingTicks;
     private boolean scheduledPower;
+    private LogicGate gateType;
 
-    public DiodeBE() {}
+    public LogicGateBE() {}
 
-    public DiodeBE(BlockState state, Zone zone, int gX, int gY, int gZ) {
+    public LogicGateBE(BlockState state, Zone zone, int gX, int gY, int gZ) {
         super(state, zone, gX, gY, gZ);
         Boolean invOut = getBlockEntityParam(getBlockState().getBlock(), "invertOutputs");
         invertOutputs = invOut != null && invOut;
         Boolean invInp = getBlockEntityParam(getBlockState().getBlock(), "invertInputs");
         invertInputs = invInp != null && invInp;
+
+        String gType = getBlockEntityParamString(
+                getBlockState().getBlock(),
+                "gateType"
+        );
+        if (gType == null) {
+            gateType = LogicGate.OR;
+        } else {
+            gateType = LogicGate.valueOf(gType.toUpperCase(Locale.ROOT));
+        }
     }
 
     private void scheduleToggle(boolean power) {
@@ -78,18 +92,13 @@ public class DiodeBE extends AbstractEnergyBE {
     @Override
     public boolean canConnect(BlockState state, BlockState target, BlockEntity beTarget, Direction direction) {
         initPorts();
-        if (!(Arrays.stream(inPorts).anyMatch(i -> i == direction) || Arrays.stream(outPorts).anyMatch(i -> i == direction))) return false;
+        boolean isInput = Arrays.stream(inPorts).anyMatch(i -> i == direction);
+        boolean isOutput = Arrays.stream(outPorts).anyMatch(i -> i == direction);
+        if (!isInput && !isOutput) return false;
 
         IGameTagList list = target.getTags();
         return (list != null && list.contains(HorizonTags.TAG_CABLE_CONNECTABLE)) || beTarget instanceof IEnergyBE;
     }
-
-    @Override
-    public boolean isOn() {
-        return isOn;
-    }
-
-    private final BlockEventArgs args = new BlockEventArgs();
 
     private void sendPowerOut(boolean powered) {
         initPorts();
@@ -111,10 +120,86 @@ public class DiodeBE extends AbstractEnergyBE {
         }
     }
 
+    private boolean isOn(Direction port) {
+        if (canConnect(port)) {
+            int gX = getGlobalX() + port.getXOffset();
+            int gY = getGlobalY() + port.getYOffset();
+            int gZ = getGlobalZ() + port.getZOffset();
+
+            BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
+
+            if (entity instanceof IEnergyBE ebe) {
+                return ebe.isOn();
+            }
+        }
+        return false;
+    }
+
+    private boolean isGateTrue() {
+        return switch (gateType) {
+            case OR -> isOrTrue();
+            case AND -> isANDTrue();
+            case XOR -> isXORTrue();
+        };
+    }
+
+    private boolean isANDTrue() {
+        boolean previous = false;
+        boolean first = false;
+        for (Direction port : inPorts) {
+            boolean portOn = isOn(port) == !this.invertInputs;
+            if (!first) {
+                previous = portOn;
+                first = true;
+            }
+            else previous = portOn && previous;
+        }
+        return previous;
+    }
+
+    private boolean isXORTrue() {
+        boolean previous = false;
+        boolean first = false;
+        for (Direction port : inPorts) {
+            boolean portOn = isOn(port) == !this.invertInputs;
+            if (!first) {
+                previous = portOn;
+                first = true;
+            }
+            else previous = previous ^ (portOn);
+        }
+        return previous;
+    }
+
+    private boolean isOrTrue() {
+        boolean previous = false;
+        boolean first = false;
+        for (Direction port : inPorts) {
+            boolean portOn = isOn(port) == !this.invertInputs;
+            if (!first) {
+                previous = portOn;
+                first = true;
+            }
+            else previous = previous || (portOn);
+        }
+        return previous;
+    }
+
+//    @Override
+//    public void turnOn(Direction direction) {
+//        doTurnOn(direction);
+//    }
+//
+//    @Override
+//    public void turnOff(Direction direction) {
+//        doTurnOff(direction);
+//    }
+
     @Override
     public void doTurnOn(Direction direction) {
         if (Arrays.stream(inPorts).noneMatch(i -> i == direction.getOpposite())) return;
-        isOn = !this.invertInputs;
+
+        isOn = isGateTrue();
         triggerEvents();
         if (remainingTicks != 0) return;
         if (delay != 0) scheduleToggle(isOn);
@@ -124,7 +209,8 @@ public class DiodeBE extends AbstractEnergyBE {
     @Override
     public void doTurnOff(Direction direction) {
         if (Arrays.stream(inPorts).noneMatch(i -> i == direction.getOpposite())) return;
-        isOn = this.invertInputs;
+
+        isOn = !isGateTrue();
         triggerEvents();
         if (remainingTicks != 0) return;
         if (delay != 0) scheduleToggle(isOn);
@@ -179,6 +265,7 @@ public class DiodeBE extends AbstractEnergyBE {
         serial.writeBoolean("invertInputs", invertInputs);
         serial.writeInt("remainingTicks", remainingTicks);
         serial.writeInt("delay", delay);
+        serial.writeShort("gateType", (short) gateType.ordinal());
         super.write(serial);
     }
 
@@ -188,6 +275,7 @@ public class DiodeBE extends AbstractEnergyBE {
         invertInputs = deserial.readBoolean("invertInputs", false);
         remainingTicks = deserial.readInt("remainingTicks", remainingTicks);
         delay = deserial.readInt("delay", delay);
+        gateType = LogicGate.VALUES[deserial.readShort("gateType", (short) 0)];
         super.read(deserial);
     }
 

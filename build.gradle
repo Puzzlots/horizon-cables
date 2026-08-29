@@ -31,7 +31,7 @@ dependencies {
 
     cosmicReach("finalforeach:cosmic-reach:${cosmic_reach_version}")
 
-    clientImplementation commonImplementation("com.github.PuzzlesHQ:cosmic-api:${cosmic_api_version}:merged")
+//    clientImplementation commonImplementation("com.github.PuzzlesHQ:cosmic-api:${cosmic_api_version}:merged")
 
 //    clientImplementation commonImplementation("com.github.stephengold:Libbulletjme:21.2.1")
 //    clientImplementation commonImplementation("commons-io:commons-io:2.16.1")
@@ -44,9 +44,9 @@ dependencies {
 
     testImplementation("org.hjson:hjson:3.1.0")
 
-    commonBundle(commonImplementation('party.iroiro.luajava:luajava:4.1.0'))
-    commonBundle(commonImplementation('party.iroiro.luajava:luajit:4.1.0'))
-    commonBundle(commonImplementation('party.iroiro.luajava:luajit-platform:4.1.0:natives-desktop'))
+//    commonBundle(commonImplementation('party.iroiro.luajava:luajava:4.1.0'))
+//    commonBundle(commonImplementation('party.iroiro.luajava:luajit:4.1.0'))
+//    commonBundle(commonImplementation('party.iroiro.luajava:luajit-platform:4.1.0:natives-desktop'))
 //
 //    commonImplementation('com.twelvemonkeys.imageio:imageio-core:3.13.1')
 //    commonImplementation('com.twelvemonkeys.imageio:imageio-metadata:3.13.1')

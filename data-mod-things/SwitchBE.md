@@ -1,6 +1,6 @@
 # LaserPulser BlockEntity
 
-This block assumes that your block model faces the diection `PosZ`
+This block assumes that your block model faces the direction `PosZ`
 
 ```python
 'Directions' [

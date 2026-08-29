@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"transistor.png": {
-			"fileName": "horizon:imcables/transistor.png",
+			"fileName": "horizon:imcables/transistor.png"
 		}
 	},
 	"cuboids": [{

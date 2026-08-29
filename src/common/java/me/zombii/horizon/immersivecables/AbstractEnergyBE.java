@@ -70,7 +70,6 @@ public abstract class AbstractEnergyBE extends BlockEntity implements IEnergyBE 
         return isOn;
     }
 
-    @Override
     public BlockPosition getBlockPosition() {
         return BlockPosition.ofGlobal(getZone(), getGlobalX(), getGlobalY(), getGlobalZ());
     }
@@ -79,5 +78,71 @@ public abstract class AbstractEnergyBE extends BlockEntity implements IEnergyBE 
     public void read(CRBinDeserializer deserial) {
         super.read(deserial);
         isOn = deserial.readBoolean("isOn", false);
+    }
+
+    /*
+     * front  POS_Z
+     * back   NEG_Z
+     * top    POS_Y
+     * bottom NEG_Y
+     * right  POS_X
+     * left   NEG_X
+     */
+
+    protected void rotatePorts(boolean rotatePorts, Direction facingDirection, Direction[] directions) {
+        if (!rotatePorts) return;
+        switch (facingDirection) {
+            case NEG_Z: {
+                for (int i = 0; i < directions.length; i++) {
+                    Direction dir = directions[i];
+                    if (dir.isYAxis()) continue;
+                    directions[i] = dir.getOpposite();
+                }
+                break;
+            }
+            case POS_X: {
+                for (int i = 0; i < directions.length; i++) {
+                    Direction dir = directions[i];
+                    if (dir.isYAxis()) continue;
+                    directions[i] = dir.getLeft();
+                }
+                break;
+            }
+            case NEG_X: {
+                for (int i = 0; i < directions.length; i++) {
+                    Direction dir = directions[i];
+                    if (dir.isYAxis()) continue;
+                    directions[i] = dir.getRight();
+                }
+                break;
+            }
+            case POS_Y: {
+                for (int i = 0; i < directions.length; i++) {
+                    Direction dir = directions[i];
+                    if (dir.isXAxis()) continue;
+                    switch (dir) {
+                        case POS_Z: directions[i] = Direction.POS_Y; break;
+                        case NEG_Z: directions[i] = Direction.NEG_Y; break;
+                        case POS_Y: directions[i] = Direction.NEG_Z; break;
+                        case NEG_Y: directions[i] = Direction.POS_Z; break;
+                    }
+                }
+                break;
+            }
+            case NEG_Y: {
+                for (int i = 0; i < directions.length; i++) {
+                    Direction dir = directions[i];
+                    if (dir.isXAxis()) continue;
+                    switch (dir) {
+                        case POS_Z: directions[i] = Direction.NEG_Y; break;
+                        case NEG_Z: directions[i] = Direction.POS_Y; break;
+                        case POS_Y: directions[i] = Direction.POS_Z; break;
+                        case NEG_Y: directions[i] = Direction.NEG_Z; break;
+                    }
+                }
+                break;
+            }
+        }
+
     }
 }
