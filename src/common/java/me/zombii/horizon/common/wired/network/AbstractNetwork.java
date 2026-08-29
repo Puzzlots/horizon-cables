@@ -156,7 +156,6 @@ public abstract class AbstractNetwork {
     }
 
     public NetworkGroup<?> getGroup() {
-        System.out.println(netID);
         if (group == null) throw new IllegalStateException("Group is null");
         return group;
     }

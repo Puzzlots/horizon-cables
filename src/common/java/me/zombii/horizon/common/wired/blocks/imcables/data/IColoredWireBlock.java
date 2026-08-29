@@ -1,7 +1,8 @@
-package me.zombii.horizon.common.wired.blocks.energy;
+package me.zombii.horizon.common.wired.blocks.imcables.data;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
+import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.connected.ISidedBlockConnector;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.BlockEventGenerator;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.model.ModelCuboid;
@@ -10,29 +11,21 @@ import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.Block
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.state.State;
 import finalforeach.cosmicreach.blocks.Block;
 import finalforeach.cosmicreach.blocks.BlockState;
-import finalforeach.cosmicreach.blocks.IReadBlockPosition;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.singletons.GameSingletons;
-import finalforeach.cosmicreach.util.IGameTagList;
 import finalforeach.cosmicreach.util.Identifier;
 import finalforeach.cosmicreach.util.assets.GameAssetLoader;
 import finalforeach.cosmicreach.util.constants.Direction;
 import me.zombii.horizon.common.HorizonCommon;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.common.wired.connectedblocks.CableConnectorFunction2;
-import me.zombii.horizon.common.wired.network.AbstractNetwork;
-import me.zombii.horizon.common.wired.network.AbstractNode;
-import me.zombii.horizon.common.wired.network.NetworkManager;
-import me.zombii.horizon.common.wired.network.energy.EnergyNetwork;
-import me.zombii.horizon.common.wired.network.energy.interfaces.IEnergyBlock;
-import me.zombii.horizon.common.wired.network.energy.interfaces.IEnergyHubBlockEntity;
-import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNodeCable;
+import me.zombii.horizon.common.wired.connectedblocks.CableConnectorFunctionBe;
+import me.zombii.horizon.immersivecables.be.WireBE;
+import org.hjson.JsonValue;
 
 import java.util.Arrays;
 import java.util.List;
 
-// Very unfinished
-public class EnergyCableBlock implements IEnergyBlock {
+public class IColoredWireBlock implements IModBlock {
 
     private static final Direction[] PORTS = {
             Direction.POS_X, Direction.POS_Z,
@@ -42,27 +35,44 @@ public class EnergyCableBlock implements IEnergyBlock {
 
     private static final List<Direction> PORT_LIST = Arrays.asList(PORTS);
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "energy-cable");
+    public static final Identifier GENERAL_ID = Identifier.of(HorizonCommon.NAMESPACE, "i-wire-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
     private final EnhancedBlockModelGenerator modelGenerator;
-    private final CableConnectorFunction2 connector;
+    private final CableConnectorFunctionBe connector;
+    private final String color;
+    private final Identifier id;
 
-    public EnergyCableBlock() {
-        FileHandle modelFile = GameAssetLoader.loadAsset(Identifier.of(HorizonCommon.NAMESPACE, "imcables/cables/insulated/wire-insulated.json"));
+    public IColoredWireBlock(
+            String color
+    ) {
+        this.color = color;
+        FileHandle modelFile = GameAssetLoader.loadAsset(
+                Identifier.of(HorizonCommon.NAMESPACE, "imcables/cables/insulated/wire-insulated.json")
+        );
 
-        this.blockGenerator = new BlockGenerator(ID);
+        id = Identifier.of(
+                GENERAL_ID.getNamespace(),
+                GENERAL_ID.getName() + "-" + color
+        );
+
+        this.blockGenerator = new BlockGenerator(id);
+        this.blockGenerator.setBlockEntity(Identifier.of(WireBE.ID));
+        this.blockGenerator.getBlockEntityParams().put("channel", JsonValue.valueOf(color));
 
         this.modelGenerator = EnhancedBlockModelGenerator.fromEntityModelJsonAsPlanes(
-                "horizon-energy-cable-model",
+                "immersive-cables-model-" + color,
                 modelFile.readString(),
                 false
         );
+        this.modelGenerator.textures
+                .get("all")
+                .setRegularTexture(Identifier.of(HorizonCommon.NAMESPACE, "imcables/cables/insulated/textures/wire-" + color + ".png"));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "energy_cable_block_events")
+                Identifier.of("horizon", "iwire-" + color + "-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -76,7 +86,7 @@ public class EnergyCableBlock implements IEnergyBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         this.modelGenerator.getGroup("CENTER").cuboids.add(collisionCube);
 
-        this.connector = new CableConnectorFunction2(this, modelGenerator, ID);
+        this.connector = new CableConnectorFunctionBe(this, modelGenerator, id);
 
         State defaultState = this.blockGenerator.createState("default");
         defaultState.blockEventId = eventGenerator.getId();
@@ -85,61 +95,22 @@ public class EnergyCableBlock implements IEnergyBlock {
         defaultState.lightAttenuation = 0;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     @Override
     public void onPlace(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
-
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        NetworkManager.build(network, args.blockPos, false);
     }
 
     public void onBreak(BlockEventArgs args) {
         if (!GameSingletons.isHost()) return;
-
-        EnergyNetwork network = NetworkManager.findNetwork(
-                IEnergyBlock.class,
-                IEnergyHubBlockEntity.NETWORK_DISCOVERY_FUNCTION,
-                args.blockPos
-        );
-
-        if (network == null) return;
-
-        network.removeNode(args.blockPos);
-    }
-
-    @Override
-    public Direction[] getConnectionFaces(BlockState state) {
-        return PORTS;
-    }
-
-    @Override
-    public boolean canConnect(BlockState state, Direction direction, BlockState target) {
-        if (!PORT_LIST.contains(direction)) return false;
-
-        IGameTagList list = target.getTags();
-        return list.contains(HorizonTags.TAG_ENERGY_COMPATIBLE);
-    }
-
-    @Override
-    public AbstractNode createNode(AbstractNetwork network, IReadBlockPosition pos, BlockState state) {
-        return new EnergyNodeCable(network, pos, state, this);
     }
 
     @Override
     public BlockEventGenerator[] getEventGenerators() {
         return new BlockEventGenerator[]{eventGenerator};
-    }
-
-    @Override
-    public AbstractNode createEmptyNode() {
-        return new EnergyNodeCable();
     }
 
     @Override
@@ -149,7 +120,7 @@ public class EnergyCableBlock implements IEnergyBlock {
 
     @Override
     public Identifier getId() {
-        return ID;
+        return id;
     }
 
     @Override
@@ -157,8 +128,7 @@ public class EnergyCableBlock implements IEnergyBlock {
         for (BlockState value : block.blockStates.values()) {
             value.initTagList();
             value.tags.add(HorizonTags.TAG_ENERGY_COMPATIBLE);
-            value.tags.add(HorizonTags.TAG_STOP_PISTON_PUSH);
-            value.tags.add(HorizonTags.TAG_STOP_PISTON_PULL);
+            value.tags.add(HorizonTags.TAG_CABLE_CONNECTABLE);
         }
 
         ISidedBlockConnector.getInstance()

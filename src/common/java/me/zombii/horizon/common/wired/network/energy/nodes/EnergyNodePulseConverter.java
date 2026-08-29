@@ -11,6 +11,8 @@ import me.zombii.horizon.common.wired.network.AbstractNetwork;
 import me.zombii.horizon.common.wired.network.AbstractNode;
 import me.zombii.horizon.common.wired.network.INetworkedBlock;
 
+import java.util.Arrays;
+
 public class EnergyNodePulseConverter extends EnergyNode {
 
     public EnergyNodePulseConverter() {

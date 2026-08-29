@@ -1,44 +1,21 @@
 package me.zombii.horizon.common;
 
 import dev.puzzleshq.puzzleloader.cosmic.game.GameRegistries;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.BlockEventGenerator;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.Trigger;
-import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.generation.event.TriggerGroup;
 import dev.puzzleshq.puzzleloader.cosmic.game.events.block.EventModBlockRegister;
-import dev.puzzleshq.puzzleloader.cosmic.game.events.block.EventRegisterBlockEvent;
 import dev.puzzleshq.puzzleloader.cosmic.game.events.command.EventRegisterCommand;
 import dev.puzzleshq.puzzleloader.cosmic.game.events.net.EventRegisterPacket;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.PostModInit;
-import finalforeach.cosmicreach.blocks.Block;
-import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.singletons.GameSingletons;
-import finalforeach.cosmicreach.util.Identifier;
-import io.github.puzzle.cosmic.item.AbstractCosmicItem;
-import me.zombii.horizon.common.cc.blocks.bios.BlockBiosFlasher;
-import me.zombii.horizon.common.cc.blocks.bios.BlockEntityBiosFlasher;
-import me.zombii.horizon.common.cc.blocks.computer.BlockDevComputer;
-import me.zombii.horizon.common.cc.blocks.computer.BlockEntityDevComputer;
-import me.zombii.horizon.common.cc.commands.CommandCheckBiosChip;
-import me.zombii.horizon.common.cc.computer.storage.nonportable.BiosChip;
-import me.zombii.horizon.common.cc.computer.storage.portable.BasicStorage;
-import me.zombii.horizon.common.cc.items.BiosChipItem;
-import me.zombii.horizon.common.cc.items.CompactDiscItem;
-import me.zombii.horizon.common.cc.items.FloppyDiskItem;
-import me.zombii.horizon.common.cc.items.HardDiskDriveItem;
-import me.zombii.horizon.common.cc.packets.PacketFlashBIOS;
-import me.zombii.horizon.common.cc.packets.PacketOpenScreen;
-import me.zombii.horizon.common.cc.packets.PacketScreenState;
-import me.zombii.horizon.common.cc.packets.PacketSetComputerPower;
-import me.zombii.horizon.common.wired.be.energy.EnergyNetworkHubBlockEntity;
 import me.zombii.horizon.common.wired.be.energy.SwitchBlockEntity;
-import me.zombii.horizon.common.wired.blocks.energy.BatteryBlock;
-import me.zombii.horizon.common.wired.blocks.energy.EnergyHubBlock;
-import me.zombii.horizon.common.wired.blocks.energy.EnergyCableBlock;
 import me.zombii.horizon.common.wired.blocks.imcables.*;
+import me.zombii.horizon.common.wired.blocks.imcables.data.*;
 import me.zombii.horizon.common.wired.network.energy.nodes.EnergyNode;
+import me.zombii.horizon.immersivecables.be.DiodeBE;
+import me.zombii.horizon.immersivecables.be.LaserPulserBE;
+import me.zombii.horizon.immersivecables.be.SwitchBE;
+import me.zombii.horizon.immersivecables.be.WireBE;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.hjson.JsonObject;
 
 public class HorizonCommon implements ModInit, PostModInit {
 
@@ -53,6 +30,10 @@ public class HorizonCommon implements ModInit, PostModInit {
     public void onInit() {
 //        PowerNetworkHubBlockEntity.register();
         SwitchBlockEntity.register();
+        WireBE.register();
+        SwitchBE.register();
+        DiodeBE.register();
+        LaserPulserBE.register();
 //        EnergyNetworkHubBlockEntity.register();
 
         // Computer Mod
@@ -106,13 +87,22 @@ public class HorizonCommon implements ModInit, PostModInit {
 
         // --
         for (String cableColor : colors) {
-            e.register(new ColoredCableBlock(cableColor));
+//            e.register(new ColoredCableBlock(cableColor));
+            e.register(new IColoredWireBlock(cableColor));
         }
-        e.register(new PulseConverterBlock());
-        e.register(new SwitchBlock());
-        e.register(new InverterBlock());
-        e.register(new DiodeBlock());
-        e.register(new DelayBlock());
+        e.register(new ISwitchBlock());
+        e.register(new IDiodeBlock());
+        e.register(new INotGateBlock());
+        e.register(new ILowPulserBlock());
+        e.register(new IPulserBlock());
+        e.register(new IHighPulserBlock());
+        e.register(new IDelayBlock());
+
+//        e.register(new PulseConverterBlock());
+//        e.register(new SwitchBlock());
+//        e.register(new InverterBlock());
+//        e.register(new DiodeBlock());
+//        e.register(new DelayBlock());
         // --
 
         // Computer Mod

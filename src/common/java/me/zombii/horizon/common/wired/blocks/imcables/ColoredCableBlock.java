@@ -79,7 +79,7 @@ public class ColoredCableBlock implements IEnergyBlock {
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "immersive-cables-block-events")
+                Identifier.of("horizon", color + "-immersive-cables-block-events")
         );
 
         eventGenerator.inheritParentContents();

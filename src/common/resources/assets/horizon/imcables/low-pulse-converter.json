@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"pulse-converter.png": {
+			"fileName": "horizon:imcables/low-pulse-converter.png"
+		}
+	},
+	"cuboids": [{
+		"localBounds": [6,6,0,10,10,16],
+		"faces": {
+			"localPosY": {"uv":[4,16,8,0],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localNegY": {"uv":[8,0,4,16],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localNegZ": {"uv":[0,0,4,4],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localPosZ": {"uv":[0,4,4,8],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localPosX": {"uv":[4,16,8,0],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":90},
+			"localNegX": {"uv":[8,0,4,16],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":90}
+		}
+	}, {
+		"localBounds": [5,5,8,11,11,15],
+		"faces": {
+			"localPosY": {"uv":[10,16,16,9],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localNegY": {"uv":[16,9,10,16],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localNegZ": {"uv":[8,0,14,6],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localPosZ": {"uv":[8,0,14,6],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":0},
+			"localPosX": {"uv":[10,16,16,9],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":90},
+			"localNegX": {"uv":[16,9,10,16],"ambientocclusion":false,"cullFace":false,"texture":"pulse-converter.png","uvRotation":90}
+		}
+	}]
+}
