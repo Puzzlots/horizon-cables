@@ -1,7 +1,10 @@
 package me.zombii.horizon.common;
 
+import finalforeach.cosmicreach.blocks.BlockPosition;
+import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.util.constants.Direction;
+import finalforeach.cosmicreach.world.BlockSetter;
 
 public class DirectionUtil {
 
@@ -19,12 +22,11 @@ public class DirectionUtil {
     public static void flipOnSneak(BlockEventArgs args) {
         if (args.srcPlayer.isSneaking()) {
             Direction direction = args.srcBlockState.getParamDirection("direction");
-            args.blockPos.setBlockState(
-                    args.srcBlockState.getVariantWithParam(
-                            "direction",
-                            DirectionUtil.toString(direction.getOpposite()
-                            ))
-            );
+            BlockState v = args.srcBlockState.getVariantWithParam(
+                    "direction",
+                    DirectionUtil.toString(direction.getOpposite()
+                    ));
+            BlockSetter.get().replaceBlock(v, (BlockPosition) args.blockPos);
         }
     }
 
