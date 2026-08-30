@@ -49,7 +49,7 @@ public class WireBE extends AbstractEnergyBE {
     @Override
     public boolean canConnect(BlockState state, BlockState target, BlockEntity beTarget, Direction direction) {
         if (beTarget instanceof WireBE be) {
-            return this.getChannel() != null && (this.getChannel().equals(be.getChannel()) || be.isUniversal());
+            return this.getChannel() != null && (this.getChannel().equals(be.getChannel()) || (be.isUniversal() || isUniversal()));
         }
 
         IGameTagList list = target.getTags();

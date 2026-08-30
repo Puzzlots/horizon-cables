@@ -76,6 +76,7 @@ public class HorizonCommon implements ModInit, PostModInit {
         for (String cableColor : colors) {
             e.register(new IColoredWireBlock(cableColor));
         }
+        e.register(new IExposedWireBlock());
         e.register(new ISwitchBlock());
         e.register(new IDiodeBlock());
         e.register(new INotGateBlock());
