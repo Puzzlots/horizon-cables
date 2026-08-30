@@ -36,8 +36,8 @@ pulseCondition: "ON" or "OFF" or "BOTH"
 
 BlockEntity Signals (`usable with the "base:block_entity_signal" block action`)
 ```java
-"turnOn" // switches the block-entity on
-"turnOff" // switches the block-entity off
+"turnOn-<insert-direction>" // switches the block-entity on
+"turnOff-<insert-direction>" // switches the block-entity off
 "pulse" // sends a pulse to all outPorts
 ```
 

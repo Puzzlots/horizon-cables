@@ -44,8 +44,8 @@ delay: 0 to infinity
 BlockEntity Signals (`usable with the "base:block_entity_signal" block action`)
 
 ```java
-"turnOn" // switches the block-entity on
-"turnOff" // switches the block-entity off
+"turnOn-<insert-direction>" // switches the block-entity on
+"turnOff-<insert-direction>" // switches the block-entity off
 ```
 
 BlockState Triggers (`can be called by the block-entity when avalible`)

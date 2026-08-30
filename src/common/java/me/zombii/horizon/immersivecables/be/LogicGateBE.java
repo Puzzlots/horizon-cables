@@ -147,6 +147,7 @@ public class LogicGateBE extends AbstractEnergyBE {
         boolean previous = false;
         boolean first = false;
         for (Direction port : inPorts) {
+            if (!canConnect(port)) continue;
             boolean portOn = isOn(port) == !this.invertInputs;
             if (!first) {
                 previous = portOn;
@@ -161,6 +162,7 @@ public class LogicGateBE extends AbstractEnergyBE {
         boolean previous = false;
         boolean first = false;
         for (Direction port : inPorts) {
+            if (!canConnect(port)) continue;
             boolean portOn = isOn(port) == !this.invertInputs;
             if (!first) {
                 previous = portOn;
@@ -175,6 +177,7 @@ public class LogicGateBE extends AbstractEnergyBE {
         boolean previous = false;
         boolean first = false;
         for (Direction port : inPorts) {
+            if (!canConnect(port)) continue;
             boolean portOn = isOn(port) == !this.invertInputs;
             if (!first) {
                 previous = portOn;
@@ -185,36 +188,43 @@ public class LogicGateBE extends AbstractEnergyBE {
         return previous;
     }
 
-//    @Override
-//    public void turnOn(Direction direction) {
-//        doTurnOn(direction);
-//    }
-//
-//    @Override
-//    public void turnOff(Direction direction) {
-//        doTurnOff(direction);
-//    }
+    @Override
+    public void turnOn(Direction direction) {
+        doTurnOn(direction);
+    }
+
+    @Override
+    public void turnOff(Direction direction) {
+        doTurnOff(direction);
+    }
+
+    private boolean lastState;
+    private boolean usedBefore = false;
+
+    public void checkAndSend(Direction direction) {
+        if (Arrays.stream(inPorts).noneMatch(i -> i == direction.getOpposite())) return;
+
+        lastState = isOn;
+        isOn = isGateTrue();
+
+        boolean shouldSendUpdate = lastState != isOn || !usedBefore;
+        if (remainingTicks != 0) return;
+        if (shouldSendUpdate) {
+            usedBefore = true;
+            triggerEvents();
+            if (delay != 0) scheduleToggle(isOn);
+            else sendPowerOut(isOn);
+        }
+    }
 
     @Override
     public void doTurnOn(Direction direction) {
-        if (Arrays.stream(inPorts).noneMatch(i -> i == direction.getOpposite())) return;
-
-        isOn = isGateTrue();
-        triggerEvents();
-        if (remainingTicks != 0) return;
-        if (delay != 0) scheduleToggle(isOn);
-        else sendPowerOut(isOn);
+        checkAndSend(direction);
     }
 
     @Override
     public void doTurnOff(Direction direction) {
-        if (Arrays.stream(inPorts).noneMatch(i -> i == direction.getOpposite())) return;
-
-        isOn = !isGateTrue();
-        triggerEvents();
-        if (remainingTicks != 0) return;
-        if (delay != 0) scheduleToggle(isOn);
-        else sendPowerOut(isOn);
+        checkAndSend(direction);
     }
 
     public void initPorts() {
@@ -276,6 +286,8 @@ public class LogicGateBE extends AbstractEnergyBE {
         remainingTicks = deserial.readInt("remainingTicks", remainingTicks);
         delay = deserial.readInt("delay", delay);
         gateType = LogicGate.VALUES[deserial.readShort("gateType", (short) 0)];
+        lastState = deserial.readBoolean("lastState", false);
+        usedBefore = deserial.readBoolean("usedBefore", false);
         super.read(deserial);
     }
 
