@@ -53,7 +53,7 @@ public class IPulserBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/pulse-converter.json";
+        defaultProperties.modelId = "horizon:imcables/pulser/pulse-converter.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;

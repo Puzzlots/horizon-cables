@@ -62,7 +62,7 @@ public class IAndGateBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/transistor.json";
+        defaultProperties.modelId = "horizon:imcables/gates/and-gate.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;

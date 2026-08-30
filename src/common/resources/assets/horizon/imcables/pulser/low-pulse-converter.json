@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"pulse-converter.png": {
-			"fileName": "horizon:imcables/high-pulse-converter.png"
+			"fileName": "horizon:imcables/pulser/low-pulse-converter.png"
 		}
 	},
 	"cuboids": [{

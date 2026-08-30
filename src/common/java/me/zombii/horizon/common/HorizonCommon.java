@@ -27,6 +27,7 @@ public class HorizonCommon implements ModInit, PostModInit {
         DiodeBE.register();
         LaserPulserBE.register();
         LogicGateBE.register();
+        ClockBE.register();
 
         // Computer Mod
 //        BlockEntityBiosFlasher.register();
@@ -82,7 +83,10 @@ public class HorizonCommon implements ModInit, PostModInit {
         e.register(new IPulserBlock());
         e.register(new IHighPulserBlock());
         e.register(new IDelayBlock());
+        e.register(new IClockBlock());
         e.register(new IAndGateBlock());
+        e.register(new IXorGateBlock());
+        e.register(new IOrGateBlock());
         // --
 
         // Computer Mod

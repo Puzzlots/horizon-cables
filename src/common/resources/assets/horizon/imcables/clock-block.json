@@ -1,0 +1,58 @@
+{
+	"textures": {
+		"clock-block.png": {
+			"fileName": "horizon:imcables/clock-block.png"
+		}
+	},
+	"cuboids": [{
+			"localBounds": [7,7,0,9,9,1],
+			"faces": {
+				"localPosY": {"uv":[15,6,16,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegY": {"uv":[14,6,15,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegZ": {"uv":[14,4,16,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosZ": {"uv":[16,4,14,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosX": {"uv":[14,4,15,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegX": {"uv":[15,4,16,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [7,7,15,9,9,16],
+			"faces": {
+				"localPosY": {"uv":[15,6,16,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegY": {"uv":[14,6,15,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegZ": {"uv":[14,4,16,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosZ": {"uv":[16,4,14,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosX": {"uv":[14,4,15,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegX": {"uv":[15,4,16,6],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [4,4,2,12,12,14],
+			"faces": {
+				"localPosY": {"uv":[0,0,12,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegY": {"uv":[12,0,0,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":90},
+				"localNegZ": {"uv":[0,8,8,16],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosZ": {"uv":[0,8,8,16],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosX": {"uv":[12,0,0,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegX": {"uv":[0,0,12,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [6,6,14,10,10,15],
+			"faces": {
+				"localPosY": {"uv":[16,10,12,9],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegY": {"uv":[16,10,12,11],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegZ": {"uv":[12,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosZ": {"uv":[12,0,16,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosX": {"uv":[13,4,14,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegX": {"uv":[9,13,10,17],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0}
+			}
+		}, {
+			"localBounds": [6,6,1,10,10,2],
+			"faces": {
+				"localPosY": {"uv":[16,10,12,9],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegY": {"uv":[16,10,12,11],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegZ": {"uv":[16,0,12,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosZ": {"uv":[16,0,12,4],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localPosX": {"uv":[13,4,14,8],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0},
+				"localNegX": {"uv":[9,13,10,17],"ambientocclusion":false,"cullFace":false,"texture":"clock-block.png","uvRotation":0}
+			}
+		}]
+}
