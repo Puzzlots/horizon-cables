@@ -16,6 +16,7 @@ import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.immersivecables.AbstractEnergyBE;
 import me.zombii.horizon.immersivecables.IEnergyBE;
+import me.zombii.horizon.immersivecables.ImEventManager;
 
 public class SwitchBE extends AbstractEnergyBE {
 
@@ -97,11 +98,12 @@ public class SwitchBE extends AbstractEnergyBE {
                 BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
                 if (!(entity instanceof IEnergyBE energyBE)) continue;
 
-                if (isOn()) {
-                    energyBE.turnOn(port);
-                } else {
-                    energyBE.turnOff(port);
-                }
+                ImEventManager.queueEvent(getZone(), gX, gY, gZ, isOn, port);
+//                if (isOn()) {
+//                    energyBE.turnOn(port);
+//                } else {
+//                    energyBE.turnOff(port);
+//                }
             }
         }
         remainingTicks = 0;

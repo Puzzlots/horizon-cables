@@ -35,6 +35,7 @@ public interface IEnergyBE extends IBlockEntity {
         if (isOn()) return;
         doTurnOn(direction);
     }
+
     default void turnOff(Direction direction) {
         if (!isOn()) return;
         doTurnOff(direction);

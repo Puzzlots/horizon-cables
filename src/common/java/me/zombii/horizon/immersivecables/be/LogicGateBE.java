@@ -11,10 +11,7 @@ import finalforeach.cosmicreach.util.IGameTagList;
 import finalforeach.cosmicreach.util.constants.Direction;
 import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonTags;
-import me.zombii.horizon.immersivecables.AbstractEnergyBE;
-import me.zombii.horizon.immersivecables.IEnergyBE;
-import me.zombii.horizon.immersivecables.LogicGate;
-import me.zombii.horizon.immersivecables.PulseCondition;
+import me.zombii.horizon.immersivecables.*;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -113,8 +110,9 @@ public class LogicGateBE extends AbstractEnergyBE {
                 BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
 
                 if (entity instanceof IEnergyBE ebe) {
-                    if (isOn) ebe.turnOn(port);
-                    else ebe.turnOff(port);
+                    ImEventManager.queueEvent(getZone(), gX, gY, gZ, isOn, port);
+//                    if (isOn) ebe.turnOn(port);
+//                    else ebe.turnOff(port);
                 }
             }
         }

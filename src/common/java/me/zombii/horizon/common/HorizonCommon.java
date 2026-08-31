@@ -7,7 +7,7 @@ import dev.puzzleshq.puzzleloader.cosmic.game.events.net.EventRegisterPacket;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.ModInit;
 import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.common.PostModInit;
 import me.zombii.horizon.common.wired.blocks.imcables.*;
-import me.zombii.horizon.immersivecables.LogicGate;
+import me.zombii.horizon.immersivecables.ImEventManager;
 import me.zombii.horizon.immersivecables.be.*;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -22,6 +22,8 @@ public class HorizonCommon implements ModInit, PostModInit {
 
     @Override
     public void onInit() {
+        ImEventManager.register();
+
         WireBE.register();
         SwitchBE.register();
         DiodeBE.register();

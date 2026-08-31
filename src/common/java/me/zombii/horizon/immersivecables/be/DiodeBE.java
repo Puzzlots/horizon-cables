@@ -13,6 +13,7 @@ import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.immersivecables.AbstractEnergyBE;
 import me.zombii.horizon.immersivecables.IEnergyBE;
+import me.zombii.horizon.immersivecables.ImEventManager;
 
 import java.util.Arrays;
 
@@ -104,8 +105,9 @@ public class DiodeBE extends AbstractEnergyBE {
                 BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
 
                 if (entity instanceof IEnergyBE ebe) {
-                    if (isOn) ebe.turnOn(port);
-                    else ebe.turnOff(port);
+                    ImEventManager.queueEvent(getZone(), gX, gY, gZ, isOn, port);
+//                    if (isOn) ebe.turnOn(port);
+//                    else ebe.turnOff(port);
                 }
             }
         }

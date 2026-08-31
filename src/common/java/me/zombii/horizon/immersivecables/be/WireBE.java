@@ -10,9 +10,15 @@ import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.util.IGameTagList;
 import finalforeach.cosmicreach.util.constants.Direction;
 import finalforeach.cosmicreach.world.Zone;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.immersivecables.AbstractEnergyBE;
 import me.zombii.horizon.immersivecables.IEnergyBE;
+import me.zombii.horizon.immersivecables.ImEventManager;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class WireBE extends AbstractEnergyBE {
 
@@ -65,36 +71,92 @@ public class WireBE extends AbstractEnergyBE {
         return BlockPosition.ofGlobal(getZone(), getGlobalX(), getGlobalY(), getGlobalZ());
     }
 
+    public void findAndPower(boolean doTurnOn, Direction origin) {
+        Queue<IEnergyBE> positions = new ConcurrentLinkedDeque<>();
+        ObjectSet<IEnergyBE> entities = new ObjectOpenHashSet<>();
+        Queue<IEnergyBE> toModify = new ConcurrentLinkedDeque<>();
+        Queue<Direction> dirList = new ConcurrentLinkedDeque<>();
+
+        positions.add(this);
+        while (!positions.isEmpty()) {
+            IEnergyBE entity = positions.poll();
+            if (!entities.add(entity)) continue;
+
+//            System.err.println(doTurnOn + " " + entity.getGlobalX() + " " + entity.getGlobalY() + " " + entity.getGlobalZ() + " " + entity);
+            if (entity instanceof WireBE wireBE) {
+                wireBE.isOn = doTurnOn;
+                for (Direction port : wireBE.getPorts()) {
+                    if (wireBE == this && port.getOpposite() == origin) continue;
+                    if (wireBE.canConnect(port)) {
+                        int gX = wireBE.getGlobalX() + port.getXOffset();
+                        int gY = wireBE.getGlobalY() + port.getYOffset();
+                        int gZ = wireBE.getGlobalZ() + port.getZOffset();
+
+                        BlockEntity entityCon = wireBE.getZone().getBlockEntity(gX, gY, gZ);
+                        if (!(entityCon instanceof IEnergyBE energyBE)) continue;
+//                        System.err.println(doTurnOn + " " +wireBE + " " + energyBE);
+                        if (entityCon instanceof WireBE) {
+                            positions.add(energyBE);
+                        } else {
+                            toModify.add(energyBE);
+                            dirList.add(port);
+                        }
+                    }
+                }
+                continue;
+            }
+            throw new IllegalStateException("How did I get here?");
+        }
+
+        while (!toModify.isEmpty()) {
+            IEnergyBE energyBE = toModify.poll();
+            Direction direction = dirList.poll();
+            ImEventManager.queueEvent(getZone(),
+                    energyBE.getGlobalX(),
+                    energyBE.getGlobalY(),
+                    energyBE.getGlobalZ(),
+                    doTurnOn, direction
+            );
+//            if (doTurnOn) {
+//                energyBE.turnOn(direction);
+//            } else {
+//                energyBE.turnOff(direction);
+//            }
+        }
+    }
+
     @Override
     public void doTurnOff(Direction direction) {
         super.doTurnOff(direction);
-        for (Direction port : getPorts()) {
-            if (canConnect(port)) {
-                int gX = getGlobalX() + port.getXOffset();
-                int gY = getGlobalY() + port.getYOffset();
-                int gZ = getGlobalZ() + port.getZOffset();
-
-                BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
-                if (!(entity instanceof IEnergyBE energyBE)) continue;
-                energyBE.turnOff(port);
-            }
-        }
+        findAndPower(false, direction);
+//        for (Direction port : getPorts()) {
+//            if (canConnect(port)) {
+//                int gX = getGlobalX() + port.getXOffset();
+//                int gY = getGlobalY() + port.getYOffset();
+//                int gZ = getGlobalZ() + port.getZOffset();
+//
+//                BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
+//                if (!(entity instanceof IEnergyBE energyBE)) continue;
+//                energyBE.turnOff(port);
+//            }
+//        }
     }
 
     @Override
     public void doTurnOn(Direction direction) {
         super.doTurnOn(direction);
-        for (Direction port : getPorts()) {
-            if (canConnect(port)) {
-                int gX = getGlobalX() + port.getXOffset();
-                int gY = getGlobalY() + port.getYOffset();
-                int gZ = getGlobalZ() + port.getZOffset();
-
-                BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
-                if (!(entity instanceof IEnergyBE energyBE)) continue;
-                energyBE.turnOn(port);
-            }
-        }
+        findAndPower(true, direction);
+//        for (Direction port : getPorts()) {
+//            if (canConnect(port)) {
+//                int gX = getGlobalX() + port.getXOffset();
+//                int gY = getGlobalY() + port.getYOffset();
+//                int gZ = getGlobalZ() + port.getZOffset();
+//
+//                BlockEntity entity = getZone().getBlockEntity(gX, gY, gZ);
+//                if (!(entity instanceof IEnergyBE energyBE)) continue;
+//                energyBE.turnOn(port);
+//            }
+//        }
     }
 
     @Override
