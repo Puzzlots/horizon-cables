@@ -1,0 +1,19 @@
+{
+	"textures": {
+		"all": {
+			"fileName": "horizon:imcables/button/button-on.png",
+			"emissivefileName": "horizon:imcables/button/button-on-emissive.png"
+		}
+	},
+	"cuboids": [{
+			"localBounds": [0,0,0,16,16,16],
+			"faces": {
+				"localPosY": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0},
+				"localNegY": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0},
+				"localNegZ": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0},
+				"localPosZ": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0},
+				"localPosX": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0},
+				"localNegX": {"uv":[0,0,16,16],"ambientocclusion":false,"cullFace":false,"texture":"all","uvRotation":0}
+			}
+		}]
+}

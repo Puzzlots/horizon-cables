@@ -7,6 +7,7 @@ import finalforeach.cosmicreach.gameevents.blockevents.BlockEventArgs;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEventTrigger;
 import finalforeach.cosmicreach.gameevents.blockevents.BlockEvents;
 import finalforeach.cosmicreach.savelib.crbin.CRBinDeserializer;
+import finalforeach.cosmicreach.savelib.crbin.CRBinSerializer;
 import finalforeach.cosmicreach.util.constants.Direction;
 import finalforeach.cosmicreach.world.Zone;
 import me.zombii.horizon.common.DirectionUtil;
@@ -78,6 +79,12 @@ public abstract class AbstractEnergyBE extends BlockEntity implements IEnergyBE 
     public void read(CRBinDeserializer deserial) {
         super.read(deserial);
         isOn = deserial.readBoolean("isOn", false);
+    }
+
+    @Override
+    public void write(CRBinSerializer serial) {
+        super.write(serial);
+        serial.writeBoolean("isOn", isOn);
     }
 
     /*

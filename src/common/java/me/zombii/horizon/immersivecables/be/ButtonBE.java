@@ -17,19 +17,19 @@ import me.zombii.horizon.common.HorizonTags;
 import me.zombii.horizon.immersivecables.AbstractEnergyBE;
 import me.zombii.horizon.immersivecables.IEnergyBE;
 
-public class SwitchBE extends AbstractEnergyBE {
+public class ButtonBE extends AbstractEnergyBE {
 
-    public static final String ID = "horizon:switch-block-entity";
+    public static final String ID = "horizon:button-block-entity";
 
     public static void register() {
-        BlockEntityCreator.registerBlockEntityCreator(ID, SwitchBE::new);
+        BlockEntityCreator.registerBlockEntityCreator(ID, ButtonBE::new);
     }
 
     private Direction[] ports;
 
-    public SwitchBE() {}
+    public ButtonBE() {}
 
-    public SwitchBE(BlockState state, Zone zone, int gX, int gY, int gZ) {
+    public ButtonBE(BlockState state, Zone zone, int gX, int gY, int gZ) {
         super(state, zone, gX, gY, gZ);
     }
 
@@ -46,7 +46,7 @@ public class SwitchBE extends AbstractEnergyBE {
 
     @Override
     public boolean canConnect(BlockState state, BlockState target, BlockEntity beTarget, Direction direction) {
-        if (beTarget instanceof SwitchBE) return false;
+        if (beTarget instanceof ButtonBE) return false;
         initPorts();
 
         IGameTagList list = target.getTags();
@@ -88,6 +88,22 @@ public class SwitchBE extends AbstractEnergyBE {
             return;
         }
         initPorts();
+
+        BlockEventTrigger[] events;
+        if (isOn) {
+            events = getBlockState().getTrigger("onTurnOn");
+        } else {
+            events = getBlockState().getTrigger("onTurnOff");
+        }
+
+        if (events != null) {
+            eventArgs.blockPos = getBlockPosition();
+            eventArgs.zone = getZone();
+            eventArgs.srcBlockState = getBlockState();
+            eventArgs.run(events);
+            eventArgs.runScheduledTriggers();
+        }
+
         for (Direction port : getPorts()) {
             if (canConnect(port)) {
                 int gX = getGlobalX() + port.getXOffset();
@@ -104,8 +120,14 @@ public class SwitchBE extends AbstractEnergyBE {
                 }
             }
         }
-        remainingTicks = 0;
-        setTicking(false);
+        if (isOn) {
+            remainingTicks = 30;
+            isOn = false;
+            setTicking(true);
+        } else {
+            remainingTicks = 0;
+            setTicking(false);
+        }
     }
 
     @Override
@@ -113,24 +135,9 @@ public class SwitchBE extends AbstractEnergyBE {
         if (!GameSingletons.isHost()) return;
         initPorts();
 
-        isOn = !isOn;
-        BlockEventTrigger[] events;
-        if (isOn) {
-            events = getBlockState().getTrigger("onTurnOn");
-        } else {
-            events = getBlockState().getTrigger("onTurnOff");
-        }
+        isOn = true;
+        remainingTicks = 0;
 
-        if (events != null) {
-            eventArgs.srcPlayer = player;
-            eventArgs.blockPos = getBlockPosition();
-            eventArgs.zone = zone;
-            eventArgs.srcBlockState = getBlockState();
-            eventArgs.run(events);
-            eventArgs.runScheduledTriggers();
-        }
-
-        remainingTicks = 1;
         setTicking(true);
     }
 
