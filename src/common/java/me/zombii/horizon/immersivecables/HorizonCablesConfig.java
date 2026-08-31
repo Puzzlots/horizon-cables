@@ -1,12 +1,13 @@
 package me.zombii.horizon.immersivecables;
 
 import com.google.gson.Gson;
+import finalforeach.cosmicreach.util.SaveLocation;
 
 import java.io.*;
 
 public class HorizonCablesConfig {
 
-    public static final File configFile = new File("config.json");
+    public static final File configFile = new File(SaveLocation.getSaveFolder(), "horizon-cables-config.json");
     public static final HorizonCablesConfig DEFAULT = new HorizonCablesConfig();
     public static final HorizonCablesConfig INSTANCE;
     private static final Gson GSON = new Gson();
