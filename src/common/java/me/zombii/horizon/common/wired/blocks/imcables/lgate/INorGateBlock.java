@@ -1,4 +1,4 @@
-package me.zombii.horizon.common.wired.blocks.imcables;
+package me.zombii.horizon.common.wired.blocks.imcables.lgate;
 
 import com.badlogic.gdx.math.Vector3;
 import dev.puzzleshq.puzzleloader.cosmic.game.blockloader.block.IModBlock;
@@ -22,14 +22,14 @@ import org.hjson.JsonValue;
 
 import java.util.Arrays;
 
-public class IAndGateBlock implements IModBlock {
+public class INorGateBlock implements IModBlock {
 
-    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-and-gate-block");
+    public static final Identifier ID = Identifier.of(HorizonCommon.NAMESPACE, "i-nor-gate-block");
 
     private final BlockGenerator blockGenerator;
     private final BlockEventGenerator eventGenerator;
 
-    public IAndGateBlock() {
+    public INorGateBlock() {
         this.blockGenerator = new BlockGenerator(ID);
         this.blockGenerator.setBlockEntity(Identifier.of(LogicGateBE.ID));
         JsonArray portArrayA = new JsonArray()
@@ -42,13 +42,13 @@ public class IAndGateBlock implements IModBlock {
         JsonArray portArrayB = new JsonArray().add(Direction.POS_Z.toString());
         this.blockGenerator.getBlockEntityParams().put("inPorts", portArrayA);
         this.blockGenerator.getBlockEntityParams().put("outPorts", portArrayB);
-        this.blockGenerator.getBlockEntityParams().put("gateType", JsonValue.valueOf(LogicGate.AND.toString()));
-        this.blockGenerator.getBlockEntityParams().put("invertOutputs", JsonValue.valueOf(false));
+        this.blockGenerator.getBlockEntityParams().put("gateType", JsonValue.valueOf(LogicGate.OR.toString()));
+        this.blockGenerator.getBlockEntityParams().put("invertOutputs", JsonValue.valueOf(true));
         this.blockGenerator.getBlockEntityParams().put("rotatePorts", JsonValue.valueOf(true));
 
         eventGenerator = new BlockEventGenerator(
                 BlockEventGenerator.DEFAULT_BLOCK_EVENTS_ID,
-                Identifier.of("horizon", "iand-gate-block-events")
+                Identifier.of("horizon", "inor-gate-block-events")
         );
 
         eventGenerator.inheritParentContents();
@@ -62,7 +62,7 @@ public class IAndGateBlock implements IModBlock {
 //        this.modelGenerator.getGroup("base").cuboids.add(collisionCube);
         State defaultProperties = this.blockGenerator.getDefaultProperties();
         defaultProperties.blockEventId = eventGenerator.getId();
-        defaultProperties.modelId = "horizon:imcables/gates/and-gate.json";
+        defaultProperties.modelId = "horizon:imcables/gates/nor-gate.json";
         defaultProperties.isOpaque.set(false);
         defaultProperties.isCatalogHidden.set(true);
         defaultProperties.lightAttenuation = 0;

@@ -1,6 +1,8 @@
 package me.zombii.horizon.immersivecables;
 
+import com.google.gson.FormattingStyle;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
 import finalforeach.cosmicreach.util.SaveLocation;
 
 import java.io.*;
@@ -16,8 +18,10 @@ public class HorizonCablesConfig {
         if (!configFile.exists()) {
             try {
                 FileWriter writer = new FileWriter(configFile);
-                writer.write(GSON.toJson(DEFAULT, HorizonCablesConfig.class));
-                writer.close();
+                JsonWriter jsonWriter = new JsonWriter(writer);
+                jsonWriter.setFormattingStyle(FormattingStyle.PRETTY);
+                GSON.toJson(DEFAULT, HorizonCablesConfig.class, jsonWriter);
+                jsonWriter.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
