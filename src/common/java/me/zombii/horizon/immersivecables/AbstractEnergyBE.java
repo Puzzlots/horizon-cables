@@ -14,7 +14,7 @@ import me.zombii.horizon.common.DirectionUtil;
 
 public abstract class AbstractEnergyBE extends BlockEntity implements IEnergyBE {
 
-    protected boolean isOn = false;
+    public boolean isOn = false;
 
     public AbstractEnergyBE() {}
 

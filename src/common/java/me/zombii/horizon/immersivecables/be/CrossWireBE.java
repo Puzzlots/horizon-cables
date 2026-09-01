@@ -20,25 +20,25 @@ import me.zombii.horizon.immersivecables.ImEventManager;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class WireBE extends AbstractEnergyBE {
+public class CrossWireBE extends AbstractEnergyBE {
 
-    public static final String ID = "horizon:wire-block-entity";
+    public static final String ID = "horizon:cross-wire-block-entity";
     public static final String UNIVERSAL_CHANNEL = "universal";
 
     public static void register() {
         BlockEntityCreator.registerBlockEntityCreator(ID, (blockState, zone, x, y, z) -> {
             Block block = blockState.getBlock();
             String channel = getBlockEntityParamString(block, "channel");
-            return new WireBE(blockState, zone, x, y, z, channel);
+            return new CrossWireBE(blockState, zone, x, y, z, channel);
         });
     }
 
     private String channel;
     private final Direction[] ports = Direction.ALL_DIRECTIONS;
 
-    public WireBE() {}
+    public CrossWireBE() {}
 
-    public WireBE(BlockState state, Zone zone, int gX, int gY, int gZ, String channel) {
+    public CrossWireBE(BlockState state, Zone zone, int gX, int gY, int gZ, String channel) {
         super(state, zone, gX, gY, gZ);
         this.channel = channel;
     }
@@ -54,7 +54,7 @@ public class WireBE extends AbstractEnergyBE {
 
     @Override
     public boolean canConnect(BlockState state, BlockState target, BlockEntity beTarget, Direction direction) {
-        if (beTarget instanceof WireBE be) {
+        if (beTarget instanceof CrossWireBE be) {
             return this.getChannel() != null && (this.getChannel().equals(be.getChannel()) || (be.isUniversal() || isUniversal()));
         }
 
@@ -69,6 +69,16 @@ public class WireBE extends AbstractEnergyBE {
     @Override
     public BlockPosition getBlockPosition() {
         return BlockPosition.ofGlobal(getZone(), getGlobalX(), getGlobalY(), getGlobalZ());
+    }
+
+    @Override
+    public void turnOn(Direction direction) {
+        doTurnOff(direction);
+    }
+
+    @Override
+    public void turnOff(Direction direction) {
+        doTurnOn(direction);
     }
 
     public void findAndPower(boolean doTurnOn, Direction origin) {
@@ -89,7 +99,6 @@ public class WireBE extends AbstractEnergyBE {
             if (entity instanceof WireBE wireBE) {
                 wireBE.isOn = doTurnOn;
                 for (Direction port : wireBE.getPorts()) {
-                    if (wireBE == this && port.getOpposite() == origin) continue;
                     if (wireBE.canConnect(port)) {
                         int gX = wireBE.getGlobalX() + port.getXOffset();
                         int gY = wireBE.getGlobalY() + port.getYOffset();
